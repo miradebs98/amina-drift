@@ -3,6 +3,16 @@
 > Read the root `/CLAUDE.md` first. This is **Mira's lane**: `ingest/`, `resolve/`, `cascade/`,
 > `govern/`, `api/`. **`backend/drift/` is Miguel's** — don't edit it; consume/expose it via the API.
 
+## 🚩 FIRST TASK (before building connectors)
+Help decide the schemas (see root `/CLAUDE.md` §0 + `shared/schemas/README.md`). **Your angle:**
+- Open `data/fixtures/gentwo-events.example.json` — can every connector (news, registry, sanctions,
+  Wayback) realistically fill this `EvidenceEvent` shape? Is the `payload` flexible enough?
+- Own the call on **Q2.1 (the big one)**: do we detect slow drift from *events only*, or do you
+  also emit periodic `Snapshot`s? This decides how much you build — weigh it.
+- **Q2.3**: confirm connectors stay dumb (just emit facts) and Miguel's engine does evidence→
+  assertion matching. **Q2.5**: agree how unresolved events are marked.
+Bring these to the kickoff. Don't build connectors until the `EvidenceEvent` shape is agreed.
+
 ## Your mission
 You're the integration spine that lets Giacomo and Miguel move fast, and you own the two
 under-contested axes: **Cost Efficiency (20%)** and **Engineering (15%)**, plus the **Compliance

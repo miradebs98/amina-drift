@@ -1,0 +1,92 @@
+{
+  "_comment": "WORKED EXAMPLE (real data) — Giacomo's input = the bank's BELIEFS about the customer.",
+  "_status": "DRAFT — the shape below is a proposal; the team finalizes the Assertion schema first (see shared/schemas/README.md).",
+  "_real_vs_simulated": "Layer-1 facts are REAL & sourced. risk_tier is SIMULATED (we invent the internal KYC view, as the brief allows).",
+
+  "customer_id": "gentwo-ag",
+  "legal_name": "GenTwo AG",
+  "onboarded_as_of": "2019-01-01",
+  "_open_question": "Do we also need a separate Customer schema, or is the customer just an id + a list of assertions? (decide at kickoff)",
+
+  "assertions": [
+    {
+      "id": "A1",
+      "customer_id": "gentwo-ag",
+      "predicate": "business_model",
+      "value": "B2B securitization platform for traditional & non-bankable assets",
+      "as_of": "2019-01-01",
+      "last_verified": "2019-01-01",
+      "source": "company profile + Wayback 2019 snapshot",
+      "source_url": "https://web.archive.org/web/2019*/gentwo.com",
+      "confidence": 0.9,
+      "status": "valid",
+      "notes": "REAL — founded Zurich 2018, 'make any asset bankable/investable'. Giacomo: verify exact 2019 wording via Wayback."
+    },
+    {
+      "id": "A2",
+      "customer_id": "gentwo-ag",
+      "predicate": "domicile",
+      "value": "Zurich, CH",
+      "as_of": "2019-01-01",
+      "last_verified": "2019-01-01",
+      "source": "ZEFIX / GLEIF",
+      "source_url": "https://www.zefix.ch/",
+      "confidence": 1.0,
+      "status": "valid",
+      "notes": "REAL — registered address Brandschenkestrasse 5, 8001 Zurich."
+    },
+    {
+      "id": "A3",
+      "customer_id": "gentwo-ag",
+      "predicate": "ubo",
+      "value": "{\"Patrick Loepfe\": \"chairman\", \"Philippe A. Naegeli\": \"ceo\"}",
+      "as_of": "2019-01-01",
+      "last_verified": "2019-01-01",
+      "source": "ZEFIX directors + press",
+      "source_url": "https://www.businesswire.com/news/home/20230905088491/en/",
+      "confidence": 0.85,
+      "status": "valid",
+      "notes": "REAL founders. OPEN QUESTION: is UBO one assertion with a dict value, or one per owner? (kickoff)"
+    },
+    {
+      "id": "A4",
+      "customer_id": "gentwo-ag",
+      "predicate": "counterparty_geographies",
+      "value": "Switzerland-only operations",
+      "expected_envelope": { "allowed_set": ["CH"], "unit": "operating_country" },
+      "as_of": "2019-01-01",
+      "last_verified": "2019-01-01",
+      "source": "registry + Wayback",
+      "source_url": "https://www.gentwo.com/about/",
+      "confidence": 0.8,
+      "status": "valid",
+      "notes": "OPEN QUESTION: do we need an OPERATING_GEOGRAPHIES predicate distinct from COUNTERPARTY_GEOGRAPHIES? (kickoff)"
+    },
+    {
+      "id": "A5",
+      "customer_id": "gentwo-ag",
+      "predicate": "product_mix",
+      "value": "Primarily traditional/alternative assets; crypto NOT a material business line",
+      "as_of": "2019-01-01",
+      "last_verified": "2019-01-01",
+      "source": "Wayback 2019 snapshot",
+      "source_url": "https://web.archive.org/web/2019*/gentwo.com",
+      "confidence": 0.7,
+      "status": "valid",
+      "notes": "THIS IS THE BELIEF THAT LATER BREAKS. Giacomo: verify against the real 2019 site."
+    },
+    {
+      "id": "A6",
+      "customer_id": "gentwo-ag",
+      "predicate": "risk_tier",
+      "value": "LOW",
+      "as_of": "2019-01-01",
+      "last_verified": "2019-01-01",
+      "source": "bank internal (SIMULATED)",
+      "source_url": null,
+      "confidence": 1.0,
+      "status": "valid",
+      "notes": "SIMULATED — our authored internal KYC view (Layer 2). Allowed by the brief."
+    }
+  ]
+}

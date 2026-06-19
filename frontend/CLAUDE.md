@@ -3,6 +3,16 @@
 > Read the root `/CLAUDE.md` first. This is **Giacomo's lane.** Don't edit `backend/drift/`
 > (Miguel) or `backend/` services (Mira) — consume their outputs via the API + `shared/schemas/`.
 
+## 🚩 FIRST TASK (before building the UI)
+Help decide the schemas (see root `/CLAUDE.md` §0 + `shared/schemas/README.md`). **Your angle:**
+- Open `data/customers/gentwo-ag.json` — does the `Assertion` shape capture how a *real* KYC
+  profile is structured? What fields is an ex-RM missing (e.g. source-of-funds, expected products,
+  PEP status, sector codes)?
+- Open `eval/scenarios/gentwo-drift.example.json` — as the person who'll *render* this, answer
+  **Q3.1**: do you want ONE alert per customer (cleaner screen) or one per contradicted assertion?
+- Confirm the GenTwo onboarding beliefs are realistic; fix the values you can verify.
+Bring these to the kickoff. Don't build screens until the `DriftAlert` shape is agreed.
+
 ## Your mission
 You're the ex-KYC relationship manager — your edge is **authenticity**. Make the system look and
 feel like a tool a real bank compliance/AML analyst would trust. You own the **20% UX &

@@ -7,6 +7,26 @@
 
 ---
 
+## 0. 🚩 FIRST TASK — decide the schemas (before any feature code)
+
+**The schemas are the most important decision in this project.** They are the contracts that let
+three people build in parallel. We do NOT freeze them blindly — the three founders **reason them
+through together first** (~1h), then build. Direction for every agent:
+
+1. Read **[`shared/schemas/README.md`](shared/schemas/README.md)** — it frames the open design
+   questions (with options + recommended defaults) to reason about, not a finished answer.
+2. The **locked demo entity is GenTwo AG.** It's already filled into the draft schemas, split
+   across the lanes so you can see your part:
+   - Giacomo → `data/customers/gentwo-ag.json` (the beliefs / `Assertion`s)
+   - Mira → `data/fixtures/gentwo-events.example.json` (the public signals / `EvidenceEvent`s)
+   - Miguel → `eval/scenarios/gentwo-drift.example.json` (the mismatch / `DriftAlert`)
+3. Each agent's job *right now* is to pressure-test the draft schema **from its own lane's needs**
+   (see the lane `CLAUDE.md`) and bring those points to the kickoff. Only after the schemas are
+   agreed and the GenTwo example validates do we start building features.
+
+> Why first: once the data shapes are agreed, each person mocks the others' data in that shape and
+> builds alone. Skip this and everyone waits on everyone — a single-file queue instead of parallel.
+
 ## 1. What we are building (the goal — keep this fixed)
 
 A **Dynamic Risk Profiling System** that catches **KYC Drift**: the slow, structural divergence
