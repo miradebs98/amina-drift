@@ -1,0 +1,5 @@
+# amina-drift dependencies (add as code lands)
+pydantic>=2
+fastapi
+uvicorn
+httpx
