@@ -90,7 +90,10 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
 
     alerts = r["alerts"]
     latest = max((e.published_at for e in events), default=datetime.now(timezone.utc))
-    headline = alerts[-1] if alerts else _clean_alert(cid, baseline, len(events), latest)
+    # Headline = the most MATERIAL drift episode (highest resulting score, tie-break latest),
+    # not just the chronologically last (which can be a minor early nudge).
+    headline = (max(alerts, key=lambda al: ((al.new_risk_score or 0), al.created_at))
+                if alerts else _clean_alert(cid, baseline, len(events), latest))
 
     return {
         "customer": cust,
