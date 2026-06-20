@@ -95,6 +95,10 @@ class LLMClient:
     def interpret_risk(self, drifts: list[dict], context: dict) -> "RiskJudgment":
         raise NotImplementedError
 
+    def score_factors(self, facts: list[dict]) -> list[dict]:
+        """Rate each onboarding KYC factor's inherent risk level [0,1] (+ why) → drives the PRIOR."""
+        raise NotImplementedError
+
 
 # --- drift keyword set for the offline mock verdict --------------------------------------------
 _DRIFT_KW = (
@@ -160,6 +164,37 @@ def consistent_with_baseline(predicate: str, baseline: str, event_text: str) -> 
     return False    # adverse_media / pep / sanctions / source_of_funds / volume → always genuine
 
 
+# --- inherent (onboarding) risk LEVEL of a single KYC factor VALUE, before any drift -------------
+# The PRIOR is COMPUTED from the client's own facts (no hardcoded number): a crypto exchange in many
+# jurisdictions onboards elevated; a domestic SaaS founder-owned shop onboards low. MockLLM = the
+# deterministic stand-in; ApiLLM asks Apertus to rate each factor + give a one-line why.
+_INHERENT_HIGH = ("crypto", "web3", "bitcoin", "digital asset", "digital-asset", "exchange",
+                  "brokerage", "trading", "derivatives", "custody", "offshore", "bvi", "seychelles",
+                  "cayman", "pep", "politically exposed", "sanction", "unlicensed", "unauthor",
+                  "high-risk", "billion", "money service")
+_INHERENT_MED = ("global", "globally", "international", "expanding", "cross-border", "multiple",
+                 "investor", "fund", "listed", "public", "settlement", "ofac", "moderate", "million")
+_INHERENT_LOW = ("saas", "software", "analytics", "subscription", "dashboard", "domestic", "uae",
+                 "adgm", "emirates", "founder", "simple", "clean", "small", "early-stage",
+                 "licensed", "registered", "regulated")
+_INHERENT_NEG = (" no ", " not ", "none", "without", "-free", " nil ", "zero")
+
+
+def inherent_level(value: str) -> float:
+    """Deterministic 0–1 inherent-risk level of one KYC factor VALUE (offline stand-in for the LLM)."""
+    v = f" {value.lower()} "
+    high = any(w in v for w in _INHERENT_HIGH)
+    if high and any(n in v for n in _INHERENT_NEG):     # e.g. "no crypto exposure" → low
+        return 0.2
+    if high:
+        return 0.85
+    if any(w in v for w in _INHERENT_LOW):
+        return 0.2
+    if any(w in v for w in _INHERENT_MED):
+        return 0.5
+    return 0.4
+
+
 class MockLLM(LLMClient):
     """Offline, deterministic stand-in. A clean/narrow onboarding belief is 'contradicted' when a
     drift signal for that predicate appears. (Real ApiLLM returns the same Verdict via a provider.)"""
@@ -206,6 +241,14 @@ class MockLLM(LLMClient):
                          flag="", recommended_action="", reasoning="", evidence_quote=str(quote)[:160])
         self.meter.record("heavy", str(context) + str(drifts), "risk")
         return j
+
+    def score_factors(self, facts: list[dict]) -> list[dict]:
+        out = []
+        for a in facts:
+            lvl = inherent_level(str(a.get("value", "")))
+            out.append({"predicate": a["predicate"], "value": a["value"], "level": lvl,
+                        "why": f"{a['predicate']} = '{str(a['value'])[:48]}' → inherent {lvl:.0%}"})
+        return out
 
 
 class ApiLLM(LLMClient):
@@ -312,6 +355,27 @@ class ApiLLM(LLMClient):
             )
         except Exception:
             return self._fallback.interpret_risk(drifts, context)
+
+    def score_factors(self, facts: list[dict]) -> list[dict]:
+        system = ("You are a KYC risk officer at a regulated bank. For EACH onboarding fact, rate its "
+                  "INHERENT KYC/AML risk level from 0.0 (benign) to 1.0 (high-risk), with a short why. "
+                  "Crypto / offshore / PEP / sanctions / unlicensed activity = high; domestic SaaS, "
+                  "founder-owned, clean, licensed, small volume = low. Reply ONLY JSON: "
+                  '{"factors":[{"predicate":"<predicate>","level":0.0-1.0,"why":"<=12 words"}]}')
+        user = "ONBOARDING FACTS:\n" + "\n".join(
+            f"- {a['predicate']}: {str(a['value'])[:120]}" for a in facts)
+        try:
+            obj = _parse_json(self._chat(self.cheap_model, system, user, "cheap"))
+            by_pred = {str(f.get("predicate")): f for f in obj.get("factors", [])}
+            out = []
+            for a in facts:
+                f = by_pred.get(a["predicate"], {})
+                out.append({"predicate": a["predicate"], "value": a["value"],
+                            "level": max(0.0, min(1.0, float(f.get("level", 0.4)))),
+                            "why": str(f.get("why", ""))})
+            return out
+        except Exception:
+            return self._fallback.score_factors(facts)
 
 
 def _parse_json(text: str) -> dict:

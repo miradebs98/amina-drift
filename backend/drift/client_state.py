@@ -14,6 +14,8 @@ from datetime import date
 from pathlib import Path
 
 from shared.schemas import Assertion, EvidenceEvent, Snapshot
+from backend.drift.score import compute_inherent_score
+from backend.drift.llm import MockLLM
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -23,17 +25,21 @@ _EVENTS_FILE = {
     "coinbase": "coinbase-events.example.json",
 }
 
+# the computed prior is deterministic per customer → cache it (avoid recomputing on every load)
+_BASELINE_CACHE: dict[str, tuple[int, list]] = {}
+
 
 @dataclass
 class ClientState:
     customer_id: str
     legal_name: str
     onboarded_as_of: date
-    baseline_risk_score: int           # the rolled-up 0–100 KYC score at onboarding (the prior)
+    baseline_risk_score: int           # the prior — now COMPUTED from the onboarding facts (not hardcoded)
     assertions: list[Assertion]
     evidence: list[EvidenceEvent]
     snapshots: list[Snapshot]
     dossier: str = ""                  # rolling compacted summary (Mira owns compaction in prod)
+    baseline_breakdown: list = field(default_factory=list)   # per-factor inherent-risk levels behind the prior
 
 
 def load_client_state_from_fixtures(customer_id: str = "meridian-sands") -> ClientState:
@@ -48,14 +54,22 @@ def load_client_state_from_fixtures(customer_id: str = "meridian-sands") -> Clie
 
     snapshots = _MOCK_SNAPSHOTS.get(customer_id, lambda c: [])(customer_id)
 
+    # PRIOR = COMPUTED from the client's own KYC facts (deterministic MockLLM; Apertus per-factor why optional).
+    if customer_id in _BASELINE_CACHE:
+        baseline, breakdown = _BASELINE_CACHE[customer_id]
+    else:
+        baseline, breakdown = compute_inherent_score(assertions, MockLLM())
+        _BASELINE_CACHE[customer_id] = (baseline, breakdown)
+
     return ClientState(
         customer_id=customer_id,
         legal_name=cust.get("legal_name", customer_id),
         onboarded_as_of=date.fromisoformat(cust["onboarded_as_of"]),
-        baseline_risk_score=_baseline_score(cust, assertions),
+        baseline_risk_score=baseline,
         assertions=assertions,
         evidence=events,
         snapshots=snapshots,
+        baseline_breakdown=breakdown,
     )
 
 

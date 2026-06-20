@@ -52,6 +52,20 @@ def risk_direction(predicate: str) -> float:
     return config.RISK_DIRECTION.get(predicate, config.DEFAULT_RISK_DIRECTION)
 
 
+def compute_inherent_score(assertions, llm) -> tuple[int, list[dict]]:
+    """The PRIOR, COMPUTED from the client's own KYC facts (no hardcoded number): the weight-averaged
+    inherent risk LEVEL across the onboarding profile, normalised 0–100. Drift is measured from this.
+    `llm.score_factors` rates each factor's level (deterministic MockLLM, or Apertus + a per-factor why)."""
+    facts = [{"predicate": a.predicate.value, "value": str(a.value)}
+             for a in assertions if a.predicate.value not in _OUTPUT_PREDICATES]
+    if not facts:
+        return 30, []
+    factors = llm.score_factors(facts)
+    den = sum(risk_weight(f["predicate"]) for f in factors) or 1.0
+    num = sum(f["level"] * risk_weight(f["predicate"]) for f in factors)
+    return max(0, min(100, int(round(100 * num / den)))), factors
+
+
 @dataclass
 class AssertionDrift:
     assertion: Assertion

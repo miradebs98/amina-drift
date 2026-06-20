@@ -12,7 +12,7 @@ if str(ROOT) not in sys.path:
 
 from backend.drift.client_state import load_client_state_from_fixtures
 from backend.drift.engine import replay
-from backend.drift.score import assess
+from backend.drift.score import assess, tier_for
 from backend.drift.classify import anti_hallucination_gate
 from backend.drift.llm import MockLLM, Verdict
 from shared.schemas import EvidenceEvent, EvidenceType
@@ -30,11 +30,11 @@ def _result():
 
 def test_low_to_high_arc():
     s = _state()
-    assert s.baseline_risk_score == 28, "Meridian onboards at 28 (LOW)"
+    assert tier_for(s.baseline_risk_score) == "LOW", f"Meridian onboards LOW (computed {s.baseline_risk_score})"
     r = _result()
     tiers = [t["tier"] for t in r["timeline"]]
     scores = [t["risk_score"] for t in r["timeline"]]
-    assert tiers[0] == "LOW" and scores[0] == 28
+    assert tiers[0] == "LOW" and scores[0] == s.baseline_risk_score
     assert r["final_tier"] == "HIGH" and r["final_score"] >= 67, "must silently re-tier to HIGH"
     assert all(_RANK[b] >= _RANK[a] for a, b in zip(tiers, tiers[1:])), "tier never goes backwards"
     assert "MEDIUM" in tiers and tiers.index("MEDIUM") < tiers.index("HIGH")
