@@ -8,11 +8,28 @@ most pairs die here for ~$0.
 """
 from __future__ import annotations
 
+import re
 from typing import Optional
 
 from shared.schemas import Assertion, EvidenceEvent
 from backend.drift import config
 from backend.drift.llm import LLMClient, Verdict
+
+_NONWORD = re.compile(r"[^a-z0-9]+")
+
+
+def _norm(s: str) -> str:
+    """Lowercase, strip punctuation, collapse whitespace; pad with spaces for substring tests."""
+    return " " + " ".join(_NONWORD.sub(" ", s.lower()).split()) + " "
+
+
+def _token_overlap(quote_norm: str, text_norm: str) -> float:
+    """Fraction of the quote's content tokens present in the evidence text."""
+    qt = [t for t in quote_norm.split() if len(t) > 2]
+    if not qt:
+        return 0.0
+    tset = set(text_norm.split())
+    return sum(1 for t in qt if t in tset) / len(qt)
 
 # predicate -> signals that make an event RELEVANT to it (keywords / event types / payload flags)
 PREDICATE_SIGNALS = {
@@ -72,14 +89,21 @@ def check_envelope_breach(assertion: Assertion, event: EvidenceEvent) -> Optiona
 
 
 def anti_hallucination_gate(verdict: Verdict, event: EvidenceEvent) -> Verdict:
-    """Never let a 'contradicts' through unless the cited span actually appears in the evidence."""
+    """Never let a 'contradicts' through unless the cited span is supported by the evidence.
+    Fuzzy (normalized substring OR token-overlap >= 0.6), so a real model that paraphrases its quote
+    isn't falsely rejected — while a fabricated quote (low overlap) still gets downgraded."""
     if verdict.verdict != "contradicts":
         return verdict
-    text = f"{event.summary} {event.payload}".lower()
-    if verdict.evidence_quote and verdict.evidence_quote.lower() in text:
-        return verdict
-    return Verdict("ambiguous", 0.0,
-                   "Downgraded: cited evidence not found in the source (anti-hallucination gate).", "")
+    text = _norm(f"{event.summary} {event.payload}")
+    quote = _norm(verdict.evidence_quote or "")
+    if quote.strip():
+        if quote in text or _token_overlap(quote, text) >= 0.6:
+            return verdict                       # the model's quote IS in the evidence — keep it
+        return Verdict("ambiguous", 0.0,         # the model FABRICATED a quote not in the evidence → kill
+                       "Downgraded: cited quote not supported by the source (anti-hallucination gate).", "")
+    # No quote supplied: the verdict still rests on a REAL evidence event (has a source_url) — there's
+    # nothing fabricated to reject. Ground the flag with the event's own (verbatim, sourced) summary.
+    return Verdict("contradicts", verdict.strength, verdict.rationale, event.summary[:200])
 
 
 def classify_event(assertion: Assertion, event: EvidenceEvent, llm: LLMClient) -> Verdict:

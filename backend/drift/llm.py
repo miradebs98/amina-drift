@@ -147,11 +147,14 @@ class ApiLLM(LLMClient):
         return content
 
     def classify(self, assertion: Assertion, event: EvidenceEvent) -> Verdict:
-        system = ("You are a KYC drift detector for a regulated bank. Decide whether the EVIDENCE "
-                  "confirms, contradicts, is irrelevant to, or is ambiguous about the bank's BELIEF. "
-                  'Reply with ONLY a JSON object: {"verdict":"confirms|contradicts|irrelevant|ambiguous",'
-                  '"strength":0.0-1.0,"rationale":"...","evidence_quote":"a short span copied VERBATIM '
-                  'from the evidence that justifies it"}.')
+        system = ('You are a KYC drift detector for a regulated bank. Decide whether the EVIDENCE '
+                  'confirms, contradicts, is irrelevant to, or is ambiguous about the BELIEF. '
+                  'Reply with ONLY one JSON object and nothing else: '
+                  '{"verdict":"confirms|contradicts|irrelevant|ambiguous","strength":0.0-1.0,'
+                  '"evidence_quote":"<short phrase copied WORD-FOR-WORD from the EVIDENCE text only>",'
+                  '"rationale":"<1-2 sentences; do NOT put the quote here>"}. '
+                  'If verdict is "contradicts", evidence_quote MUST be a non-empty phrase taken '
+                  'verbatim from the EVIDENCE summary or payload.')
         user = (f"BELIEF: predicate={assertion.predicate.value}; value={assertion.value}\n"
                 f"EVIDENCE: type={event.type.value}; summary={event.summary}; payload={event.payload}")
         try:
