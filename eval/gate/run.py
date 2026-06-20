@@ -27,12 +27,11 @@ GOLD = json.loads((HERE / "gold.json").read_text())["labels"]
 
 
 def _load(dataset: str | None, gold: str | None) -> None:
-    """Optionally point the harness at a different (dataset, gold) pair — e.g. the adversarial set."""
+    """Point the harness at a (dataset, gold) pair — e.g. the adversarial set. Passing None resets to
+    the default real set (so callers can switch back and forth without state leaking between sets)."""
     global DATA, GOLD
-    if dataset:
-        DATA = json.loads(Path(dataset).read_text())
-    if gold:
-        GOLD = json.loads(Path(gold).read_text())["labels"]
+    DATA = json.loads(Path(dataset or (HERE / "dataset.json")).read_text())
+    GOLD = json.loads(Path(gold or (HERE / "gold.json")).read_text())["labels"]
 
 CRITICAL = {"sanctions_status", "pep_status", "adverse_media_status"}
 

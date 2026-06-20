@@ -84,6 +84,18 @@ PREDICATE_SIGNALS = {
 NEVER_GATE = {"adverse_media_status"}
 SEMANTIC_MIN = 2  # lexical backstop (offline fallback): >= 2 shared stemmed content tokens belief↔event
 
+# Structured/binary beliefs that may ONLY be moved by their authoritative source — never inferred from
+# news by keyword or embedding. A "sanctions" headline or a NASDAQ-listing article must be UNABLE to
+# flip sanctions_status; only an actual screen hit (OpenSanctions/OFAC — a `sanctions_hit` event or a
+# sanctioned/SDN payload flag) can. This routing kills the entire false-positive class where unrelated
+# news ("direct-lists on NASDAQ") collided with the sanctions belief and pinned the score at 100.
+# (PEP deliberately stays news-capable: PEP-by-association — "a minister's son becomes UBO" — legitimately
+# surfaces in news, not just the PEP list, so it goes through the normal keyword/embedding path.)
+AUTHORITATIVE_ONLY = {
+    "sanctions_status": {"types": {"sanctions_hit"},
+                         "flags": {"sanctioned", "sdn", "ofac_match", "designated", "on_sdn_list"}},
+}
+
 # --- Stage-1 SEMANTIC backstop: free Swiss-sovereign embeddings (CSCS arctic-embed) ----------------
 # Keyword/type/flag hits stay FIRST (precision, $0, fully auditable). When they're silent, we fall
 # back to embedding cosine between a RICH belief query (predicate + on-file value + the predicate's
@@ -209,6 +221,10 @@ def is_candidate(assertion: Assertion, event: EvidenceEvent) -> bool:
     eval/gate/: REAL set 100% material recall; ADVERSARIAL (paraphrase/synonym) set 87% — vs 40% for
     the keyword-only gate on the same adversarial events."""
     pred = assertion.predicate.value
+    auth = AUTHORITATIVE_ONLY.get(pred)
+    if auth is not None:                                    # structured belief → authoritative source ONLY
+        return (event.type.value in auth["types"]
+                or any(event.payload.get(f) for f in auth["flags"]))
     if pred in NEVER_GATE:                                  # critical news-driven category → never filter
         return True
     sig = PREDICATE_SIGNALS.get(pred)
@@ -221,6 +237,33 @@ def is_candidate(assertion: Assertion, event: EvidenceEvent) -> bool:
         if any(kw in text for kw in sig.get("kw", [])):
             return True
     return _semantic_relevant(assertion, event)   # semantic (embedding) backstop, lexical if offline
+
+
+# Beliefs verified by a dedicated SCREEN (sanctions/PEP). Scored DETERMINISTICALLY from the match
+# metadata, NOT by the LLM — and match QUALITY sets the strength. A confirmed designation is a hard,
+# categorically-disqualifying hit; an UNVERIFIED name-only match is only a POTENTIAL hit that needs a
+# human (it must NOT auto-max the score — that's the 85–95% sanctions false-positive trap).
+_SCREEN_PREDICATES = {"sanctions_status", "pep_status"}
+_SCREEN_TYPES = {"sanctions_hit", "pep_hit"}
+
+
+def check_screen_match(assertion: Assertion, event: EvidenceEvent) -> Optional[Verdict]:
+    """Deterministic verdict for a sanctions/PEP screen hit (or None if not a screen pair). Confirmed
+    designation → strong contradiction (→ critical channel → ~100). Name-only/unverified → a capped
+    POTENTIAL contradiction that elevates via accumulation and flags for human verification."""
+    if assertion.predicate.value not in _SCREEN_PREDICATES or event.type.value not in _SCREEN_TYPES:
+        return None
+    p = event.payload or {}
+    name_only = str(p.get("match_basis", "")).lower() == "name-only"
+    needs_verify = bool(p.get("needs_human_verification"))
+    score = float(p.get("name_score", 1.0) or 1.0)
+    quote = event.summary[:160]
+    if needs_verify or name_only:                       # POTENTIAL — route to a human, do NOT auto-condemn
+        return Verdict("contradicts", min(0.5, 0.5 * score),
+                       "Potential (name-only) screen match — UNVERIFIED, requires human verification "
+                       "before any risk decision.", quote)
+    return Verdict("contradicts", max(0.9, score),      # CONFIRMED designation — categorical hard stop
+                   "Confirmed screen designation.", quote)
 
 
 def check_envelope_breach(assertion: Assertion, event: EvidenceEvent) -> Optional[float]:
@@ -249,7 +292,9 @@ def anti_hallucination_gate(verdict: Verdict, event: EvidenceEvent) -> Verdict:
     """Never let a 'contradicts' through unless the cited span is supported by the evidence.
     Fuzzy (normalized substring OR token-overlap >= 0.6), so a real model that paraphrases its quote
     isn't falsely rejected — while a fabricated quote (low overlap) still gets downgraded."""
-    if verdict.verdict != "contradicts":
+    # Ground BOTH directions: a fabricated "contradicts" must not raise risk, and a fabricated
+    # "resolves" (e.g. a hallucinated "case dismissed") must not LOWER it. Same evidence check.
+    if verdict.verdict not in ("contradicts", "resolves"):
         return verdict
     text = _norm(f"{event.summary} {event.payload}")
     quote = _norm(verdict.evidence_quote or "")
@@ -259,8 +304,9 @@ def anti_hallucination_gate(verdict: Verdict, event: EvidenceEvent) -> Verdict:
         return Verdict("ambiguous", 0.0,         # the model FABRICATED a quote not in the evidence → kill
                        "Downgraded: cited quote not supported by the source (anti-hallucination gate).", "")
     # No quote supplied: the verdict still rests on a REAL evidence event (has a source_url) — there's
-    # nothing fabricated to reject. Ground the flag with the event's own (verbatim, sourced) summary.
-    return Verdict("contradicts", verdict.strength, verdict.rationale, event.summary[:200])
+    # nothing fabricated to reject. Ground it with the event's own (verbatim, sourced) summary, keeping
+    # the original verdict type (contradicts → raises risk, resolves → lowers it).
+    return Verdict(verdict.verdict, verdict.strength, verdict.rationale, event.summary[:200])
 
 
 def classify_event(assertion: Assertion, event: EvidenceEvent, llm: LLMClient) -> Verdict:

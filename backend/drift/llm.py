@@ -29,7 +29,7 @@ try:
 except Exception:
     pass
 
-VERDICTS = ("confirms", "contradicts", "irrelevant", "ambiguous")
+VERDICTS = ("confirms", "contradicts", "irrelevant", "ambiguous", "resolves")
 
 
 @dataclass
@@ -104,6 +104,12 @@ _DRIFT_KW = (
     "pep", "politically exposed", "fraud", "investigation", "probe", "litigation", "scandal",
     "fsra", "unlicensed", "regulated activity", "proceeds",
 )
+# events that RETRACT a prior concern → the score comes back DOWN (risk is not a ratchet).
+_RESOLVE_KW = (
+    "dismiss", "dismisses", "dropped", "cleared", "resolved", "acquitted", "withdrawn", "exonerat",
+    "divest", "in favour", "in favor", "ruling for", "overturned", "case closed", "settled",
+    "licence granted", "license granted", "charges dropped",
+)
 _BREAKABLE = {
     "business_model", "product_mix", "digital_asset_policy", "digital_asset_holdings",
     "operating_geographies", "counterparty_geographies", "ubo", "source_of_funds",
@@ -168,6 +174,15 @@ class MockLLM(LLMClient):
 
     def classify(self, assertion: Assertion, event: EvidenceEvent) -> Verdict:
         text = f"{event.summary} {event.payload}".lower()
+        # De-risking FIRST: an event that retracts a prior concern (suit dismissed, licence granted,
+        # risky unit divested) RESOLVES the belief → risk comes back DOWN. Offline stand-in for what
+        # Apertus returns as a `resolves` verdict; the score subtracts these from the contradictions.
+        if assertion.predicate.value in _BREAKABLE and any(rk in text for rk in _RESOLVE_KW):
+            v = Verdict("resolves", max(0.5, min(0.95, float(event.confidence))),
+                        f"De-risking event — retracts a prior concern on {assertion.predicate.value}.",
+                        event.summary[:120])
+            self.meter.record("cheap", str(assertion.value) + text, v.verdict)
+            return v
         hit = next((kw for kw in _DRIFT_KW if kw in text), None)
         if hit and assertion.predicate.value in _BREAKABLE:
             if consistent_with_baseline(assertion.predicate.value, str(assertion.value), text):
@@ -267,20 +282,23 @@ class ApiLLM(LLMClient):
                   'situation MATERIALLY WORSENED); (c) a new owner with a significant stake, a new '
                   'jurisdiction, or an ownership/control change.\n'
                   '- confirms: the evidence is FULLY within what the belief already states AND adds no '
-                  'new risk — a product squarely inside the listed scope, OR a RESOLVING/IMPROVING event '
-                  '(lawsuit dismissed, charges dropped, licence GRANTED, cleared). GOOD NEWS must NOT be '
-                  'flagged as a contradiction.\n'
+                  'new risk — a product squarely inside the listed scope. (Consistent, no change.)\n'
+                  '- resolves: a DE-RISKING event that RETRACTS a prior concern and LOWERS risk — a '
+                  'lawsuit dismissed or settled, charges dropped, an investigation closed, a licence '
+                  'GRANTED/restored, cleared/exonerated, or a risky unit divested. Use this (NOT '
+                  'contradicts, NOT confirms) for GOOD NEWS that reverses earlier deterioration — it '
+                  'pulls the risk score back DOWN.\n'
                   '- irrelevant: no bearing on THIS belief or THIS entity — news about a DIFFERENT '
                   'company (even if this entity merely offers a product referencing it, e.g. "launches '
                   'futures on SpaceX\'s IPO" does NOT change THIS entity\'s ownership), wrong-entity name '
                   'matches, generic market commentary, or price/analyst notes. ambiguous: genuinely '
                   'unclear.\n'
                   'Reply with ONLY one JSON object and nothing else: '
-                  '{"verdict":"confirms|contradicts|irrelevant|ambiguous","strength":0.0-1.0,'
+                  '{"verdict":"confirms|contradicts|irrelevant|ambiguous|resolves","strength":0.0-1.0,'
                   '"evidence_quote":"<short phrase copied WORD-FOR-WORD from the EVIDENCE text only>",'
                   '"rationale":"<1-2 sentences; do NOT put the quote here>"}. '
-                  'If verdict is "contradicts", evidence_quote MUST be a non-empty phrase taken '
-                  'verbatim from the EVIDENCE summary or payload.')
+                  'If verdict is "contradicts" OR "resolves", evidence_quote MUST be a non-empty phrase '
+                  'taken verbatim from the EVIDENCE summary or payload.')
         user = (f"BELIEF: predicate={assertion.predicate.value}; value={assertion.value}\n"
                 f"EVIDENCE: type={event.type.value}; summary={event.summary}; payload={event.payload}")
         try:

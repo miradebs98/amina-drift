@@ -115,7 +115,7 @@
       "id": "CB6",
       "customer_id": "coinbase-global",
       "predicate": "sanctions_status",
-      "value": "Historic OFAC settlement (2020, apparent sanctions-screening failures); no entity designation",
+      "value": "No current sanctions designation (OFAC / EU / UN); one historic OFAC civil settlement (2020, sanctions-screening lapses), resolved",
       "as_of": "2021-04-14",
       "last_verified": "2021-04-14",
       "source": "US OFAC enforcement action",

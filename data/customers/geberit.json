@@ -1,0 +1,37 @@
+{
+  "_comment": "NOISE CONTROL (real). Geberit AG — a boring, stable Swiss sanitary-technology manufacturer. Onboards LOW; its real public events are benign (earnings in line, dividend, product line, buyback, CFO promotion). The score MUST stay put — this is the precision/false-positive control for the whole pipeline.",
+  "_real_vs_simulated": "Events are realistic, benign public-company items (VERIFY exact specifics). Bank-side onboarding score is SIMULATED.",
+  "customer_id": "geberit",
+  "legal_name": "Geberit AG",
+  "onboarded_as_of": "2022-01-01",
+  "purpose_of_relationship": "Corporate treasury for a listed Swiss industrial (SIMULATED onboarding rationale).",
+
+  "risk_model": {
+    "_note": "A widely-held, SIX-listed, non-crypto industrial onboards LOW. Benign news must NOT move the score.",
+    "scale": "0-100",
+    "bands": { "LOW": "0-33", "MEDIUM": "34-66", "HIGH": "67-100" },
+    "onboarding_score": 22,
+    "onboarding_band": "LOW"
+  },
+
+  "entity_profile": {
+    "legal_name": "Geberit AG",
+    "principal_place_of_business": "Rapperswil-Jona, Switzerland",
+    "website": "https://www.geberit.com",
+    "listed_on_exchange": true
+  },
+
+  "assertions": [
+    { "id": "GB1", "customer_id": "geberit", "predicate": "business_model", "value": "Sanitary technology and plumbing-systems manufacturer", "as_of": "2022-01-01", "last_verified": "2022-01-01", "source": "annual report", "confidence": 0.95, "status": "valid" },
+    { "id": "GB2", "customer_id": "geberit", "predicate": "product_mix", "value": "Bathroom systems, piping and installation products; no financial services", "as_of": "2022-01-01", "last_verified": "2022-01-01", "source": "annual report", "confidence": 0.95, "status": "valid" },
+    { "id": "GB3", "customer_id": "geberit", "predicate": "operating_geographies", "value": "Switzerland HQ; Europe-focused manufacturing and distribution", "as_of": "2022-01-01", "last_verified": "2022-01-01", "source": "annual report", "confidence": 0.9, "status": "valid" },
+    { "id": "GB4", "customer_id": "geberit", "predicate": "regulatory_status", "value": "Standard industrial company; SIX-listed; no financial-services regulation", "as_of": "2022-01-01", "last_verified": "2022-01-01", "source": "annual report", "confidence": 0.9, "status": "valid" },
+    { "id": "GB5", "customer_id": "geberit", "predicate": "ubo", "value": "Widely held public company (SIX: GEBN); no controlling shareholder", "as_of": "2022-01-01", "last_verified": "2022-01-01", "source": "share register", "confidence": 0.9, "status": "valid" },
+    { "id": "GB6", "customer_id": "geberit", "predicate": "source_of_wealth", "value": "Operating revenue from product sales", "as_of": "2022-01-01", "last_verified": "2022-01-01", "source": "annual report", "confidence": 0.95, "status": "valid" },
+    { "id": "GB7", "customer_id": "geberit", "predicate": "digital_asset_policy", "value": "No digital-asset activity", "as_of": "2022-01-01", "last_verified": "2022-01-01", "source": "annual report", "confidence": 0.95, "status": "valid" },
+    { "id": "GB8", "customer_id": "geberit", "predicate": "listing_status", "value": "Public — SIX Swiss Exchange (GEBN)", "as_of": "2022-01-01", "last_verified": "2022-01-01", "source": "SIX", "confidence": 0.95, "status": "valid" },
+    { "id": "GB9", "customer_id": "geberit", "predicate": "pep_status", "value": "No politically exposed person among directors", "as_of": "2022-01-01", "last_verified": "2022-01-01", "source": "screening", "confidence": 0.85, "status": "valid" },
+    { "id": "GB10", "customer_id": "geberit", "predicate": "sanctions_status", "value": "No sanctions designation (OFAC / EU / UN)", "as_of": "2022-01-01", "last_verified": "2022-01-01", "source": "screening", "confidence": 0.9, "status": "valid" },
+    { "id": "GB11", "customer_id": "geberit", "predicate": "adverse_media_status", "value": "No adverse media, investigation or litigation", "as_of": "2022-01-01", "last_verified": "2022-01-01", "source": "screening", "confidence": 0.9, "status": "valid" }
+  ]
+}

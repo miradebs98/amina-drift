@@ -13,7 +13,7 @@ from datetime import date
 from shared.schemas import Assertion
 from shared.schemas.dimensions import dimension_for_predicate
 from backend.drift import config
-from backend.drift.classify import is_candidate, check_envelope_breach, classify_event
+from backend.drift.classify import is_candidate, check_envelope_breach, check_screen_match, classify_event
 from backend.drift.llm import LLMClient
 from backend.drift.trajectory import Trajectory, compute_trajectory
 from backend.drift.embeddings import ConceptAxisEmbedder
@@ -61,6 +61,7 @@ class AssertionDrift:
     staleness: float = 0.0
     envelope: float = 0.0
     trajectory: float = 0.0
+    implied_excess: float = 0.0     # this belief's pull into the headroom (0–1), for the level re-derivation
     status: str = "valid"
     confidence: float = 1.0
     evidence_ids: list[str] = field(default_factory=list)
@@ -104,12 +105,21 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
             continue
 
         strengths: list[float] = []
+        resolve_strengths: list[float] = []     # de-risking events that retract a prior concern
         envelope_mag = 0.0
         ev_ids: list[str] = []
         rationales: list[str] = []
 
         for e in events:
             if not is_candidate(A, e):
+                continue
+            # Sanctions/PEP screen hits are scored DETERMINISTICALLY from match quality (never the LLM):
+            # confirmed → strong, name-only/unverified → capped potential (+ needs human verification).
+            screen = check_screen_match(A, e)
+            if screen is not None:
+                strengths.append(screen.strength)
+                ev_ids.append(e.id)
+                rationales.append(screen.rationale)
                 continue
             breach = check_envelope_breach(A, e)
             if breach is not None:
@@ -127,14 +137,23 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
                 strengths.append(v.strength)
                 ev_ids.append(e.id)
                 rationales.append(v.rationale)
+            elif v.verdict == "resolves":
+                resolve_strengths.append(v.strength)
+                ev_ids.append(e.id)
+                rationales.append(v.rationale)
 
-        contra = _noisy_or(strengths)
+        # Risk is NOT a ratchet: de-risking events (suit dismissed, licence granted) RETRACT the
+        # accumulated concern, so the contradiction — and the score — can come back DOWN over time.
+        contra = _clamp(_noisy_or(strengths) - _noisy_or(resolve_strengths))
         staleness = min(config.STALENESS_CAP, _years_between(A.last_verified, as_of) * config.STALENESS_DECAY_PER_YEAR)
         traj_term = _clamp(traj.per_predicate.get(pred, 0.0))
 
+        # Drift magnitude = what the EVIDENCE says changed. Staleness is deliberately NOT here: "we
+        # haven't re-verified in N years" is a DATA-FRESHNESS / re-KYC signal, not higher inherent risk
+        # (it was silently climbing clean clients like Geberit across band edges). It's still computed
+        # below and surfaced via `status`/confidence — just kept out of the risk LEVEL.
         surprise = _clamp(
             config.W_CONTRADICTION * contra
-            + config.W_STALENESS * staleness
             + config.W_ENVELOPE * envelope_mag
             + config.W_TRAJECTORY * traj_term
         )
@@ -150,16 +169,32 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
         ))
         all_evidence_ids.extend(ev_ids)
 
-    # Breadth — the "connect-the-dots" core: count distinct dimensions among MATERIAL contributors;
-    # ≥3 co-moving gets a combination boost (5 quiet changes across dimensions > 1 loud one).
+    # Breadth — # distinct dimensions materially co-moving (connect-the-dots), reported for alerting.
     material_dims = sorted({dimension_for_predicate(ad.assertion.predicate.value).value
                             for ad in per if ad.risk_impact > config.MATERIAL_IMPACT})
     breadth = len(material_dims)
-    breadth_factor = 1.0 + config.BREADTH_BONUS * max(0, breadth - 2)
 
-    total_impact = sum(ad.risk_impact for ad in per) * breadth_factor
-    saturate = min(1.0, total_impact / config.RISK_SCORE_FULL_DRIFT)
-    risk_score = int(round(state.baseline_risk_score + (100 - state.baseline_risk_score) * saturate))
+    # ── Risk LEVEL re-derived from the current belief-state — TWO channels so "many moderate drifts"
+    # never reads as catastrophic, and one true designation does:
+    #   • accumulation — non-designation drift, severity-weighted (d × risk_weight), breadth-aware via
+    #     noisy-OR, but CAPPED at ACCUMULATION_CAP (high-HIGH). Slow structural drift lives here; it can
+    #     no longer pin at 100 just from many signals (the HashKey/Binance saturation).
+    #   • critical     — an actual sanctions designation (authoritative-only) jumps straight to its
+    #     ceiling (~100). 88–100 is reserved for that; everything else maxes at the cap.
+    # No baseline "headroom toward 100" magic; the cap and the critical channel are the only knobs.
+    baseline = state.baseline_risk_score
+    cap = max(config.ACCUMULATION_CAP, baseline)
+    contributions: list[float] = []
+    critical_level = 0.0
+    for ad in per:
+        pred = ad.assertion.predicate.value
+        d = _clamp(ad.surprise * risk_direction(pred))     # signed invalidation in [0,1]
+        ad.implied_excess = d * risk_weight(pred)           # severity-weighted contribution (explainable)
+        contributions.append(ad.implied_excess)
+        if pred in config.CRITICAL_DESIGNATION and d >= config.CRIT_DESIGNATION_MIN:
+            critical_level = max(critical_level, 100.0 * risk_weight(pred))
+    accum_level = baseline + (cap - baseline) * _noisy_or(contributions)
+    risk_score = int(round(max(accum_level, critical_level)))
     risk_score = max(0, min(100, risk_score))
     surprise_max = max((ad.surprise for ad in per), default=0.0)
 

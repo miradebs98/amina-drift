@@ -28,6 +28,18 @@
 
 ## ✅ FIXED
 
+### SCORING REDESIGN — "re-derive the risk LEVEL from the belief-state" `[2026-06-20, validate on Apertus + real companies]`
+> Meridian was fabricated and the old score was reverse-fit to it. We rebuilt scoring on REAL companies
+> (Coinbase, HashKey, Binance=drift-hero, Geberit=noise-control). Decisions, all landed in `score.py`/
+> `engine.py`/`classify.py`/`config.py`:
+> - **Level = re-derive from state, two channels** ([score.py](backend/drift/score.py)): *accumulation* (non-designation drift, severity-weighted `d×risk_weight`, breadth via noisy-OR) **capped at `ACCUMULATION_CAP=88`**, and *critical* (a confirmed sanctions designation → its ceiling ~100). Kills the noisy-OR→100 saturation (Binance 100→88).
+> - **Staleness OUT of the level** — "not re-verified in N years" is a data-freshness / re-KYC signal, NOT inherent risk. Was silently climbing clean clients across band edges (**Geberit 35/MED→22/LOW, 0 alerts**).
+> - **`resolves` (signed, down-moves)** — de-risking events (suit dismissed, licence granted) subtract from `contra`; `final_tier` follows the current score (de-ratcheted). **Coinbase: 60→97/88→65/68 rise-then-fall** on the real SEC-suit→dismissal. Grounded both directions (a fabricated "dismissed" can't lower risk).
+> - **Alerts DECOUPLED from band-crossing** ([engine.py](backend/drift/engine.py)) — fire on the DRIFT (a NEW assumption invalidated, breadth ≥N, a critical hit, or a one-tick velocity ≥`VELOCITY_ALERT_POINTS`), never on a tier crossing. Catches within-band drift; kills band-edge false alerts. **Bands are now a LABEL/cadence only.**
+> - **Sanctions/PEP scored DETERMINISTICALLY from match quality** (`check_screen_match`, not the LLM): confirmed designation → critical→~100; **name-only/`needs_human_verification` → capped POTENTIAL hit + HITL alert, NOT auto-100** (HashKey's "Xiao Feng"≈"FENG XIAO" wanted-list match was pinning it at 100).
+> - **Why 100:** reserved for a *confirmed* sanctions designation (categorically prohibited/exit), NOT "lots of drift" — even Binance's $4.3B settlement tops at 88 (EDD/consider-exit).
+> **Still open (next):** Stage-2 STRENGTH GRADATION + selective-70B verification — HashKey's accumulation still ~86 because 8B over-contradicts at scale (256 pairs, flat strength 1.0). Coinbase final 68 is 1pt into HIGH (minor). Tests are Meridian-based → rewrite around the real roster.
+
 ### 1. Quadratic LLM cost in replay — classify every event on every tick `[fixed 2026-06-20]`
 **Was:** `replay` called `assess` once per date and `assess` re-classified every event `≤ as_of` on every tick, so each `(assertion, event)` pair was re-sent to the LLM at every subsequent tick — pure waste (verdicts are date-independent).
 **Fix shipped:** a `verdict_cache` keyed by `(assertion_id, event_id)`, threaded through:
@@ -174,10 +186,18 @@ Covered by #5 — fold the saturation constant into the calibration so it's deri
 
 ---
 
-### 15. 🔴 Stage-1 gate recall = 35% material — fix raises it to 100% (gate ADOPTED); scorer re-tune is the follow-up
-**Where:** `is_candidate` — [backend/drift/classify.py:60](backend/drift/classify.py#L60). Eval + harness in [eval/gate/](eval/gate/) (`python -m eval.gate.run`).
-**Problem:** measured against Claude-labelled real events for 4 firms (Circle/Ripple/Kraken/Revolut), the ORIGINAL keyword gate kept only **35% of MATERIAL** (belief,event) pairs (12/34): adverse_media **0%** (AML fines / SEC penalties say "fine/penalty/settlement", not the hardcoded "investigation/fraud"), listing_status **0%** (absent from the vocab), operating_geographies **0%**, regulatory 42%. A dropped pair never reaches the LLM = **silent risk** — the opposite of what a drift system must do.
-**Fix (ADOPTED in classify.py):** never-gate `adverse_media_status` (news-driven) + add `listing_status` + broaden keyword lists to real-news vocab + a free stemmed-lexical semantic backstop → **100% material recall, 91% overall**, ~38% pass-rate. Data also disproves "never-gate ALL critical": adding sanctions/PEP = identical recall at 56% vs 38% pass (pure cost — they're covered by the dedicated screen).
+### 15. 🟢 Stage-1 gate — now a KEYWORD+EMBEDDING HYBRID (gate ADOPTED); scorer re-tune is the open follow-up
+**Where:** `is_candidate` — [backend/drift/classify.py:110+](backend/drift/classify.py#L110). Evals in [eval/gate/](eval/gate/): `python -m eval.gate.run` (real), `--dataset eval/gate/adversarial.json --gold eval/gate/adversarial_gold.json` (adversarial), `python -m eval.gate.calibrate` (τ curve).
+**Problem:** measured against Claude-labelled real events for 4 firms (Circle/Ripple/Kraken/Revolut), the ORIGINAL keyword gate kept only **35% of MATERIAL** pairs; broadening keywords got the real set to 100% — BUT a purpose-built **adversarial set** (paraphrase / unseen-vocab / hard negatives, [eval/gate/adversarial.json](eval/gate/adversarial.json)) proved keyword-only collapses to **40% material recall**: it structurally cannot link "Cayman"→offshore, "cabinet minister"→PEP, "perpetual contracts"→derivatives (no shared token — more keywords can't fix synonymy).
+**Fix (ADOPTED in classify.py):** hybrid gate — keyword/type/flag hits first (precision, $0, auditable) + never-gate `adverse_media_status`, then a **free Swiss-sovereign embedding backstop** (`SwissAIEmbedder`, arctic-embed-v2 on CSCS, same key as the LLM) when keywords are silent. Belief is expanded into a rich **`query:`-prefixed** embedding query (GRAIN's `build_rich_query` trick) via per-predicate `SEMANTIC_HINTS` natural-language drift descriptions; cosine ≥ `SEMANTIC_COSINE_MIN=0.24` (calibrated on the curve). Degrades to the lexical overlap if the endpoint is down (CI/offline still runs).
+**Hybrid gate eval (shipped, τ=0.24):**
+
+| set | keyword-only material recall | **hybrid material recall** | pass-rate |
+|---|---|---|---|
+| REAL (4 firms) | 100% | **100%** | 42% |
+| ADVERSARIAL (paraphrase/synonym) | **40%** | **87%** | 34% |
+
+Recovered the offshore-re-domicile, PEP-by-title, tokenised-treasury and business-pivot misses; the `query:`+`SEMANTIC_HINTS` bridge lifted PEP 0.21→0.32 and UBO 0.22→0.45 while hard negatives stayed ~0.03–0.12. Remaining adversarial miss: an undisclosed-derivatives event (product_mix cosine 0.237 — caught at τ=0.22; its 2-hop regulatory angle is below any safe threshold and left to Stage-2). Embedding adds ~2 marginal hard-negative FPs vs keyword-only — the bulk of FPs are pre-existing keyword over-triggers + the `adverse_media` never-gate (both cheap-LLM-filtered).
 **Real-model validation (Apertus, before→after gate, memoized engine):**
 
 | | Apertus old gate | Apertus new gate | |
@@ -188,6 +208,7 @@ Covered by #5 — fold the saturation constant into the calibration so it's deri
 
 NB: Meridian is **97 on Apertus vs its "designed" 82** even with the OLD gate → the demo's fixed numbers are **MockLLM-calibrated; Apertus runs hotter**. (Coinbase/HashKey old-gate ≈ designed, so they were closer.)
 **Follow-up = scorer re-calibration (this item, Miguel's lane):** the filter is the product goal and is adopted; the band is a downstream knob. Re-tune so **HashKey returns to MEDIUM on Apertus** while Meridian stays HIGH / Coinbase MEDIUM. Targets (Apertus, improved gate): **HashKey 75 → ≤66**, **Meridian keep ≥67** (currently 98 — lots of room), **Coinbase keep ≤66** (65). Likely `RISK_SCORE_FULL_DRIFT` up ~15–20% (watch the Meridian floor) and/or per-predicate weights; couples with #5/#12. **Validate on Apertus, NOT MockLLM** — the mock over-escalates (it also reds 4 drift tests: `test_coinbase_stays_medium`, `test_coinbase_fires_within_band_alert`, `test_meridian_flips_coinbase_does_not`, `test_no_premature_adverse_media`) until calibrated.
+**⤷ UPDATE (hybrid embedding gate now shipped):** the recall-first hybrid feeds even MORE signal to the scorer, so the mismatch grew — MockLLM now scores **Coinbase 83/HIGH** (target ≤66) and **Meridian 100/HIGH** (saturated). Same 4 tests red, **no new failures** vs the keyword-broadening state — confirming this is purely the scorer-calibration gap, not a gate regression. Re-calibration (couples with #5/#12) is now the single thing standing between "best-in-class gate" and a green, on-band demo. Re-measure the Apertus bands with the hybrid gate before tuning.
 **Verify:** `python -m eval.gate.run` = 100% material recall; the 3 demo cases keep their designed bands **on Apertus**; the 4 drift tests green.
 
 ---

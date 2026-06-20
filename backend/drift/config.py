@@ -52,15 +52,20 @@ RISK_DIRECTION = {
 }
 DEFAULT_RISK_DIRECTION = 1.0
 
-# --- Risk score (0–100) and tier bands -------------------------------------------------------
-RISK_SCORE_FULL_DRIFT = 10.0        # Σ risk_impact that maps to "fully drifted" (climb to ~100)
-TIER_BANDS = [("LOW", 0), ("MEDIUM", 34), ("HIGH", 67)]   # 0–100 bands
+# --- Risk score (0–100): two-channel re-derived level -----------------------------------------
+RISK_SCORE_FULL_DRIFT = 10.0        # (legacy, unused) Σ risk_impact for the old saturate() mapping
+ACCUMULATION_CAP = 88               # non-designation drift maxes here (high-HIGH); 88–100 is reserved
+                                    # for an actual sanctions designation so "lots of drift" ≠ "sanctioned"
+CRITICAL_DESIGNATION = ("sanctions_status",)   # authoritative-only beliefs that jump straight to ceiling
+CRIT_DESIGNATION_MIN = 0.7          # min invalidation for the critical channel to fire (a real hit)
+TIER_BANDS = [("LOW", 0), ("MEDIUM", 34), ("HIGH", 67)]   # 0–100 bands — a LABEL/cadence only, NOT a trigger
 
 # --- Flagging: a flag needs both enough surprise AND enough risk movement -----------------------
 SURPRISE_FLAG_THRESHOLD = 0.30      # below this = case (a): score drifts gently, visualize only
 RISK_DELTA_FLAG_POINTS = 6          # min risk_score jump (points) to raise a flag
 
 # --- Breadth: connect-the-dots — co-movement ACROSS dimensions is the real KYC-drift signal ------
+VELOCITY_ALERT_POINTS = 8           # a one-tick jump of ≥ this many score points → drift alert (rate, not band)
 BREADTH_MIN_DIMS = 3                 # ≥ this many distinct dimensions drifting → combination alert + score boost
 BREADTH_BONUS = 0.12                # ×Σimpact per dimension beyond 2 (3 dims = +0.12, 4 = +0.24)
 MATERIAL_IMPACT = 0.05              # a per-assertion risk_impact above this counts toward breadth

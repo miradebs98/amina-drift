@@ -1,0 +1,38 @@
+{
+  "_comment": "DRIFT HERO (real). Binance — a real, well-documented deterioration: global growth → multi-jurisdiction enforcement → $4.3B DOJ settlement + founder steps down. Replaces the fabricated Meridian as the honest LOW/MED→HIGH case.",
+  "_real_vs_simulated": "Events are REAL & publicly reported (URLs given; VERIFY exact dates/figures). The bank-side onboarding score, cadence and 'as an AMINA client' framing are SIMULATED.",
+  "customer_id": "binance",
+  "legal_name": "Binance Holdings Ltd.",
+  "onboarded_as_of": "2019-01-01",
+  "purpose_of_relationship": "Institutional account for a global crypto-asset exchange group (SIMULATED onboarding rationale).",
+
+  "risk_model": {
+    "_note": "A large, fast-growing, lightly-regulated global crypto exchange onboards ELEVATED (MEDIUM). Real drift = escalating multi-jurisdiction enforcement + an ownership/control change.",
+    "scale": "0-100",
+    "bands": { "LOW": "0-33", "MEDIUM": "34-66", "HIGH": "67-100" },
+    "onboarding_score": 58,
+    "onboarding_band": "MEDIUM"
+  },
+
+  "entity_profile": {
+    "legal_name": "Binance Holdings Ltd.",
+    "founded": "2017",
+    "principal_place_of_business": "No single declared global headquarters (SIMULATED onboarding note)",
+    "website": "https://www.binance.com",
+    "listed_on_exchange": false
+  },
+
+  "assertions": [
+    { "id": "BN1", "customer_id": "binance", "predicate": "business_model", "value": "Global crypto-asset spot exchange and ecosystem (BNB chain, wallet)", "as_of": "2019-01-01", "last_verified": "2019-01-01", "source": "company disclosures", "confidence": 0.9, "status": "valid" },
+    { "id": "BN2", "customer_id": "binance", "predicate": "product_mix", "value": "Spot crypto trading, custody and staking; no broadly-licensed regulated derivatives at onboarding", "as_of": "2019-01-01", "last_verified": "2019-01-01", "source": "company disclosures", "confidence": 0.85, "status": "valid" },
+    { "id": "BN3", "customer_id": "binance", "predicate": "operating_geographies", "value": "Global retail & institutional; no single declared headquarters", "as_of": "2019-01-01", "last_verified": "2019-01-01", "source": "company disclosures", "confidence": 0.8, "status": "valid" },
+    { "id": "BN4", "customer_id": "binance", "predicate": "regulatory_status", "value": "Pursuing licences across jurisdictions; not yet broadly authorised", "as_of": "2019-01-01", "last_verified": "2019-01-01", "source": "company disclosures", "confidence": 0.8, "status": "valid" },
+    { "id": "BN5", "customer_id": "binance", "predicate": "ubo", "value": "Founder Changpeng Zhao (CZ) — majority owner and CEO", "as_of": "2019-01-01", "last_verified": "2019-01-01", "source": "press / company", "confidence": 0.85, "status": "valid" },
+    { "id": "BN6", "customer_id": "binance", "predicate": "source_of_wealth", "value": "Trading and listing fees", "as_of": "2019-01-01", "last_verified": "2019-01-01", "source": "company disclosures", "confidence": 0.8, "status": "valid" },
+    { "id": "BN7", "customer_id": "binance", "predicate": "digital_asset_policy", "value": "Crypto-native exchange; holds BNB and custodies customer assets", "as_of": "2019-01-01", "last_verified": "2019-01-01", "source": "company disclosures", "confidence": 0.85, "status": "valid" },
+    { "id": "BN8", "customer_id": "binance", "predicate": "listing_status", "value": "Private company", "as_of": "2019-01-01", "last_verified": "2019-01-01", "source": "company disclosures", "confidence": 0.9, "status": "valid" },
+    { "id": "BN9", "customer_id": "binance", "predicate": "pep_status", "value": "No politically exposed person among owners or directors", "as_of": "2019-01-01", "last_verified": "2019-01-01", "source": "screening", "confidence": 0.8, "status": "valid" },
+    { "id": "BN10", "customer_id": "binance", "predicate": "sanctions_status", "value": "No sanctions designation (OFAC / EU / UN)", "as_of": "2019-01-01", "last_verified": "2019-01-01", "source": "screening", "confidence": 0.85, "status": "valid" },
+    { "id": "BN11", "customer_id": "binance", "predicate": "adverse_media_status", "value": "No material adverse media at onboarding", "as_of": "2019-01-01", "last_verified": "2019-01-01", "source": "screening", "confidence": 0.8, "status": "valid" }
+  ]
+}

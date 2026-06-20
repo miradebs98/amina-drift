@@ -38,9 +38,10 @@ _FLAGS = {
 _DEFAULT_ACTION = "Refresh KYC scope; reassess activity profile and transaction-monitoring thresholds."
 
 
-def _label_situation(tier_up: bool, tick_surprise: float) -> str:
-    """(b) tier crossed = risk flag · (c) fresh surprise but no re-tier = notable · (a) gentle drift."""
-    if tier_up:
+def _label_situation(fired: bool, tick_surprise: float) -> str:
+    """(b) a drift alert fired this tick · (c) fresh surprise but no flag = notable · (a) gentle drift.
+    Note: this is DRIFT-based, not band-based — a flag no longer means 'crossed a tier'."""
+    if fired:
         return "b:flag"
     if tick_surprise >= config.SURPRISE_FLAG_THRESHOLD:
         return "c:notable"
@@ -156,8 +157,9 @@ def replay(state, llm: LLMClient | None = None, embedder: ConceptAxisEmbedder | 
                    | {state.onboarded_as_of})
     clock = SimClock(dates[0])
     timeline, alerts = [], []
-    prev_score, prev_tier = state.baseline_risk_score, tier_of(state.baseline_risk_score)
+    prev_score = state.baseline_risk_score
     prev_breadth, fired_critical = 0, set()
+    prev_contradicted: set[str] = set()
     prev_surprise: dict[str, float] = {}
     for d in dates:
         clock.advance_to(d)
@@ -166,26 +168,35 @@ def replay(state, llm: LLMClient | None = None, embedder: ConceptAxisEmbedder | 
         # (captures new contradictions, envelope breaches, partial drift) + the profile trajectory velocity
         deltas = [max(0.0, ad.surprise - prev_surprise.get(ad.assertion.id, 0.0)) for ad in a.per_assertion]
         tick_surprise = max(deltas + [a.trajectory.velocity], default=0.0)
-        tier_up = _TIER_RANK[a.tier] > _TIER_RANK[prev_tier]
-        timeline.append({"as_of": d, "risk_score": a.risk_score, "tier": a.tier,
-                         "surprise": round(tick_surprise, 2), "situation": _label_situation(tier_up, tick_surprise),
-                         "traj_distance": round(a.trajectory.distance, 3)})
-        # Alerting is DECOUPLED from tier-crossing: also fire on a breadth crossing (≥N dimensions
-        # co-move — the within-band combination the challenge is about) or a single critical hit
-        # (sanctions/PEP/adverse-media), each once. (Mira's HashKey 55→63 case + the brief's use cases.)
+
+        # ── DRIFT-based alerting (NOT band crossing). The tier is now only a LABEL/cadence; what fires an
+        # alert is the DRIFT itself: a NEW assumption invalidated, the drift spanning ≥N dimensions, an
+        # actual critical designation, or a sharp one-tick jump in the level. This finally catches
+        # within-band drift (a client doubling risk inside MEDIUM) and stops band-edge false alerts
+        # (a clean client nudging across 34 fires nothing).
+        contradicted_now = {ad.assertion.id for ad in a.per_assertion
+                            if ad.contra >= 0.5 or ad.envelope >= 0.9}
+        newly_contradicted = [ad for ad in a.per_assertion
+                              if ad.assertion.id in (contradicted_now - prev_contradicted)
+                              and ad.risk_impact > config.MATERIAL_IMPACT]
         breadth_cross = a.breadth >= config.BREADTH_MIN_DIMS > prev_breadth
         new_critical = [ad for ad in a.per_assertion
                         if ad.assertion.predicate.value in config.CRITICAL_PREDICATES
                         and ad.contra >= config.CRITICAL_CONTRA
                         and ad.assertion.predicate.value not in fired_critical]
-        if tier_up or breadth_cross or new_critical:
-            alerts.append(build_alert(state, a, prev_score, prev_tier, llm, tick_surprise))
-            if tier_up:
-                prev_tier = a.tier
+        velocity_spike = (a.risk_score - prev_score) >= config.VELOCITY_ALERT_POINTS
+        fired = bool(newly_contradicted or breadth_cross or new_critical or velocity_spike)
+
+        timeline.append({"as_of": d, "risk_score": a.risk_score, "tier": a.tier,
+                         "surprise": round(tick_surprise, 2), "situation": _label_situation(fired, tick_surprise),
+                         "traj_distance": round(a.trajectory.distance, 3)})
+        if fired:
+            alerts.append(build_alert(state, a, prev_score, tier_of(prev_score), llm, tick_surprise))
             for ad in new_critical:
                 fired_critical.add(ad.assertion.predicate.value)
         prev_score = a.risk_score
         prev_breadth = a.breadth
+        prev_contradicted = contradicted_now
         for ad in a.per_assertion:
             prev_surprise[ad.assertion.id] = ad.surprise
     return {
@@ -193,7 +204,9 @@ def replay(state, llm: LLMClient | None = None, embedder: ConceptAxisEmbedder | 
         "timeline": timeline,
         "alerts": alerts,
         "final_score": prev_score,
-        "final_tier": prev_tier,
+        # current tier reflects the current score — NOT the ratcheted alert tier: with de-risking
+        # (resolves) the level can fall back, so the reported tier must be able to come down too.
+        "final_tier": tier_of(prev_score),
         "cost": {"cheap_calls": llm.meter.cheap_calls, "heavy_calls": llm.meter.heavy_calls,
                  "total_tokens": llm.meter.total_tokens, "escalation_rate": round(llm.meter.escalation_rate, 3)},
     }
