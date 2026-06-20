@@ -7,6 +7,7 @@ Two decoupled axes (the sponsor's framing):
 """
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 from datetime import date
 
@@ -30,6 +31,16 @@ def _noisy_or(strengths: list[float]) -> float:
     for s in strengths:
         prod *= (1.0 - s)
     return 1.0 - prod
+
+
+def _drift_index(contributions: list[float], decay: float) -> float:
+    """Diminishing-returns ACCUMULATION (replaces noisy-OR). The strongest drift counts fully; each
+    ADDITIONAL co-moving drift adds less (× decay^rank). This is the connect-the-dots core: the index
+    CLIMBS with every extra drifting dimension (so the timeline arc rises as changes accumulate — the
+    visible 'drift, not single event' signal), but unlike noisy-OR it does NOT saturate to 1 on a
+    handful of moderate signals — so 'moderate but broad' (HashKey) ranks BELOW 'severe' (Binance)."""
+    ranked = sorted((c for c in contributions if c > 0), reverse=True)
+    return sum(c * (decay ** i) for i, c in enumerate(ranked))
 
 
 def _years_between(d0: date, d1: date) -> float:
@@ -176,12 +187,12 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
 
     # ── Risk LEVEL re-derived from the current belief-state — TWO channels so "many moderate drifts"
     # never reads as catastrophic, and one true designation does:
-    #   • accumulation — non-designation drift, severity-weighted (d × risk_weight), breadth-aware via
-    #     noisy-OR, but CAPPED at ACCUMULATION_CAP (high-HIGH). Slow structural drift lives here; it can
-    #     no longer pin at 100 just from many signals (the HashKey/Binance saturation).
+    #   • accumulation — non-designation drift, severity-weighted (d × risk_weight), combined by the
+    #     diminishing-returns DRIFT INDEX (not noisy-OR). It CLIMBS with breadth (connect-the-dots: the
+    #     timeline arc rises as drifts accumulate) but does NOT saturate — so moderate-but-broad ranks
+    #     below severe — then maps smoothly toward ACCUMULATION_CAP (asymptote, never pins).
     #   • critical     — an actual sanctions designation (authoritative-only) jumps straight to its
-    #     ceiling (~100). 88–100 is reserved for that; everything else maxes at the cap.
-    # No baseline "headroom toward 100" magic; the cap and the critical channel are the only knobs.
+    #     ceiling (~100). 88–100 is reserved for that.
     baseline = state.baseline_risk_score
     cap = max(config.ACCUMULATION_CAP, baseline)
     contributions: list[float] = []
@@ -193,7 +204,9 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
         contributions.append(ad.implied_excess)
         if pred in config.CRITICAL_DESIGNATION and d >= config.CRIT_DESIGNATION_MIN:
             critical_level = max(critical_level, 100.0 * risk_weight(pred))
-    accum_level = baseline + (cap - baseline) * _noisy_or(contributions)
+    drift_index = _drift_index(contributions, config.BREADTH_DECAY)
+    g = 1.0 - math.exp(-drift_index / config.DRIFT_SATURATION)    # smooth; breadth climbs it, never pins
+    accum_level = baseline + (cap - baseline) * g
     risk_score = int(round(max(accum_level, critical_level)))
     risk_score = max(0, min(100, risk_score))
     surprise_max = max((ad.surprise for ad in per), default=0.0)

@@ -54,8 +54,11 @@ DEFAULT_RISK_DIRECTION = 1.0
 
 # --- Risk score (0–100): two-channel re-derived level -----------------------------------------
 RISK_SCORE_FULL_DRIFT = 10.0        # (legacy, unused) Σ risk_impact for the old saturate() mapping
-ACCUMULATION_CAP = 88               # non-designation drift maxes here (high-HIGH); 88–100 is reserved
+ACCUMULATION_CAP = 88               # non-designation drift asymptotes here (high-HIGH); 88–100 reserved
                                     # for an actual sanctions designation so "lots of drift" ≠ "sanctioned"
+BREADTH_DECAY = 0.6                 # each ADDITIONAL co-moving drift counts × decay^rank (connect-the-dots
+                                    # weight); higher → breadth matters more, lower → more single-driver
+DRIFT_SATURATION = 1.0             # accumulated severity-weighted drift that maps ~63% toward the cap
 CRITICAL_DESIGNATION = ("sanctions_status",)   # authoritative-only beliefs that jump straight to ceiling
 CRIT_DESIGNATION_MIN = 0.7          # min invalidation for the critical channel to fire (a real hit)
 TIER_BANDS = [("LOW", 0), ("MEDIUM", 34), ("HIGH", 67)]   # 0–100 bands — a LABEL/cadence only, NOT a trigger
