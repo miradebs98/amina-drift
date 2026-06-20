@@ -76,12 +76,16 @@ a `DriftAlert`. **Mira produces the evidence; Miguel produces the verdict.** The
 - **Relevance quality** (lexical) is mixed today (~half the 10-K passage matches are noisy);
   semantic embeddings fix it (Miguel).
 
-## Built vs. not (so the picture is honest)
-- ✅ Built & tested: the 4 schemas, Coinbase KYC profile, grain_lite (SEC/earnings), connector
-  framework, 5 live sources + fixtures + stubs, the relevance gate, the runner, the smoke test.
-- 🟡 Partial: relevance quality (lexical → embeddings); resolution (at emission, no fuzzy step).
-- ⬜ Not yet: sanctions/registry/funding connectors, continuous scheduler, cost meter, dashboard,
-  audit/HITL layer.
+## Built vs. not (so the picture is honest) — canonical: [STATUS.md](../STATUS.md)
+- ✅ Built & tested: schemas (+ 4-dimension tagging), 3 demo entities (Coinbase/Meridian/HashKey),
+  grain_lite, **9 live connectors** + fixtures, the relevance gate, the runner, **the drift engine
+  on live Apertus**, the **API keystone**, **governance** (hash-chained audit + HITL + RBAC), the
+  **network graph**, the smoke tests.
+- 🟡 Partial: relevance quality (lexical → swissai embeddings available); resolution at-emission;
+  cost meter works but no UI widget; dashboard built but not yet live-wired.
+- 🔜 The gold gap: **combination/breadth threshold** (fire on ≥3 dimensions co-moving) + the Apertus
+  **connect-the-dots narrative** (Miguel); dashboard live-wire + 4-lane + network viz (Giacomo);
+  registry connector; pitch deck.
 
 ## Run it
 ```bash
