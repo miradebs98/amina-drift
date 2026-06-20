@@ -5,18 +5,29 @@
 > renders your `DriftAlert`. Don't edit connectors (`ingest/`) or the cascade orchestration —
 > consume `EvidenceEvent`/`Snapshot`, produce `DriftAlert`.
 
-## 🚩 FIRST TASK (before building the engine)
-Help decide the schemas (see root `/CLAUDE.md` §0 + `shared/schemas/README.md`). **Your angle:**
-- You consume `Assertion` + `EvidenceEvent` and produce `DriftAlert` — so you have the biggest
-  stake. Open the two base-case sets — esp. the drift hero **Meridian Sands**
-  (`data/customers/meridian-sands.json`, `data/fixtures/meridian-events.example.json`,
-  `eval/scenarios/meridian-drift.example.json`) plus **Coinbase** (`*coinbase*`).
-- Drive **Q2.1**: can you detect Meridian's silent re-tiering (LOW 28 → HIGH 82; SaaS→crypto
-  pivot + offshore + new UBO) from events alone, or do you need `Snapshot`s + an embedding
-  trajectory? Your answer sets Mira's scope.
-- **Q3.2**: does `DriftAlert` need a per-factor score breakdown for explainability? **Q1.4**:
-  confirm you get `last_verified` for confidence decay.
-Bring these to the kickoff. Don't build the engine until the three shapes are agreed.
+## ✅ Schema decisions already locked (2026-06-20) — build to these
+- **`risk_score` is a DERIVED OUTPUT, not a monitored assertion.** Your engine *computes* it. The
+  onboarding baseline is `customer.risk_model.onboarding_score`; `CB10`/`MS13` are baseline anchors
+  only — never diff them against evidence. Drift = the movement of this computed number.
+- **`DriftAlert` now has `also_contradicts: list[str]`** (the secondary assertions a drift episode
+  breaks) alongside the primary `contradicted_assertion_id`. Both example alerts use it.
+- **Alert granularity = ONE alert per customer drift-episode** (aggregating contradictions), not one
+  per assertion.
+- **Demo numbers are fixed:** Meridian flips **LOW 28 → HIGH 82** (the wow); Coinbase stays
+  **MEDIUM 60 → 66** (within-band upward pressure, deliberate contrast — do NOT make it flip).
+
+## 🚩 YOUR OPEN CALL — decide this, it sets Mira's scope (Q2.1, the big one)
+**Can you detect Meridian's silent re-tiering from the EVENT SEQUENCE alone, or do you need
+periodic `Snapshot`s (+ embedding trajectory)?** Both fixtures are currently events-only and
+`evidence.py` has no Snapshot in use. This is the single most important architectural decision on
+your side:
+- If **events-only** works → Mira builds less, you detect drift by accumulating contradictions over
+  the event timeline. Simpler, faster to demo.
+- If you need **snapshots** → tell Mira NOW so she emits them; this is what powers the
+  embedding-trajectory "wow," but it's more to build.
+Decide early and tell the team — everything downstream depends on it. Also confirm **Q3.2** (do you
+want a per-factor score breakdown in the alert for explainability?) and **Q1.4** (`last_verified`
+is present for confidence decay).
 
 ## Your mission
 Turn "the bank's beliefs vs. reality" into measurable, explainable drift. Build the thing nobody
@@ -45,6 +56,25 @@ else has: **evidence-driven invalidation of specific KYC assertions** + **slow s
    it — validate that cited evidence contains the claim (anti-hallucination gate).
 6. **`eval/scenarios/`** (with Giacomo): turn each business scenario into a runnable test that
    asserts the right flag fires (and wrong ones don't).
+
+## 🎯 The bar — what "done" looks like (you own AI Intelligence, 25%)
+This is the heart of the project; the demo lives or dies on it. "Done" =
+1. **Both base cases produce their correct `DriftAlert`** from the seeded data:
+   **Meridian** re-tiers LOW 28 → HIGH 82 (the trajectory wow); **Coinbase** rises MEDIUM 60 → 66
+   with the SEC-suit-then-dismissed `what_would_flip` arc.
+2. **Event drift works**: an `(Assertion, EvidenceEvent)` pair → `{confirms/contradicts/irrelevant/
+   ambiguous}` + cited rationale.
+3. **Slow structural drift works** on Meridian (your Q2.1 mechanism) — the signal is the
+   *trajectory*, not any single event.
+4. **The score is transparent & attributable** — `risk_now` is a weighted sum you can explain
+   line-by-line to a compliance officer (no black box).
+5. **Cost-aware**: assume you DON'T see every signal — the cheap filter gates which pairs reach the
+   LLM. (Filter logic is yours; the metered LLM wrapper + token counting is Mira's.)
+6. **Grounded**: NEVER emit a flag whose evidence doesn't support the rationale (anti-hallucination
+   gate). This is non-negotiable — general LLMs are disqualified as final compliance deciders, so
+   citation-grounded "why" is the whole point.
+7. **Measurable**: it fires the right flags on the two cases AND stays quiet on noise events (so we
+   can show precision, not just recall).
 
 ## Contracts (read `shared/schemas/`)
 - **Consume** `Assertion` (from `data/customers/`) + `EvidenceEvent`/`Snapshot` (from Mira).

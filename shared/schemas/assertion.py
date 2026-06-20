@@ -68,8 +68,12 @@ class Predicate(str, Enum):
     SANCTIONS_STATUS = "sanctions_status"        # ⭐ entity / director / UBO sanctions exposure
     ADVERSE_MEDIA_STATUS = "adverse_media_status"# ⭐ investigations/litigation/financial-crime media
 
-    # --- Rolled-up output (the KYC's verdict; drift is framed as movement of this) ---
-    RISK_SCORE = "risk_score"                    # ⭐ 0–100 composite KYC risk score — the demo re-scores it LOW→HIGH
+    # --- Rolled-up DERIVED OUTPUT (NOT a monitored belief — the engine COMPUTES this) ---
+    # ⚠️ risk_score is the OUTPUT of the scoring model, not an assertion the engine re-validates
+    # against evidence. The onboarding baseline lives in customer.risk_model.onboarding_score; the
+    # engine recomputes risk_now from the per-assertion drift. Where it appears in a customer file
+    # (e.g. CB10/MS13) it is only the BASELINE ANCHOR, never a drift target. Drift = movement of this.
+    RISK_SCORE = "risk_score"                    # 0–100 composite KYC risk score — DERIVED OUTPUT, baseline anchor only
     RISK_TIER = "risk_tier"                      # derived band of risk_score (LOW 0–33 / MED 34–66 / HIGH 67–100), display only
 
 

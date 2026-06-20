@@ -40,13 +40,16 @@ class DriftAlert(BaseModel):
                                            # "Ownership Change – KYC Drift", "Material Business Model Change"
     severity: Severity
     drift_score: float                     # contribution to risk re-tiering (0..1)
+    # risk_score is a DERIVED OUTPUT (computed by the scoring model), NOT a monitored assertion.
+    # The onboarding baseline lives in customer.risk_model.onboarding_score; the engine recomputes it.
     old_risk_score: Optional[int] = None   # 0–100 score BEFORE drift (rolled-up KYC output)
     new_risk_score: Optional[int] = None   # 0–100 score AFTER drift → the number that moves on stage
     old_risk_tier: str                     # derived band of old_risk_score, e.g. "LOW"
     new_risk_tier: str                     # derived band of new_risk_score, e.g. "HIGH" → green→amber→red
 
     # --- explainability (no alert without these) ---
-    contradicted_assertion_id: Optional[str] = None   # the specific belief invalidated
+    contradicted_assertion_id: Optional[str] = None   # the PRIMARY belief invalidated (the headline)
+    also_contradicts: list[str] = Field(default_factory=list)  # other assertion ids this drift episode breaks
     evidence_ids: list[str] = Field(default_factory=list)  # EvidenceEvent ids (each has source_url)
     rationale: str                         # human-readable why, grounded in the evidence
     what_would_flip: Optional[str] = None  # contestability: what would change this decision

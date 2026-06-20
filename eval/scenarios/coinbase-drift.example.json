@@ -2,7 +2,7 @@
   "_comment": "STARTER EXAMPLE — Miguel's lane. The MISMATCH for Coinbase, derived from beliefs (coinbase.json) vs signals (coinbase-events.example.json).",
   "_status": "DRAFT — Miguel refines the drift engine on top of this.",
   "_framing": "NEUTRAL: 'material change -> re-KYC needed', NOT an accusation. A human analyst decides.",
-  "_note_score": "Risk now expressed as old/new risk_score (0-100); tier is the derived band.",
+  "_note_score": "Risk now expressed as old/new risk_score (0-100); tier is the derived band. Coinbase intentionally does NOT flip band (stays MEDIUM 60->66) — the deliberate contrast with Meridian's LOW->HIGH flip. Drift = upward pressure within-band + a resolvable overhang.",
 
   "alert": {
     "id": "alert-coinbase-001",
@@ -10,11 +10,11 @@
     "drift_type": "structural",
     "flag": "Regulatory Posture & Business Expansion (Scope Drift)",
     "severity": "medium",
-    "drift_score": 0.55,
+    "drift_score": 0.45,
     "old_risk_score": 60,
-    "new_risk_score": 70,
+    "new_risk_score": 66,
     "old_risk_tier": "MEDIUM",
-    "new_risk_tier": "HIGH",
+    "new_risk_tier": "MEDIUM",
 
     "contradicted_assertion_id": "CB7",
     "also_contradicts": ["CB1", "CB4", "CB5"],
