@@ -27,3 +27,7 @@ build/
 .DS_Store
 .vscode/
 .idea/
+
+# grain_lite file cache + temp filings
+.grain_cache/
+/tmp/grain_data/
