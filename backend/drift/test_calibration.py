@@ -13,9 +13,12 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from datetime import date
+
 from backend.drift.client_state import load_client_state_from_fixtures
 from backend.drift.engine import replay
-from backend.drift.llm import consistent_with_baseline
+from backend.drift.llm import consistent_with_baseline, MockLLM
+from backend.drift.score import assess
 
 
 def test_coinbase_stays_medium():
@@ -55,6 +58,21 @@ def test_baseline_consistency_rule():
     # genuinely-adverse predicates are never suppressed
     assert consistent_with_baseline("adverse_media_status", "no adverse media on file",
                                     "named in an SEC enforcement action") is False
+
+
+def test_coinbase_fires_within_band_alert():
+    """Decoupled alerting: Coinbase's SEC adverse-media drift fires a flag even though it stays
+    MEDIUM (the brief's 'negative news -> reputational risk', no re-tier — not 'No material drift')."""
+    r = replay(load_client_state_from_fixtures("coinbase"))
+    assert r["final_tier"] == "MEDIUM"
+    assert len(r["alerts"]) >= 1, "within-band reputational drift must still flag the manager"
+    assert any(("Adverse Media" in al.flag or "Reputational" in al.flag) for al in r["alerts"])
+
+
+def test_meridian_breadth_combination():
+    """Meridian drifts across >=3 risk dimensions — the connect-the-dots combination signal."""
+    a = assess(load_client_state_from_fixtures("meridian-sands"), date(2026, 2, 18), MockLLM())
+    assert a.breadth >= 3, f"expected >=3 dimensions, got {a.breadth}: {a.dimensions_drifted}"
 
 
 if __name__ == "__main__":

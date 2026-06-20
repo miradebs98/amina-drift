@@ -152,6 +152,7 @@ def replay(state, llm: LLMClient | None = None, embedder: ConceptAxisEmbedder | 
     clock = SimClock(dates[0])
     timeline, alerts = [], []
     prev_score, prev_tier = state.baseline_risk_score, tier_of(state.baseline_risk_score)
+    prev_breadth, fired_critical = 0, set()
     prev_surprise: dict[str, float] = {}
     for d in dates:
         clock.advance_to(d)
@@ -164,10 +165,22 @@ def replay(state, llm: LLMClient | None = None, embedder: ConceptAxisEmbedder | 
         timeline.append({"as_of": d, "risk_score": a.risk_score, "tier": a.tier,
                          "surprise": round(tick_surprise, 2), "situation": _label_situation(tier_up, tick_surprise),
                          "traj_distance": round(a.trajectory.distance, 3)})
-        if tier_up:
+        # Alerting is DECOUPLED from tier-crossing: also fire on a breadth crossing (≥N dimensions
+        # co-move — the within-band combination the challenge is about) or a single critical hit
+        # (sanctions/PEP/adverse-media), each once. (Mira's HashKey 55→63 case + the brief's use cases.)
+        breadth_cross = a.breadth >= config.BREADTH_MIN_DIMS > prev_breadth
+        new_critical = [ad for ad in a.per_assertion
+                        if ad.assertion.predicate.value in config.CRITICAL_PREDICATES
+                        and ad.contra >= config.CRITICAL_CONTRA
+                        and ad.assertion.predicate.value not in fired_critical]
+        if tier_up or breadth_cross or new_critical:
             alerts.append(build_alert(state, a, prev_score, prev_tier, llm, tick_surprise))
-            prev_tier = a.tier
+            if tier_up:
+                prev_tier = a.tier
+            for ad in new_critical:
+                fired_critical.add(ad.assertion.predicate.value)
         prev_score = a.risk_score
+        prev_breadth = a.breadth
         for ad in a.per_assertion:
             prev_surprise[ad.assertion.id] = ad.surprise
     return {
