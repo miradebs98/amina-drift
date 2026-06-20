@@ -24,6 +24,7 @@ from backend.ingest.gleif import GleifConnector
 from backend.ingest.sanctions import SanctionsConnector
 from backend.ingest.event_registry import EventRegistryConnector
 from backend.ingest.funding import FundingConnector
+from backend.ingest.cert_transparency import CertTransparencyConnector
 from backend.ingest.stubs import RegistryConnector
 
 # SEC_LEVEL2=true → also read 10-K text and emit cited passages relevant to each assertion
@@ -37,6 +38,7 @@ LIVE_CONNECTORS: list[Connector] = [
     GdeltConnector(),         # adverse media / news tone
     NewsRssConnector(),       # Google News
     WaybackConnector(),       # website change over time
+    CertTransparencyConnector(),  # crt.sh — new infra subdomains (digital exhaust, pre-announcement)
     GleifConnector(),         # legal entity + ownership graph
     SanctionsConnector(),     # OpenSanctions/yente — sanctions + PEP screening (entity + UBOs)
     FundingConnector(),       # funding rounds + new investors → UBO re-screen (startup drift)
