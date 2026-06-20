@@ -4,10 +4,10 @@ import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Fingerprint, Share2, Activity, Globe, ChevronDown, Zap } from "lucide-react";
 import type { EvidenceEvent, AssertionDrift } from "@/lib/types";
-import { toEpoch, fmtDate, predicateLabel } from "@/lib/format";
+import { toEpoch, fmtDate, fmtMonthYear, predicateLabel } from "@/lib/format";
 
-// The four KYC-drift dimensions — in plain analyst language. Lit lanes are the ones that drove
-// the alert (the engine's own breadth set); the story is the COMBINATION across them.
+// The four KYC-drift dimensions, in plain analyst language. Lit lanes are the ones that drove the
+// alert (the engine's breadth set); the story is the COMBINATION across them.
 const LANES = [
   { key: "identity_ownership", label: "Identity & Ownership", sub: "who they are / who owns them", icon: Fingerprint },
   { key: "network_risk", label: "Network Risk", sub: "who they're connected to", icon: Share2 },
@@ -34,27 +34,34 @@ export function DimensionLanes({
 }) {
   const [open, setOpen] = useState<string | null>(null);
   const lit = useMemo(() => new Set(dimensionsDrifted), [dimensionsDrifted]);
+  const eventById = useMemo(() => new Map(events.map((e) => [e.id, e])), [events]);
 
-  const { minT, span } = useMemo(() => {
+  // shared time axis across all lanes
+  const { minT, span, ticks } = useMemo(() => {
     const ts = events.map((e) => toEpoch(e.published_at)).filter(Boolean);
     const lo = ts.length ? Math.min(...ts) : 0;
     const hi = ts.length ? Math.max(...ts) : 1;
-    return { minT: lo, span: Math.max(1, hi - lo) };
+    const s = Math.max(1, hi - lo);
+    const t = Array.from({ length: 4 }, (_, i) => lo + (i / 3) * s); // 4 evenly-spaced date ticks
+    return { minT: lo, span: s, ticks: t };
   }, [events]);
   const xpct = (t: number) => 3 + ((t - minT) / span) * 94; // 3%..97%
 
-  const byDim = useMemo(() => {
-    const m: Record<string, EvidenceEvent[]> = {};
-    for (const e of events) {
-      if (!e.dimension) continue;
-      (m[e.dimension] ??= []).push(e);
-    }
-    return m;
-  }, [events]);
+  // Per lane: the BELIEFS that drifted in this dimension, and the SIGNALS (evidence events) behind
+  // them — so the dots are exactly the evidence for the beliefs you see when you expand.
+  const lanes = useMemo(() => {
+    return LANES.map((L) => {
+      const beliefs = assertionDrift.filter((a) => a.dimension === L.key);
+      const sigIds = new Set<string>();
+      beliefs.forEach((b) => b.evidence_ids.forEach((id) => sigIds.add(id)));
+      const signals = [...sigIds].map((id) => eventById.get(id)).filter((e): e is EvidenceEvent => Boolean(e));
+      return { ...L, beliefs, signals, on: lit.has(L.key) };
+    });
+  }, [assertionDrift, eventById, lit]);
 
   return (
     <div className="flex flex-col gap-4">
-      {/* breadth headline — the connect-the-dots message */}
+      {/* breadth headline */}
       {breadth >= 3 ? (
         <div className="flex items-start gap-2 rounded-md bg-risk-high-bg px-3 py-2.5 text-sm font-medium text-risk-high">
           <Zap className="mt-0.5 size-4 shrink-0" />
@@ -70,22 +77,23 @@ export function DimensionLanes({
           dimensions over time — lit lanes drove the alert.
         </p>
       )}
+      <p className="-mt-1 text-[11px] text-ink-muted">
+        Each <span className="inline-block size-2 translate-y-px rounded-full bg-teal align-middle" /> is a
+        public signal on the timeline; one signal can contradict several on-file beliefs. Click a lane for the beliefs + dates.
+      </p>
 
       {/* the four lanes */}
       <div className="divide-y divide-surface-line overflow-hidden rounded-md border border-surface-line">
-        {LANES.map(({ key, label, sub, icon: Icon }) => {
-          const on = lit.has(key);
-          const evs = byDim[key] ?? [];
-          const moved = assertionDrift.filter((a) => a.dimension === key);
+        {lanes.map(({ key, label, sub, icon: Icon, on, beliefs, signals }) => {
           const expanded = open === key;
           return (
             <div key={key} className={on ? "bg-teal-wash/40" : ""}>
-              <div className="grid grid-cols-[190px_1fr] items-center gap-3 px-3 py-2.5">
-                {/* lane label (click to see which beliefs moved) */}
+              <div className="grid grid-cols-[210px_1fr] items-center gap-3 px-3 py-2.5">
+                {/* lane label */}
                 <button
-                  onClick={() => moved.length && setOpen(expanded ? null : key)}
+                  onClick={() => beliefs.length && setOpen(expanded ? null : key)}
                   className="flex items-center gap-2.5 text-left disabled:cursor-default"
-                  disabled={!moved.length}
+                  disabled={!beliefs.length}
                 >
                   <span
                     className={`grid size-8 shrink-0 place-items-center rounded-md ${
@@ -95,22 +103,31 @@ export function DimensionLanes({
                     <Icon className="size-4" />
                   </span>
                   <span className="min-w-0">
-                    <span className={`block truncate text-sm font-medium ${on ? "text-ink" : "text-ink-muted"}`}>
+                    <span className={`block truncate text-[13px] font-medium ${on ? "text-ink" : "text-ink-muted"}`}>
                       {label}
                     </span>
                     <span className="block truncate text-[11px] text-ink-muted">
-                      {on ? `${moved.length} belief${moved.length !== 1 ? "s" : ""} moved` : sub}
+                      {on ? (
+                        <>
+                          <span className="font-medium text-ink-body">{beliefs.length}</span> belief
+                          {beliefs.length !== 1 ? "s" : ""} ·{" "}
+                          <span className="font-medium text-ink-body">{signals.length}</span> signal
+                          {signals.length !== 1 ? "s" : ""}
+                        </>
+                      ) : (
+                        sub
+                      )}
                     </span>
                   </span>
-                  {moved.length > 0 && (
+                  {beliefs.length > 0 && (
                     <ChevronDown className={`ml-auto size-3.5 shrink-0 text-ink-muted transition-transform ${expanded ? "rotate-180" : ""}`} />
                   )}
                 </button>
 
-                {/* the time track + event dots */}
+                {/* the time track + signal dots (evidence behind this lane's beliefs) */}
                 <div className="relative h-8">
                   <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-surface-line" />
-                  {evs.map((e) => {
+                  {signals.map((e) => {
                     const t = toEpoch(e.published_at);
                     const future = replayT != null && t > replayT;
                     const sel = selectedId === e.id;
@@ -135,9 +152,9 @@ export function DimensionLanes({
                 </div>
               </div>
 
-              {/* expand: WHICH beliefs moved in this dimension (the "why") */}
+              {/* expand: ALL beliefs that moved here, each with the signal date(s) behind it */}
               <AnimatePresence initial={false}>
-                {expanded && moved.length > 0 && (
+                {expanded && beliefs.length > 0 && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
@@ -146,15 +163,28 @@ export function DimensionLanes({
                     className="overflow-hidden"
                   >
                     <div className="grid gap-1.5 px-3 pb-3 pl-[58px]">
-                      {moved.slice(0, 5).map((a) => (
-                        <div key={a.assertion_id} className="rounded-md bg-surface-subtle px-2.5 py-1.5">
-                          <div className="text-[13px] font-medium text-ink">
-                            {predicateLabel(a.predicate)}
-                            <span className="font-normal text-ink-muted"> — {a.status}</span>
-                          </div>
-                          {a.why?.[0] && <div className="mt-0.5 text-[11px] leading-snug text-ink-body">{a.why[0]}</div>}
-                        </div>
-                      ))}
+                      {beliefs.map((a) => {
+                        const evs = a.evidence_ids.map((id) => eventById.get(id)).filter((e): e is EvidenceEvent => Boolean(e));
+                        const dates = [...new Set(evs.map((e) => fmtDate(e.published_at)))];
+                        return (
+                          <button
+                            key={a.assertion_id}
+                            onClick={() => evs[0] && onSelectEvent?.(evs[0])}
+                            className="rounded-md bg-surface-subtle px-2.5 py-1.5 text-left hover:bg-surface-card"
+                          >
+                            <div className="flex items-baseline justify-between gap-2">
+                              <span className="text-[13px] font-medium text-ink">
+                                {predicateLabel(a.predicate)}
+                                <span className="font-normal text-ink-muted"> — {a.status}</span>
+                              </span>
+                              {dates.length > 0 && (
+                                <span className="shrink-0 tabular text-[10px] text-ink-muted">{dates.slice(0, 2).join(" · ")}</span>
+                              )}
+                            </div>
+                            {a.why?.[0] && <div className="mt-0.5 text-[11px] leading-snug text-ink-body">{a.why[0]}</div>}
+                          </button>
+                        );
+                      })}
                     </div>
                   </motion.div>
                 )}
@@ -162,6 +192,22 @@ export function DimensionLanes({
             </div>
           );
         })}
+
+        {/* shared date axis (aligned to the track column) */}
+        <div className="grid grid-cols-[210px_1fr] gap-3 px-3 py-1.5">
+          <div />
+          <div className="relative h-4">
+            {ticks.map((t, i) => (
+              <span
+                key={i}
+                style={{ left: `${xpct(t)}%` }}
+                className="absolute -translate-x-1/2 tabular text-[10px] text-ink-muted"
+              >
+                {fmtMonthYear(new Date(t).toISOString())}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
