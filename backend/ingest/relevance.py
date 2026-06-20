@@ -7,6 +7,7 @@ This is exactly the cost cascade's Stage 1: a cheap pass that decides what's eve
 DEFAULT = lexical token-overlap (FREE, no key, no network, no surprise charges). The mode is set
 explicitly via env `RELEVANCE_EMBEDDINGS`:
   - unset / "lexical"  → lexical            (default, free)
+  - "swissai"          → CSCS Apertus-platform embeddings (Swiss-sovereign, FREE, reuses the LLM key)
   - "local"            → free local sentence-transformers   ← see SHARED-EMBEDDER note below
   - "openai"           → OpenAI embeddings  (PAID — explicit opt-in only)
 
@@ -64,6 +65,13 @@ class RelevanceFilter:
                     print("[relevance] RELEVANCE_EMBEDDINGS=openai but no OPENAI_API_KEY → lexical")
             except Exception as e:
                 print(f"[relevance] openai embedder init failed ({e}) → lexical")
+        elif choice == "swissai":       # FREE Swiss-sovereign embeddings on CSCS (same key as the LLM)
+            try:
+                from backend.drift.swissai_embed import SwissAIEmbedder
+                self._embedder = SwissAIEmbedder()
+                self.mode = "embedding(swissai)"
+            except Exception as e:
+                print(f"[relevance] swissai embedder init failed ({e}) → lexical")
         elif choice == "local":         # FREE local model — not wired yet (see note in module docstring)
             print("[relevance] RELEVANCE_EMBEDDINGS=local not wired yet → lexical (free). "
                   "Wire sentence-transformers to enable; see SHARED-EMBEDDER note.")
