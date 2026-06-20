@@ -71,8 +71,6 @@ function Item({ n }: { n: NewsItem }) {
           <a href={n.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-teal-hover hover:underline">
             open <ExternalLink className="size-3" />
           </a>
-        ) : n.simulated ? (
-          <span className="rounded-pill bg-risk-med-bg px-1.5 py-0.5 font-medium text-risk-med">SIMULATED</span>
         ) : null}
       </div>
     </div>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { CustomerCase, EvidenceEvent } from "@/lib/types";
 import { getTwinDiff } from "@/lib/diff";
 import { predicateLabel, formatAssertionValue } from "@/lib/format";
-import { ArrowRight, Check, Lock, Globe } from "lucide-react";
+import { ArrowRight, Check, Lock, Globe, ExternalLink } from "lucide-react";
 
 export function AssertionDiff({
   data,
@@ -79,15 +79,25 @@ export function AssertionDiff({
                     <div className="mt-1 flex flex-wrap gap-1">
                       {r.evidenceIds.map((id) => {
                         const ev = byId.get(id);
-                        const sim = ev && !ev.source_url;
-                        return (
-                          <button
+                        if (!ev) return null;
+                        const cls =
+                          "inline-flex items-center gap-1 rounded-pill border border-surface-line bg-white px-2 py-0.5 text-[10px] text-teal-hover hover:border-teal hover:bg-teal-wash";
+                        // real source → open it; simulated event → just select it in the chart
+                        return ev.source_url ? (
+                          <a
                             key={id}
-                            onClick={() => ev && onSelectEvent?.(ev)}
-                            title={ev?.summary}
-                            className="inline-flex items-center gap-1 rounded-pill border border-surface-line bg-white px-2 py-0.5 text-[10px] text-teal-hover hover:border-teal hover:bg-teal-wash"
+                            href={ev.source_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={() => onSelectEvent?.(ev)}
+                            title={ev.summary}
+                            className={cls}
                           >
-                            {sim ? "cited (sim)" : "cited"}
+                            source <ExternalLink className="size-2.5" />
+                          </a>
+                        ) : (
+                          <button key={id} onClick={() => onSelectEvent?.(ev)} title={ev.summary} className={cls}>
+                            cited
                           </button>
                         );
                       })}
