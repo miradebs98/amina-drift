@@ -82,7 +82,102 @@ PREDICATE_SIGNALS = {
 # they're covered by the always-on dedicated screen (SanctionsConnector), so blanket-passing every
 # event for them is pure cost with zero recall gain (eval: 56% vs 38% pass-rate, identical recall).
 NEVER_GATE = {"adverse_media_status"}
-SEMANTIC_MIN = 2  # generous lexical backstop: >= 2 shared (stemmed) content tokens between belief & event
+SEMANTIC_MIN = 2  # lexical backstop (offline fallback): >= 2 shared stemmed content tokens belief↔event
+
+# --- Stage-1 SEMANTIC backstop: free Swiss-sovereign embeddings (CSCS arctic-embed) ----------------
+# Keyword/type/flag hits stay FIRST (precision, $0, fully auditable). When they're silent, we fall
+# back to embedding cosine between a RICH belief query (predicate + on-file value + the predicate's
+# drift signals) and the event text. This catches paraphrase/synonymy the keywords structurally
+# cannot — "Cayman"≈offshore, "cabinet minister"≈PEP, "perpetual contracts"≈derivatives — the exact
+# gap proven in eval/gate/adversarial.json (keyword-only: 40% material recall). Calibrated in
+# eval/gate/calibrate.py. If the endpoint is unreachable, we degrade to the lexical overlap above
+# (so CI / offline still runs) — that's resilience, not a silent downgrade of the headline.
+# τ=0.24 chosen on the calibration curve: REAL set holds 100% material recall (42% pass-rate, vs 37%
+# keyword-only); ADVERSARIAL set rises 40% → 87% material recall. Lowering to 0.22 reaches 93% (also
+# catches an undisclosed-derivatives case) at a modestly higher cheap-call rate — move it if desired.
+SEMANTIC_COSINE_MIN = 0.24
+
+_EMB = None                                  # lazy singleton: SwissAIEmbedder | False(=unavailable)
+_EMB_CACHE: dict[str, list[float]] = {}      # text -> vector (embed each unique string once per run)
+
+
+def _embedder():
+    global _EMB
+    if _EMB is None:
+        try:
+            from backend.drift.swissai_embed import SwissAIEmbedder
+            _EMB = SwissAIEmbedder()
+        except Exception:
+            _EMB = False
+    return _EMB or None
+
+
+def _embed(text: str) -> Optional[list[float]]:
+    v = _EMB_CACHE.get(text)
+    if v is not None:
+        return v
+    emb = _embedder()
+    if emb is None:
+        return None
+    try:
+        v = emb.embed_text(text)
+    except Exception:
+        global _EMB
+        _EMB = False                         # endpoint died mid-run → stop retrying, lexical fallback
+        return None
+    _EMB_CACHE[text] = v
+    return v
+
+
+def _cosine(a: list[float], b: list[float]) -> float:
+    import math
+    dot = sum(x * y for x, y in zip(a, b))
+    na = math.sqrt(sum(x * x for x in a))
+    nb = math.sqrt(sum(y * y for y in b))
+    return dot / (na * nb) if na and nb else 0.0
+
+
+# Natural-language drift descriptions per predicate — the semantic "bridge" that lets the embedder
+# connect real-world phrasings to the predicate WITHOUT the literal keyword ("cabinet minister"→PEP,
+# "Cayman"→offshore, "perpetual contracts"→derivatives). This is GRAIN's build_rich_query idea done
+# properly: a query needs a description + examples, not a terse keyword list. Calibrated in
+# eval/gate/calibrate.py — these directly drive Stage-1 recall on paraphrased / unseen-vocab events.
+SEMANTIC_HINTS = {
+    "business_model": "a pivot or material change of core business — moving into crypto, web3, trading, brokerage, banking, payments, or a new line of activity",
+    "product_mix": "new or changed products and services — trading, derivatives, futures, perpetuals, custody, lending, deposits, payments, stablecoins, prime brokerage, clearing",
+    "operating_geographies": "expansion into or relocation to a new jurisdiction — offshore centres such as the Cayman Islands, BVI or Seychelles, new countries, foreign subsidiaries, re-domiciliation of the holding company",
+    "counterparty_geographies": "dealing with counterparties in new or higher-risk jurisdictions, offshore corridors, or new cross-border flows",
+    "ubo": "a change of beneficial ownership or control — a new shareholder, controlling owner, family office or consortium acquiring a stake, or a newly disclosed ultimate beneficial owner, founders stepping back",
+    "pep_status": "a politically exposed person — a government minister, cabinet member, politician, member of parliament, senior public official, head of state or ambassador, or a close family member or associate of one — appointed as a director, owner or board member",
+    "digital_asset_policy": "adopting or expanding digital-asset activity — holding crypto, bitcoin or stablecoins, tokenised instruments, a corporate crypto treasury, or providing custody",
+    "digital_asset_holdings": "holdings of crypto, bitcoin, stablecoins or tokenised assets on the balance sheet or in treasury reserves",
+    "source_of_funds": "a change in where operating funds or proceeds come from",
+    "source_of_wealth": "new wealth or capital — a funding round, capital raise, large investment, IPO proceeds, or a sudden change in revenue or valuation",
+    "regulatory_status": "a change in regulatory standing — a new licence or authorisation, an enforcement action, a cease-and-desist or warning, unregistered or unlicensed activity, or becoming or ceasing to be a regulated or bank entity",
+    "adverse_media_status": "negative news — an investigation, probe, fraud, fine, penalty, lawsuit, settlement, sanctions, money laundering, an executive departure amid a review, or a scandal",
+    "sanctions_status": "sanctions exposure — an OFAC, EU or UN designation, an SDN listing, dealing with a sanctioned entity, or money-laundering / financial-crime links",
+    "listing_status": "going public or a change in listing — an IPO, an S-1 filing, listing on the NYSE or Nasdaq, becoming a public company, or a delisting",
+    "expected_monthly_volume": "transaction volumes or values inconsistent with the expected profile — sudden spikes, dormancy breaks, or large cross-border transfers",
+}
+
+
+def _rich_belief(assertion: Assertion) -> str:
+    """Expand the belief into an embedding QUERY (GRAIN's build_rich_query trick). The bare on-file
+    value is too short and often a negation ('no crypto') that adds noise, so we lead with a
+    natural-language description of what drift looks like for this predicate. The 'query:' prefix is
+    what arctic-embed-v2 is trained to expect on the query side (sharply improves weak matches)."""
+    pred = assertion.predicate.value
+    hint = SEMANTIC_HINTS.get(pred) or ", ".join(PREDICATE_SIGNALS.get(pred, {}).get("kw", [])[:12])
+    return f"query: {pred.replace('_', ' ')} — {hint}. current on-file value: {assertion.value}"
+
+
+def _semantic_relevant(assertion: Assertion, event: EvidenceEvent) -> bool:
+    """Embedding cosine (rich belief ↔ event); lexical token-overlap if embeddings are unavailable."""
+    qv = _embed(_rich_belief(assertion))
+    ev = _embed(event.summary)
+    if qv is None or ev is None:
+        return _semantic_overlap(assertion, event) >= SEMANTIC_MIN
+    return _cosine(qv, ev) >= SEMANTIC_COSINE_MIN
 
 _STOP = set("the a an and or of to in for with on at by from is are be as not no into its their our via "
             "using under over more most new only both global company group ltd inc llc plc nv sa than "
@@ -108,9 +203,11 @@ def _semantic_overlap(assertion: Assertion, event: EvidenceEvent) -> int:
 
 
 def is_candidate(assertion: Assertion, event: EvidenceEvent) -> bool:
-    """Stage-1 cheap relevance gate (no LLM). RECALL-FIRST: keep anything plausibly relevant; the cheap
-    LLM is the precision backstop. Validated in eval/gate/ — 100% MATERIAL recall on a real-event set
-    (vs 35% for the original keyword-only gate), at ~38% pass-rate."""
+    """Stage-1 relevance gate (no verdict LLM). RECALL-FIRST hybrid: cheap keyword/type/flag hits
+    first (precision, $0, auditable), then a free Swiss-sovereign EMBEDDING backstop for paraphrase /
+    unseen vocabulary; the cheap Stage-2 LLM is the precision backstop downstream. Validated in
+    eval/gate/: REAL set 100% material recall; ADVERSARIAL (paraphrase/synonym) set 87% — vs 40% for
+    the keyword-only gate on the same adversarial events."""
     pred = assertion.predicate.value
     if pred in NEVER_GATE:                                  # critical news-driven category → never filter
         return True
@@ -123,7 +220,7 @@ def is_candidate(assertion: Assertion, event: EvidenceEvent) -> bool:
             return True
         if any(kw in text for kw in sig.get("kw", [])):
             return True
-    return _semantic_overlap(assertion, event) >= SEMANTIC_MIN   # generous lexical backstop
+    return _semantic_relevant(assertion, event)   # semantic (embedding) backstop, lexical if offline
 
 
 def check_envelope_breach(assertion: Assertion, event: EvidenceEvent) -> Optional[float]:
