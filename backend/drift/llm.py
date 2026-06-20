@@ -17,8 +17,17 @@ import json
 import os
 import re
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from shared.schemas import Assertion, EvidenceEvent
+
+# Load .env so DRIFT_LLM_* (Apertus/CSCS) are visible even when a drift script runs standalone
+# (run_demo / smoke_apertus / tests) — not only when the ingest layer happens to be imported.
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+except Exception:
+    pass
 
 VERDICTS = ("confirms", "contradicts", "irrelevant", "ambiguous")
 
