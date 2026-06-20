@@ -7,7 +7,7 @@ export function TopBar({ title, subtitle }: { title: string; subtitle?: string }
   return (
     <div className="sticky top-0 z-20 flex items-center gap-4 border-b border-surface-line bg-white/90 px-6 py-3 backdrop-blur">
       <div className="min-w-0">
-        <h1 className="truncate font-serif text-lg font-semibold text-ink">{title}</h1>
+        <h1 className="truncate font-display text-lg font-semibold text-ink">{title}</h1>
         {subtitle && <p className="truncate text-xs text-ink-muted">{subtitle}</p>}
       </div>
 

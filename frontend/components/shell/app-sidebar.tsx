@@ -11,6 +11,7 @@ import {
   Bell,
   Settings,
 } from "lucide-react";
+import { AminaLogo } from "./amina-logo";
 
 const NAV = [
   { label: "Portfolio", href: "/dashboard", icon: LayoutDashboard },
@@ -26,8 +27,8 @@ export function AppSidebar() {
 
   return (
     <aside className="sticky top-0 hidden h-screen w-[220px] shrink-0 flex-col border-r border-brand-deep/40 bg-brand text-white md:flex">
-      <Link href="/dashboard" className="flex items-center gap-2 px-5 py-4">
-        <span className="font-serif text-xl font-semibold tracking-tight">AMINA</span>
+      <Link href="/dashboard" className="block px-5 pt-5 pb-1">
+        <AminaLogo className="h-6 w-auto text-white" />
       </Link>
       <div className="px-5 pb-3 text-[10px] uppercase tracking-[0.18em] text-teal-bright">
         Drift Intelligence

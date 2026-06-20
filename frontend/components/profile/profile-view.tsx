@@ -1,23 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { CustomerCase, EvidenceEvent } from "@/lib/types";
 import { AppShell } from "@/components/shell/app-shell";
 import { ClientSection } from "./client-section";
-import { BaselinePanel } from "./baseline-panel";
 import { NewsPanel } from "./news-panel";
+import { ReplayControls } from "./replay-controls";
 import { RiskGauge } from "@/components/viz/risk-gauge";
 import { ScoreComparison } from "@/components/viz/score-comparison";
 import { DriftScoreOverTime } from "@/components/viz/drift-score-line";
+import { AssertionDiff } from "@/components/customers/assertion-diff";
 import { DriftLog } from "@/components/governance/drift-log";
+import { AskChat } from "@/components/chat/ask-chat";
 import { Card } from "@/components/ui/card";
 import { fmtDate, eventTypeLabel } from "@/lib/format";
-import { ExternalLink, TrendingUp, History } from "lucide-react";
+import { buildTrajectory } from "@/lib/trajectory";
+import { ExternalLink, TrendingUp, History, GitCompareArrows } from "lucide-react";
 
 function SectionTitle({ children, hint }: { children: React.ReactNode; hint?: string }) {
   return (
     <div className="mb-4">
-      <h2 className="font-serif text-lg font-semibold text-ink">{children}</h2>
+      <h2 className="font-display text-lg font-semibold text-ink">{children}</h2>
       {hint && <p className="text-xs text-ink-muted">{hint}</p>}
     </div>
   );
@@ -26,9 +29,31 @@ function SectionTitle({ children, hint }: { children: React.ReactNode; hint?: st
 export function ProfileView({ data }: { data: CustomerCase }) {
   const { customer, events, alert } = data;
   const [selected, setSelected] = useState<EvidenceEvent | null>(null);
+  const [replayIdx, setReplayIdx] = useState<number | null>(null);
 
-  const old = alert.old_risk_score ?? customer.risk_model.onboarding_score;
-  const now = alert.new_risk_score ?? old;
+  const { frames, old, now } = useMemo(
+    () => buildTrajectory(customer, events, alert),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [customer.customer_id],
+  );
+
+  // time-compressed replay: walk the key-frames, climbing the score + firing evidence
+  const playing = replayIdx !== null;
+  useEffect(() => {
+    if (replayIdx === null) return;
+    const f = frames[replayIdx];
+    if (f?.event) setSelected(f.event);
+    if (replayIdx >= frames.length - 1) {
+      const t = setTimeout(() => setReplayIdx(null), 1800);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setReplayIdx((i) => (i === null ? null : i + 1)), 1500);
+    return () => clearTimeout(t);
+  }, [replayIdx, frames]);
+
+  const currentScore = playing ? frames[replayIdx!].score : now;
+  const replayT = playing ? frames[replayIdx!].t : null;
+
   const drivers = alert.evidence_ids
     .map((id) => events.find((e) => e.id === id))
     .filter((e): e is EvidenceEvent => Boolean(e));
@@ -36,24 +61,26 @@ export function ProfileView({ data }: { data: CustomerCase }) {
   return (
     <AppShell title="Risk Profile" subtitle={customer.legal_name}>
       <div className="mx-auto w-full max-w-[1500px] space-y-5 px-6 py-6">
-        {/* CLIENT SECTION */}
         <ClientSection customer={customer} alert={alert} />
 
-        {/* ONBOARDING BASELINE */}
-        <BaselinePanel customer={customer} />
-
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1fr_340px]">
-          {/* CENTER COLUMN */}
           <div className="space-y-5">
             {/* RISK HERO */}
             <Card className="rounded-card border-surface-line p-6 shadow-card">
-              <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-[300px_1px_1fr]">
+              <ReplayControls
+                playing={playing}
+                idx={replayIdx ?? 0}
+                total={frames.length}
+                frame={playing ? frames[replayIdx!] : null}
+                onToggle={() => setReplayIdx((i) => (i === null ? 0 : null))}
+              />
+              <div className="mt-5 grid grid-cols-1 items-center gap-6 lg:grid-cols-[300px_1px_1fr]">
                 <div className="flex justify-center">
-                  <RiskGauge score={now} from={old} confidence={alert.confidence} />
+                  <RiskGauge score={currentScore} from={old} confidence={alert.confidence} />
                 </div>
                 <div className="hidden h-full w-px bg-surface-line lg:block" />
                 <div className="flex flex-col gap-4">
-                  <ScoreComparison oldScore={old} newScore={now} driftScore={alert.drift_score} />
+                  <ScoreComparison oldScore={old} newScore={currentScore} driftScore={alert.drift_score} />
                   <div className="rounded-md bg-surface-subtle p-3">
                     <div className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-ink-muted">{alert.flag}</div>
                     <p className="text-sm leading-relaxed text-ink-body">{alert.rationale}</p>
@@ -85,6 +112,16 @@ export function ProfileView({ data }: { data: CustomerCase }) {
               </div>
             </Card>
 
+            {/* TWIN DIFF — perception vs reality */}
+            <Card className="rounded-card border-surface-line p-6 shadow-card">
+              <SectionTitle hint="The bank's onboarding KYC belief vs. what public intelligence shows now. Contradicted beliefs in red.">
+                <span className="inline-flex items-center gap-2">
+                  <GitCompareArrows className="size-4 text-ink-muted" /> Onboarding twin vs. live twin
+                </span>
+              </SectionTitle>
+              <AssertionDiff data={data} onSelectEvent={setSelected} />
+            </Card>
+
             {/* DRIFT TIMELINE */}
             <Card className="rounded-card border-surface-line p-6 shadow-card">
               <SectionTitle
@@ -94,7 +131,13 @@ export function ProfileView({ data }: { data: CustomerCase }) {
               >
                 Risk-score drift over time
               </SectionTitle>
-              <DriftScoreOverTime customer={customer} events={events} alert={alert} onSelectEvent={setSelected} />
+              <DriftScoreOverTime
+                customer={customer}
+                events={events}
+                alert={alert}
+                onSelectEvent={setSelected}
+                replayT={replayT}
+              />
 
               {selected && (
                 <div className="mt-4 flex items-start gap-3 rounded-md border border-teal/30 bg-teal-wash p-3">
@@ -149,6 +192,9 @@ export function ProfileView({ data }: { data: CustomerCase }) {
           </div>
         </div>
       </div>
+
+      {/* floating grounded assistant — always visible */}
+      <AskChat data={data} />
     </AppShell>
   );
 }

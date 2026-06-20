@@ -15,6 +15,7 @@ import {
 } from "recharts";
 import type { DriftAlert, EvidenceEvent, Customer } from "@/lib/types";
 import { fmtDate, fmtMonthYear, toEpoch, bandForScore, colorsForScore, eventTypeLabel } from "@/lib/format";
+import { buildTrajectory, type TrajPoint } from "@/lib/trajectory";
 
 const PERIODS = [
   { key: "1d", label: "1D", ms: 864e5 },
@@ -24,91 +25,27 @@ const PERIODS = [
   { key: "all", label: "ALL", ms: Infinity },
 ] as const;
 
-// how hard each signal type pushes the score (drives spike size)
-const IMPACT: Record<string, number> = {
-  sanctions_hit: 3.5,
-  pep_hit: 3,
-  ownership_change: 3,
-  news: 2.6,
-  transaction: 2.2,
-  website_change: 2,
-  registry_change: 1.8,
-  funding: 1.3,
-};
-
-// deterministic PRNG so SSR and client render identical wander (no hydration drift)
-function mulberry32(seed: number) {
-  return () => {
-    seed |= 0;
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-function seedFrom(s: string) {
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
-  return h >>> 0;
-}
-
-type Pt = { t: number; estimate: number; eventId?: string; kind?: "endpoint" | "event" };
-
 export function DriftScoreOverTime({
   customer,
   events,
   alert,
   onSelectEvent,
+  replayT,
 }: {
   customer: Customer;
   events: EvidenceEvent[];
   alert: DriftAlert;
   onSelectEvent?: (e: EvidenceEvent) => void;
+  replayT?: number | null;
 }) {
   const [period, setPeriod] = useState<(typeof PERIODS)[number]["key"]>("all");
 
-  const old = alert.old_risk_score ?? customer.risk_model.onboarding_score;
-  const now = alert.new_risk_score ?? old;
-  const startT = toEpoch(customer.onboarded_as_of);
-  const endT = Math.max(toEpoch(alert.created_at), ...events.map((e) => toEpoch(e.published_at)));
-  const reviewT = toEpoch(customer.kyc_review.next_periodic_review);
-
-  // Build a varied, event-weighted trajectory between the two REAL endpoints.
-  // Big-impact signals create sudden spikes; quiet stretches drift gently.
-  const series: Pt[] = useMemo(() => {
-    const rand = mulberry32(seedFrom(customer.customer_id));
-    const ev = [...events]
-      .filter((e) => toEpoch(e.published_at) > startT && toEpoch(e.published_at) < endT)
-      .sort((a, b) => toEpoch(a.published_at) - toEpoch(b.published_at));
-
-    const weights = ev.map((e) => IMPACT[e.type] ?? 2);
-    const totalW = weights.reduce((s, w) => s + w, 0) || 1;
-    const span = now - old;
-
-    const pts: Pt[] = [{ t: startT, estimate: old, kind: "endpoint" }];
-    let cum = old;
-    let lastT = startT;
-
-    ev.forEach((e, i) => {
-      const t = toEpoch(e.published_at);
-      const target = old + (span * weights.slice(0, i + 1).reduce((s, w) => s + w, 0)) / totalW;
-
-      // a "shoulder" just before the event = gentle wander on the prior level
-      const shoulderT = Math.min(t - 9 * 864e5, (lastT + t) / 2);
-      if (shoulderT > lastT) {
-        const wander = cum + (rand() - 0.45) * 3; // ±~1.5 noise
-        pts.push({ t: shoulderT, estimate: Math.max(old, Math.min(now, Math.round(wander))) });
-      }
-      // the jump itself (sharp for high impact, soft for low)
-      cum = target;
-      pts.push({ t, estimate: Math.round(Math.max(old, Math.min(now, cum))), eventId: e.id, kind: "event" });
-      lastT = t;
-    });
-
-    pts.push({ t: endT, estimate: now, kind: "endpoint" });
-    return pts;
+  const { points, old, now, startT, endT } = useMemo(
+    () => buildTrajectory(customer, events, alert),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customer.customer_id]);
+    [customer.customer_id],
+  );
+  const reviewT = toEpoch(customer.kyc_review.next_periodic_review);
 
   const sel = PERIODS.find((p) => p.key === period)!;
   const domain: [number, number] =
@@ -143,7 +80,7 @@ export function DriftScoreOverTime({
       </div>
 
       <ResponsiveContainer width="100%" height={300}>
-        <ComposedChart data={series} margin={{ top: 16, right: 16, bottom: 8, left: -8 }}>
+        <ComposedChart data={points} margin={{ top: 16, right: 16, bottom: 8, left: -8 }}>
           <ReferenceArea y1={0} y2={33} fill="#15803d" fillOpacity={0.05} />
           <ReferenceArea y1={33} y2={66} fill="#b45309" fillOpacity={0.05} />
           <ReferenceArea y1={66} y2={100} fill="#b91c1c" fillOpacity={0.06} />
@@ -177,12 +114,13 @@ export function DriftScoreOverTime({
             strokeDasharray="5 4"
             label={{ value: "scheduled review", position: "top", fontSize: 10, fill: "#6b7280" }}
           />
+          {replayT != null && <ReferenceLine x={replayT} stroke="#14b8a6" strokeWidth={2} />}
 
           <Tooltip
             cursor={{ stroke: "#cbd5e1", strokeWidth: 1 }}
             content={({ active, payload }) => {
               if (!active || !payload?.length) return null;
-              const p = payload[0].payload as Pt;
+              const p = payload[0].payload as TrajPoint;
               const e = p.eventId ? eventById.get(p.eventId) : undefined;
               return (
                 <div className="max-w-xs rounded-md border border-surface-line bg-white p-3 shadow-card">
@@ -212,7 +150,7 @@ export function DriftScoreOverTime({
             strokeDasharray="6 5"
             isAnimationActive
             animationDuration={1200}
-            dot={(props: { cx?: number; cy?: number; payload?: Pt }) => {
+            dot={(props: { cx?: number; cy?: number; payload?: TrajPoint }) => {
               const { cx, cy, payload } = props;
               if (cx == null || cy == null || !payload) return <g />;
               if (payload.kind === "endpoint") {

@@ -88,6 +88,58 @@ export function eventTypeLabel(type: string): string {
   return EVENT_LABELS[type] ?? type.replace(/_/g, " ");
 }
 
+// Human labels for KYC predicates (business_model → "Business model").
+const PREDICATE_LABELS: Record<string, string> = {
+  business_model: "Business model",
+  industry_sector: "Industry / sector",
+  product_mix: "Products & services",
+  listing_status: "Listing status",
+  legal_form: "Legal form",
+  domicile: "Domicile",
+  principal_place_of_business: "Principal place of business",
+  domain: "Website / domain",
+  ubo: "Beneficial ownership",
+  directors: "Directors",
+  ownership_structure: "Ownership structure",
+  operating_geographies: "Operating geographies",
+  counterparty_geographies: "Counterparty geographies",
+  expected_monthly_volume: "Expected volume",
+  financial_profile: "Financial profile",
+  source_of_wealth: "Source of wealth",
+  source_of_funds: "Source of funds",
+  activity_level: "Activity level",
+  digital_asset_policy: "Digital-asset policy",
+  digital_asset_holdings: "Digital-asset holdings",
+  tax_residency: "Tax residency",
+  tax_classification: "Tax classification",
+  regulatory_status: "Regulatory status",
+  pep_status: "PEP status",
+  sanctions_status: "Sanctions status",
+  adverse_media_status: "Adverse media",
+  risk_score: "Risk score",
+  risk_tier: "Risk tier",
+};
+
+export function predicateLabel(predicate: string): string {
+  return PREDICATE_LABELS[predicate] ?? predicate.replace(/_/g, " ");
+}
+
+// Some assertion values are stringified JSON dicts (e.g. UBO). Render them readably.
+export function formatAssertionValue(value: string): string {
+  const v = value.trim();
+  if (v.startsWith("{")) {
+    try {
+      const obj = JSON.parse(v) as Record<string, string>;
+      return Object.entries(obj)
+        .map(([k, val]) => `${k} (${val})`)
+        .join("; ");
+    } catch {
+      return value;
+    }
+  }
+  return value;
+}
+
 // initials monogram for a company logo placeholder
 export function monogram(name: string): string {
   return name

@@ -49,9 +49,8 @@ export function RiskGauge({
   const c = colorsForScore(score);
   const band = bandForScore(score);
   const letter = letterForScore(score);
-  const needleAngle = angleFor(score);
-  const fromAngle = angleFor(from ?? score);
-  const tip = polar(needleAngle, r - 6);
+  const tip = polar(angleFor(score), r - 6);
+  const fromTip = polar(angleFor(from ?? score), r - 6);
 
   return (
     <div className="flex flex-col items-center">
@@ -90,21 +89,18 @@ export function RiskGauge({
           );
         })}
 
-        {/* needle (animates from onboarding angle to current) */}
+        {/* needle — animates to the current score (drives the replay) */}
         <motion.line
           x1={cx}
           y1={cy}
-          x2={tip.x}
-          y2={tip.y}
           stroke={c.fg}
           strokeWidth={4}
           strokeLinecap="round"
-          initial={{ rotate: fromAngle - needleAngle }}
-          animate={{ rotate: 0 }}
-          transition={{ duration: 1.1, ease: [0.4, 0, 0.2, 1], delay: 0.2 }}
-          style={{ transformOrigin: `${cx}px ${cy}px` }}
+          initial={{ x2: fromTip.x, y2: fromTip.y }}
+          animate={{ x2: tip.x, y2: tip.y }}
+          transition={{ type: "spring", stiffness: 90, damping: 15 }}
         />
-        <circle cx={cx} cy={cy} r={9} fill={c.fg} />
+        <motion.circle cx={cx} cy={cy} r={9} animate={{ fill: c.fg }} />
         <circle cx={cx} cy={cy} r={4} fill="#fff" />
 
         {/* center readout */}

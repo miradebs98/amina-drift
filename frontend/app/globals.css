@@ -12,9 +12,9 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
+  --font-display: var(--font-display);
   --font-mono: var(--font-mono);
-  --font-heading: var(--font-serif);
+  --font-heading: var(--font-display);
 
   /* AMINA brand */
   --color-brand: #0d2936;

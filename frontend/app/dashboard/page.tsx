@@ -16,7 +16,7 @@ export default async function DashboardPage() {
   return (
     <AppShell title="Portfolio" subtitle="Clients ranked by KYC drift">
       <main className="mx-auto w-full max-w-[1100px] px-6 py-8">
-        <h1 className="font-serif text-2xl font-semibold text-ink">Portfolio — ranked by KYC drift</h1>
+        <h1 className="font-display text-2xl font-semibold text-ink">Portfolio — ranked by KYC drift</h1>
         <p className="mt-1 text-sm text-ink-muted">
           Customers whose live public profile has diverged most from their onboarding KYC.
         </p>
