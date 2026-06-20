@@ -13,10 +13,12 @@ from .assertion import Assertion, ExpectedEnvelope, AssertionStatus, Predicate
 from .evidence import EvidenceEvent, Snapshot, EvidenceType
 from .alert import DriftAlert, DriftType, Severity, GovernanceState
 from .audit import AuditEntry, AuditAction
+from .dimensions import Dimension, dimension_for_predicate, dimension_for_evidence
 
 __all__ = [
     "Assertion", "ExpectedEnvelope", "AssertionStatus", "Predicate",
     "EvidenceEvent", "Snapshot", "EvidenceType",
     "DriftAlert", "DriftType", "Severity", "GovernanceState",
     "AuditEntry", "AuditAction",
+    "Dimension", "dimension_for_predicate", "dimension_for_evidence",
 ]

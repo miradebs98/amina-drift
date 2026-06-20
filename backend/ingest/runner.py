@@ -23,7 +23,8 @@ from backend.ingest.wayback import WaybackConnector
 from backend.ingest.gleif import GleifConnector
 from backend.ingest.sanctions import SanctionsConnector
 from backend.ingest.event_registry import EventRegistryConnector
-from backend.ingest.stubs import RegistryConnector, FundingConnector
+from backend.ingest.funding import FundingConnector
+from backend.ingest.stubs import RegistryConnector
 
 # SEC_LEVEL2=true → also read 10-K text and emit cited passages relevant to each assertion
 # (uses OpenAI embeddings if OPENAI_API_KEY is set, else lexical). Off by default (extra latency).
@@ -38,8 +39,8 @@ LIVE_CONNECTORS: list[Connector] = [
     WaybackConnector(),       # website change over time
     GleifConnector(),         # legal entity + ownership graph
     SanctionsConnector(),     # OpenSanctions/yente — sanctions + PEP screening (entity + UBOs)
+    FundingConnector(),       # funding rounds + new investors → UBO re-screen (startup drift)
     RegistryConnector(),      # stub → ZEFIX/Companies House/ADGM
-    FundingConnector(),       # stub → Crunchbase/funding news
 ]
 
 
