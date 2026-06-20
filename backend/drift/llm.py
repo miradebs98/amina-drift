@@ -82,6 +82,38 @@ class CostMeter:
         return (self.heavy_calls / total) if total else 0.0
 
 
+def cost_report(meter: "CostMeter", *, n_alerts: int, pairs_total: int) -> dict:
+    """Turn the metered token counts into the cost story: the cascade funnel (where light vs heavy
+    models run), dollars, the two figures the brief names (cost per 1,000 alerts / analyses), and the
+    saving vs. running every Stage-2 pair on the heavy model."""
+    from backend.drift import config
+    ct, ht = meter.cheap_tokens, meter.heavy_tokens
+    cheap_usd = ct / 1e6 * config.PRICE_USD_PER_MTOK_CHEAP
+    heavy_usd = ht / 1e6 * config.PRICE_USD_PER_MTOK_HEAVY
+    cost_usd = cheap_usd + heavy_usd
+    # counterfactual: same token volume, but the cheap-tier work done on the heavy model (no cheap tier)
+    all_heavy_usd = (ct + ht) / 1e6 * config.PRICE_USD_PER_MTOK_HEAVY
+    saved_pct = round((1 - cost_usd / all_heavy_usd) * 100, 1) if all_heavy_usd else 0.0
+    stage1_filtered = max(0, pairs_total - meter.cheap_calls)        # gate-killed pairs (no LLM, $0)
+    return {
+        "cheap_calls": meter.cheap_calls, "heavy_calls": meter.heavy_calls,
+        "cheap_tokens": ct, "heavy_tokens": ht, "total_tokens": meter.total_tokens,
+        "escalation_rate": round(meter.escalation_rate, 3),
+        # cascade funnel — where light vs heavy models run
+        "pairs_total": pairs_total,
+        "stage1_filtered": stage1_filtered,
+        "stage1_filtered_pct": round(stage1_filtered / pairs_total, 3) if pairs_total else 0.0,
+        "stage2_cheap_calls": meter.cheap_calls, "stage3_heavy_calls": meter.heavy_calls,
+        # dollars
+        "cheap_usd": round(cheap_usd, 6), "heavy_usd": round(heavy_usd, 6), "cost_usd": round(cost_usd, 6),
+        "cost_per_1000_analyses": round(cost_usd * 1000, 4),        # this run = monitoring 1 customer once
+        "cost_per_1000_alerts": round(cost_usd / n_alerts * 1000, 4) if n_alerts else 0.0,
+        "savings_vs_all_heavy_pct": saved_pct,
+        "prices_usd_per_mtok": {"cheap": config.PRICE_USD_PER_MTOK_CHEAP, "heavy": config.PRICE_USD_PER_MTOK_HEAVY,
+                                "note": "Apertus/CSCS is $0 for us; illustrative unit prices show the cascade economics."},
+    }
+
+
 class LLMClient:
     def __init__(self) -> None:
         self.meter = CostMeter()

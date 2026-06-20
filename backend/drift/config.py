@@ -65,6 +65,13 @@ RISK_DIRECTION = {
 }
 DEFAULT_RISK_DIRECTION = 1.0
 
+# --- Cost model: $ per 1,000,000 tokens, per tier ----------------------------------------------
+# Apertus on CSCS is $0 for us (Swiss-sovereign / hackathon access). These are ILLUSTRATIVE unit
+# prices — representative of self-hosting an 8B vs a 70B — so the cost report shows the cascade
+# economics in dollars rather than zeros. Swap in your provider's real prices to get live figures.
+PRICE_USD_PER_MTOK_CHEAP = 0.20      # Stage-2 cheap tier (Apertus-8B class)
+PRICE_USD_PER_MTOK_HEAVY = 3.00      # Stage-3 heavy tier (Apertus-70B class)
+
 # --- Risk score (0–100): two-channel re-derived level -----------------------------------------
 RISK_SCORE_FULL_DRIFT = 10.0        # (legacy, unused) Σ risk_impact for the old saturate() mapping
 ACCUMULATION_CAP = 88               # non-designation drift asymptotes here (high-HIGH); 88–100 reserved

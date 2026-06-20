@@ -14,7 +14,7 @@ from datetime import datetime, time, timezone
 
 from shared.schemas import DriftAlert, DriftType, Severity, GovernanceState
 from backend.drift import config
-from backend.drift.llm import LLMClient, MockLLM
+from backend.drift.llm import LLMClient, MockLLM, cost_report
 from backend.drift.embeddings import ConceptAxisEmbedder
 from backend.drift.score import Assessment, assess
 
@@ -207,6 +207,12 @@ def replay(state, llm: LLMClient | None = None, embedder: ConceptAxisEmbedder | 
         # current tier reflects the current score — NOT the ratcheted alert tier: with de-risking
         # (resolves) the level can fall back, so the reported tier must be able to come down too.
         "final_tier": tier_of(prev_score),
-        "cost": {"cheap_calls": llm.meter.cheap_calls, "heavy_calls": llm.meter.heavy_calls,
-                 "total_tokens": llm.meter.total_tokens, "escalation_rate": round(llm.meter.escalation_rate, 3)},
+        "cost": cost_report(llm.meter, n_alerts=len(alerts), pairs_total=_pairs_total(state)),
     }
+
+
+def _pairs_total(state) -> int:
+    """The Stage-1 universe: monitored beliefs × events — the denominator for 'gate filtered N%'."""
+    from backend.drift.score import _OUTPUT_PREDICATES
+    n_beliefs = sum(1 for a in state.assertions if a.predicate.value not in _OUTPUT_PREDICATES)
+    return n_beliefs * len(state.evidence)
