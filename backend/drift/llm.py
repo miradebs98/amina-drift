@@ -255,18 +255,24 @@ def _parse_json(text: str) -> dict:
     return json.loads(m.group(0) if m else text)
 
 
-def get_llm() -> LLMClient:
-    """Factory: ApiLLM if DRIFT_LLM_BASE_URL + DRIFT_LLM_API_KEY are set, else the offline MockLLM.
+def get_llm(offline: bool | None = None) -> LLMClient:
+    """Factory: the offline MockLLM, or ApiLLM (Apertus) when keys are set AND we're not offline.
 
-    Point the cheap/sensitive tier at **Apertus** (Swiss-sovereign) once you have access (Sat 10:00):
-        export DRIFT_LLM_BASE_URL=<apertus-openai-compatible-endpoint>
-        export DRIFT_LLM_API_KEY=<key>
-        export DRIFT_LLM_CHEAP_MODEL=apertus-8b-instruct      # sensitive Layer-2 stays in CH
-        export DRIFT_LLM_HEAVY_MODEL=apertus-70b-instruct     # or a frontier model for the deep-dive
+    `OFFLINE_DEMO=true` (the demo default) FORCES the deterministic offline MockLLM even when Apertus
+    keys are present — so the stage demo is instant, network-independent and reproducible (Meridian
+    28->80). Set `OFFLINE_DEMO=false` (+ DRIFT_LLM_* keys) for the live Apertus cascade (Meridian
+    28->83). Pass offline=False to force the live path regardless (used by smoke_apertus).
+
+        DRIFT_LLM_BASE_URL=https://api.swissai.svc.cscs.ch/v1
+        DRIFT_LLM_API_KEY=sk-rc-...
+        DRIFT_LLM_CHEAP_MODEL=swiss-ai/Apertus-8B-Instruct-2509   # sensitive Layer-2 stays in CH
+        DRIFT_LLM_HEAVY_MODEL=swiss-ai/Apertus-70B-Instruct-2509  # deep-dive
     """
+    if offline is None:
+        offline = os.environ.get("OFFLINE_DEMO", "true").strip().lower() in ("1", "true", "yes", "on")
     base, key = os.environ.get("DRIFT_LLM_BASE_URL"), os.environ.get("DRIFT_LLM_API_KEY")
-    if base and key:
+    if not offline and base and key:
         return ApiLLM(base, key,
-                      os.environ.get("DRIFT_LLM_CHEAP_MODEL", "apertus-8b-instruct"),
-                      os.environ.get("DRIFT_LLM_HEAVY_MODEL", "apertus-70b-instruct"))
+                      os.environ.get("DRIFT_LLM_CHEAP_MODEL", "swiss-ai/Apertus-8B-Instruct-2509"),
+                      os.environ.get("DRIFT_LLM_HEAVY_MODEL", "swiss-ai/Apertus-70B-Instruct-2509"))
     return MockLLM()
