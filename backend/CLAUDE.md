@@ -19,10 +19,26 @@ You're the integration spine that lets Giacomo and Miguel move fast, and you own
 under-contested axes: **Cost Efficiency (20%)** and **Engineering (15%)**, plus the **Compliance
 (20%)** plumbing (audit, RBAC, data separation).
 
+## ♻️ Reuse first: `grain_lite/` (our own GRAIN code — SEC + earnings ingestion)
+Vendored slice of Sablier's GRAIN, **OpenAI as-is**. Read `backend/grain_lite/README.md`. It gives
+you, ready-made:
+- `grain_lite/sources/edgar.py` — **SEC filings** (10-K/10-Q/8-K/DEF-14A) fetch + clean text.
+- `grain_lite/sources/transcript.py` — **earnings-call transcripts** (Alpha Vantage + sentiment).
+- `grain_lite/chunker.py` + `grain_lite/embedder.py` (`cosine_similarity`) — chunk filings → embed
+  → **your Stage-1 relevance filter** (passages vs an `Assertion`).
+- `grain_lite/llm_client.py` + `cache.py` — the metered/cached LLM client + batch scoring (cost).
+→ Best for **Coinbase** (real, listed): turn its filings + earnings calls into cited
+`EvidenceEvent`s. **Wrap grain_lite output into our `EvidenceEvent` schema** (that's your bridge).
+Meridian is fictional → stays fixture-based. Env needed: `OPENAI_API_KEY`, `ALPHAVANTAGE_API_KEY`
+(free), `SEC_USER_AGENT`. The grounded SCORING on top is Miguel's (`backend/drift/CLAUDE.md`).
+
 ## What you build
-1. **`ingest/` — Layer 1 connectors** (emit `EvidenceEvent` / `Snapshot`): GDELT, Google News
-   RSS, GLEIF (LEI/ownership), **ZEFIX** (Swiss registry), **yente/OpenSanctions** (sanctions+PEP),
-   Wayback CDX (website diff). Cache every response into `data/fixtures/` → **offline-safe demo.**
+1. **`ingest/` — Layer 1 connectors** (emit `EvidenceEvent`). ✅ **Framework + 5 live connectors
+   already built & tested** — see `backend/ingest/SOURCES.md`. `Connector` base + `runner.py`
+   merge stream; LIVE: SEC/earnings (grain_lite), Wayback, Google News, GLEIF, GDELT; FixtureConnector
+   for Meridian + offline demo. **Add a source = subclass `Connector`, add one line to
+   `runner.LIVE_CONNECTORS`.** Still STUBS to fill: `sanctions` (OpenSanctions/yente), `registry`
+   (ZEFIX/ADGM), `funding`. Every live fetch caches to `data/fixtures/` → **offline-safe demo.**
 2. **`resolve/` — entity resolution** (the silent demo-killer): match a public event to one of our
    customers with exact + fuzzy matching behind a **confidence gate**. Keep the customer set small.
 3. **`cascade/` — the cost-aware staged pipeline**:

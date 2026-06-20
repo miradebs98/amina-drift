@@ -1,5 +1,12 @@
-# amina-drift dependencies (add as code lands)
+# amina-drift dependencies
 pydantic>=2
 fastapi
 uvicorn
 httpx
+# grain_lite (SEC + earnings ingestion + scoring) — OpenAI as-is
+openai>=1.0
+beautifulsoup4
+numpy
+requests
+tqdm
+python-dotenv

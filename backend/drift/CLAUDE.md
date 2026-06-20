@@ -16,6 +16,14 @@
 - **Demo numbers are fixed:** Meridian flips **LOW 28 → HIGH 82** (the wow); Coinbase stays
   **MEDIUM 60 → 66** (within-band upward pressure, deliberate contrast — do NOT make it flip).
 
+## 📝 Note from Mira's lane — optional FREE shared embedder
+We're running zero-cost: cascade LLM → **Apertus** (free, Swiss-sovereign), and Mira's Stage-1
+relevance filter → **lexical** (free, default). Your `ConceptAxisEmbedder` is already free/offline —
+keep it for the explainability pitch. **Optional:** one free local `sentence-transformers` model
+(all-MiniLM-L6-v2, CPU) could serve BOTH your trajectory (you noted it's swappable) AND Mira's
+retrieval (`RELEVANCE_EMBEDDINGS=local`). Not wired yet — only worth it if semantic quality beats
+keyword/concept-axis matching for the demo. No OpenAI anywhere (avoids paid embeddings).
+
 ## 🚩 YOUR OPEN CALL — decide this, it sets Mira's scope (Q2.1, the big one)
 **Can you detect Meridian's silent re-tiering from the EVENT SEQUENCE alone, or do you need
 periodic `Snapshot`s (+ embedding trajectory)?** Both fixtures are currently events-only and
@@ -75,6 +83,48 @@ This is the heart of the project; the demo lives or dies on it. "Done" =
    citation-grounded "why" is the whole point.
 7. **Measurable**: it fires the right flags on the two cases AND stays quiet on noise events (so we
    can show precision, not just recall).
+
+## 🎯 SCORING — exactly what you build (you REUSE grain_lite, don't rebuild it)
+We vendored Sablier's GRAIN scorer into `backend/grain_lite/`. It already gives you the hard
+infra. **Your job is the drift-specific scoring on top.** Read `backend/grain_lite/README.md`.
+
+### What you REUSE as-is (do NOT rebuild)
+- `grain_lite/llm_client.py::score_source_holistically(...)` — reads ALL passages from a source,
+  JSON-mode output, prompt-injection sanitization, caching. Returns `{tier, direction_score,
+  key_quote, reasoning}`. **This is your Stage-2 starting point.**
+- `grain_lite/llm_client.py::_validate_key_quote(quote, passages)` — the **anti-hallucination
+  gate**: guarantees the cited quote actually exists in the source (fuzzy-matches or replaces a
+  fabricated one). **Call this on every verdict. This is your grounding guarantee (Compliance 20%).**
+- `score_passages_batch()` + the file cache — your cost levers (batch + cache = cheap repeat runs).
+- Provider = OpenAI (`gpt-4.1-mini`) via the existing client, for now (Mira's call to keep as-is).
+
+### What you BUILD (the scoring work — this is yours)
+1. **The verdict prompt** — fork `score_source_holistically` into
+   `score_assertion_drift(assertion, passages, source_type)` and **rewrite the prompt** from
+   "theme exposure tier" → the **drift verdict**. Input: one `Assertion` (predicate + onboarding
+   value) + the retrieved passages. Output JSON:
+   `{verdict: confirms|contradicts|irrelevant|ambiguous, contradiction_strength: 0..1,
+     key_quote: <verbatim>, rationale: <1-3 sentences>}`.
+   Keep the "copy the quote VERBATIM" instruction + sanitization so the grounding gate works.
+2. **Ground every verdict** — run `_validate_key_quote(result["key_quote"], passages)`. No flag
+   ships with an ungrounded quote.
+3. **Per-assertion aggregation** — combine verdicts across sources/events for one assertion →
+   contribution `= contradiction_strength × source_confidence × recency_weight`. Flip the
+   assertion `valid → contradicted` past a threshold.
+4. **Re-score the customer (DERIVED OUTPUT)** — `risk_now = onboarding_score + Σ (assertion
+   contribution × predicate_severity)`. Transparent weighted sum you can read line-by-line; map to
+   band (LOW/MED/HIGH). This produces `old_/new_risk_score`.
+5. **Slow structural drift** — accumulate contradictions across the event timeline (your Q2.1
+   mechanism) so Meridian climbs 28→82; the signal is the trajectory, not one event.
+6. **Emit `DriftAlert`** — `contradicted_assertion_id` (primary) + `also_contradicts[]` +
+   `evidence_ids` + `rationale` + `what_would_flip` + `recommended_action` + old/new score + confidence.
+
+### The handoff (so you never block)
+- **Mira gives you**: per `(customer, source)` the **retrieved relevant passages** + the
+  `EvidenceEvent`s. She owns fetch → chunk → embed → Stage-1 cosine relevance filter.
+- **You give back**: the verdict + the re-score + the `DriftAlert`. You do NOT fetch data.
+- Stage boundary: Mira's cosine filter decides WHICH `(assertion, passages)` reach your scorer
+  (Stage-1, cheap); your `score_assertion_drift` is Stage-2 (LLM).
 
 ## Contracts (read `shared/schemas/`)
 - **Consume** `Assertion` (from `data/customers/`) + `EvidenceEvent`/`Snapshot` (from Mira).
