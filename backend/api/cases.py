@@ -21,7 +21,7 @@ from shared.schemas import (Assertion, DriftAlert, DriftType, Severity, Governan
                             dimension_for_predicate, dimension_for_evidence)
 from backend.drift.client_state import ClientState, _MOCK_SNAPSHOTS
 from backend.drift.engine import replay
-from backend.drift.llm import get_llm, MockLLM
+from backend.drift.llm import get_llm
 from backend.drift.score import tier_for, assess, compute_inherent_score
 from backend.govern.decisions import get_decision
 
@@ -89,8 +89,8 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
 
     events = collect(cid, live=live)                       # Mira's Layer-1 stream (live or fixtures)
     assertions = [Assertion(**a) for a in cust["assertions"]]
-    # PRIOR is COMPUTED from the onboarding facts (deterministic) — not the hardcoded onboarding_score.
-    baseline, baseline_breakdown = compute_inherent_score(assertions, MockLLM())
+    # PRIOR is COMPUTED from the onboarding facts (Apertus via get_llm; MockLLM only under tests/no-key).
+    baseline, baseline_breakdown = compute_inherent_score(assertions, get_llm())
     rm = cust.setdefault("risk_model", {})
     rm["onboarding_score"], rm["onboarding_band"] = baseline, tier_for(baseline)   # UI shows the computed prior
     snapshots = _MOCK_SNAPSHOTS.get(cid, lambda _c: [])(cid)  # Meridian has mock snapshots; others []

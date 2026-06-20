@@ -15,7 +15,7 @@ from pathlib import Path
 
 from shared.schemas import Assertion, EvidenceEvent, Snapshot
 from backend.drift.score import compute_inherent_score
-from backend.drift.llm import MockLLM
+from backend.drift.llm import get_llm
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -58,7 +58,7 @@ def load_client_state_from_fixtures(customer_id: str = "meridian-sands") -> Clie
     if customer_id in _BASELINE_CACHE:
         baseline, breakdown = _BASELINE_CACHE[customer_id]
     else:
-        baseline, breakdown = compute_inherent_score(assertions, MockLLM())
+        baseline, breakdown = compute_inherent_score(assertions, get_llm())
         _BASELINE_CACHE[customer_id] = (baseline, breakdown)
 
     return ClientState(
