@@ -26,7 +26,7 @@ def main() -> int:
         print("⚠️  DRIFT_LLM_BASE_URL + DRIFT_LLM_API_KEY not set — skipping live smoke (offline-safe).")
         return 0
 
-    llm = get_llm()
+    llm = get_llm(offline=False)   # this script explicitly tests the LIVE Apertus path
     assert isinstance(llm, ApiLLM), "env set but get_llm() returned the mock — check DRIFT_LLM_*"
 
     st = load_client_state_from_fixtures("meridian-sands")
