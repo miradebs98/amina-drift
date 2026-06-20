@@ -109,10 +109,6 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
         d["dimension"] = dimension_for_evidence(d["type"]).value
         return d
 
-    def _dims_for_alert(al) -> list[str]:
-        ids = ([al.contradicted_assertion_id] if al.contradicted_assertion_id else []) + list(al.also_contradicts)
-        return sorted({dimension_for_predicate(pred_by_id.get(i, "")).value for i in ids if i in pred_by_id})
-
     alerts = r["alerts"]
     latest = max((e.published_at for e in events), default=datetime.now(timezone.utc))
 
@@ -143,6 +139,14 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
     headline = (max(alerts, key=lambda al: ((al.new_risk_score or 0), al.created_at))
                 if alerts else _clean_alert(cid, baseline, len(events), latest))
 
+    # ── dimensions that DROVE the drift — use the ENGINE'S OWN breadth set (single source of truth,
+    # the same material contributors it used to fire the alert), so the UI's "dimensions lit" matches
+    # what the engine combined. Fall back to deriving from material contributors for an older engine.
+    dims = getattr(decomp, "dimensions_drifted", None)
+    if dims is None:
+        dims = sorted({x["dimension"] for x in assertion_drift if x["risk_impact"] > 0.05})
+    breadth = getattr(decomp, "breadth", len(dims))
+
     return {
         "customer": cust,
         "events": [_event_json(e) for e in events],        # each tagged with its dimension
@@ -151,8 +155,9 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
         "timeline": _safe_timeline(r["timeline"]),         # the risk-score arc
         "cost": r["cost"],                                 # cheap/heavy/tokens/escalation
         "final_score": r["final_score"], "final_tier": r["final_tier"],
-        # connect-the-dots: which of the 4 dimensions the headline drift spans (≥3 = strong signal)
-        "dimensions_drifted": _dims_for_alert(headline),
+        # connect-the-dots: which dimensions materially co-moved + how many (≥3 = combination alert)
+        "dimensions_drifted": list(dims),
+        "breadth": breadth,
         # per-belief breakdown (WHY each assertion moved) — drives the twin-diff explanation
         "assertion_drift": assertion_drift,
     }

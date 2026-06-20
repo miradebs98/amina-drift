@@ -81,6 +81,24 @@ Your blockers are cleared (Mira). What the **live API** (`/cases/{id}`) returns 
   Funding / **cert-transparency** / Wayback — group/badge the news panel by it to tell the
   "creative public sources" story.
 
+## 🥇 The 4-lane convergence view — concrete spec (the hero visual)
+The API now gives you everything (and `dimensions_drifted` is the **engine's own breadth set** — the
+same dimensions it combined to fire the alert, so "lanes lit" always matches the engine):
+- `event.dimension` on every event · `dimensions_drifted` (lit lanes) · **`breadth`** (count, 0–4) ·
+  `assertion_drift` (per-belief: dimension, risk_impact, status, evidence, `why`).
+
+Build a **4-lane panel** (one row per dimension: Identity & Ownership · Network Risk · Behavioural
+Drift · Contextual Change):
+- Plot each event as a dot in its lane (`event.dimension`) along a shared time axis.
+- **Lit vs. dim:** lanes in `dimensions_drifted` glow; others stay grey.
+- **Breadth badge:** show `breadth`/4. When `breadth >= 3` → a banner: *"No single signal crossed a
+  threshold — but N dimensions moved together. That's the drift."* (the whole pitch, made visual).
+  Demo reality: **Meridian = 4/4** (combination alert) · HashKey/Coinbase = 2 (fired on a single
+  critical hit — show that contrast).
+- **Per-lane "why":** click a lit lane → expand `assertion_drift` filtered to that dimension
+  (e.g. Identity → "UBO changed: new investor; founder PEP name-match").
+- In the **time-replay**, watch lanes light up one-by-one over the months, then converge.
+
 ## 🥇 GOLD task — the 4-dimension convergence view (current focus)
 The "wow" is showing drift that **no single signal crosses** — the combination across dimensions
 over time (see root `/CLAUDE.md` §1.5). Build a **4-lane convergence timeline**:
