@@ -46,18 +46,20 @@ pitch/            .pptx deck + 3-min script
 ```
 
 ## Status — what's real vs. mocked
-> **Keep this honest.** Partners read the code; honesty scores, fake completeness doesn't.
+> **Keep this honest.** Partners read the code. Full state in **[STATUS.md](STATUS.md)**.
 
 | Component | Status |
 |---|---|
-| Schemas / contracts | 🟡 stubbed, freezing Friday |
-| Connectors | ⬜ not started |
-| Entity resolution | ⬜ not started |
-| Drift engine | ⬜ not started |
-| Cost cascade + meter | ⬜ not started |
-| Governance (audit/HITL/RBAC) | ⬜ not started |
-| Dashboard | ⬜ not started |
-| Demo entity + KYC profile | ⬜ not started |
+| Schemas / contracts (incl. 4-dimension tagging) | ✅ done |
+| Layer-1 connectors | ✅ **9 live** (SEC L1+L2, Wayback, Google News, GDELT, Event Registry, GLEIF, OpenSanctions, Funding, crt.sh) |
+| Entity resolution | 🟡 at-emission (no separate fuzzy step) |
+| Drift engine | ✅ done — **live Apertus** (Swiss-sovereign, ~2% escalation) |
+| Cost cascade + meter | 🟡 works (Stage-1 gate + CostMeter); no UI widget |
+| Governance (audit/HITL/RBAC) | ✅ done — hash-chained tamper-evident log + four-eyes |
+| API (keystone) + Network graph | ✅ done |
+| Dashboard | 🟡 built (Next.js, twin-diff, HITL UI); live-wire pending |
+| Demo entities | ✅ Coinbase · Meridian · HashKey (real startup) |
+| 🥇 Combination/breadth threshold + narrative | 🔜 the gold gap (Miguel) |
 
 ## Setup
 ```bash

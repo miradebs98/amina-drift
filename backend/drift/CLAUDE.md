@@ -84,6 +84,26 @@ This is the heart of the project; the demo lives or dies on it. "Done" =
 7. **Measurable**: it fires the right flags on the two cases AND stays quiet on noise events (so we
    can show precision, not just recall).
 
+## 🥇 GOLD task — connect the dots across 4 dimensions (current focus)
+The product's "wow" is catching drift that **no single signal crosses** — the combination of quiet
+changes over time. Two things to build on top of your engine (see root `/CLAUDE.md` §1.5):
+
+1. **Dimension-aware combination scoring.** Every assertion now maps to one of 4 dimensions via
+   `shared/schemas/dimension_for_predicate()` (Identity / Network / Behavioural / Contextual).
+   **Boost the risk when contradictions span ≥3 dimensions simultaneously** — that co-movement is
+   the real signal, even when each assertion's individual surprise is sub-threshold. (An interaction
+   term, not just a sum.) The API already returns `dimensions_drifted` per case; make the engine
+   *escalate on breadth*, not only magnitude.
+2. **Narrative synthesis (Apertus-70B).** Add a "connect-the-dots" paragraph to the headline alert:
+   *"Onboarded 2021 as X. Over 18 months: funding from an offshore fund (Identity) → PEP-adjacent
+   director (Network) → website pivot to trading (Contextual) → volume spike (Behavioural).
+   Individually innocent; together a materially different risk."* This narrative IS the demo — make
+   it cite the dimensions + the dated events. (You already call Apertus for `synthesize`; extend it.)
+
+Startups are the wedge (AMINA's hardest case) — Mira is adding funding/investor signals; a new lead
+investor = a likely NEW beneficial owner → that should light the Identity dimension and feed the
+combination.
+
 ## 🎯 SCORING — exactly what you build (you REUSE grain_lite, don't rebuild it)
 We vendored Sablier's GRAIN scorer into `backend/grain_lite/`. It already gives you the hard
 infra. **Your job is the drift-specific scoring on top.** Read `backend/grain_lite/README.md`.

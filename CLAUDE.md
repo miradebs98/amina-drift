@@ -66,6 +66,29 @@ detection = continuously re-validating each assertion against an evidence stream
   the company's public profile *trajectory* migrates over months (SaaS → crypto). Detected by
   **snapshot-and-diff over time** + confidence decay / embedding trajectory / change-point.
 
+## 1.5 🥇 GOLD direction — connect the dots across 4 dimensions (current focus)
+The leap from good→gold is NOT more alerts; it's **connecting weak signals across dimensions over
+time**. KYC drift is dangerous *because no single signal crosses a threshold* — it's the
+combination of ~5 quiet changes over 18 months that means the 2021 client is a different risk in
+2024. **Startups are the wedge** (AMINA's hardest case): little transaction history, fast pivots,
+profile goes stale fastest → you must mine **public digital exhaust** (funding, hiring, code,
+infra, domains, products).
+
+**The 4 dimensions** (`shared/schemas/dimensions.py` — tag every belief + signal):
+1. **Identity & Ownership** — UBO, directors, PEP, residency, name, domicile
+2. **Network Risk** — partners, sanctions links, adverse media, shells
+3. **Behavioural Drift** — volume, geographies, counterparties (Layer-2)
+4. **Contextual Change** — wealth source, business pivot, **funding**, litigation
+
+**What makes it gold (build toward this):**
+- **Combination-threshold**: fire when ≥3 dimensions co-move, even if each is sub-threshold (Miguel).
+- **Narrative synthesis** (Apertus-70B): the "here's the 18-month story, dots connected" paragraph (Miguel).
+- **4-lane convergence UI**: weak signals lighting up across dimensions → the moment they converge (Giacomo).
+- **Creative sources** (Mira): funding ✅, then network graph, Companies House PSC, crt.sh / GitHub "digital exhaust".
+
+> Don't add 10 shallow sources. A few deep + the combination engine + the narrative + the 4-lane
+> UX = gold. Ten half-wired feeds = noise.
+
 ## 2. How we're judged (build to these weights)
 | Criterion | Weight | Primary owner |
 |---|---|---|

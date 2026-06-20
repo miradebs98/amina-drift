@@ -16,9 +16,15 @@ care which source an event came from. **Add a source = subclass `Connector`, add
 | `gdelt.py` | **GDELT** adverse media + tone | none | ✅ live (rate-limited on burst → degrades gracefully) | NEWS | both |
 | `event_registry.py` | **Event Registry** news + sentiment + concepts | partner key | ✅ **live, tested** (8 sentiment-tagged Coinbase articles) | NEWS (+ `sentiment`, `concepts`) | both |
 | `sanctions.py` | **OpenSanctions / yente** — entity + UBO/director screening | free key or self-host | ✅ **live, tested** (flagged a NAME-ONLY UBO match → needs human verify) | SANCTIONS_HIT, PEP_HIT | both |
-| `fixtures.py` | authored/cached events | none | ✅ tested (8 Meridian, 7 Coinbase) | all | both (Meridian only) |
+| `funding.py` | **Funding rounds + lead investor** (news-derived; new investor → UBO re-screen) | none | ✅ **live, tested** (HashKey: unicorn round, Gaorong $30M, $207M IPO) | FUNDING | startups |
+| `cert_transparency.py` | **crt.sh** new-infra subdomains (digital exhaust, pre-announcement) | none | ✅ **live-tested** (HashKey: api-bank-mena, exchange., pro., global.) | WEBSITE_CHANGE | any domain |
+| `fixtures.py` | authored/cached events | none | ✅ tested (Meridian 8, Coinbase 55, HashKey 55) | all | offline replay |
 | `stubs.py::RegistryConnector` | ZEFIX / Companies House / ADGM | varies | ⬜ stub | REGISTRY_CHANGE | both |
-| `stubs.py::FundingConnector` | Crunchbase / funding news | — | ⬜ stub (derivable from news) | FUNDING | both |
+
+**Network graph** (`backend/network/graph.py`, `GET /cases/{id}/network`): assembles connected
+entities (UBOs/investors/partners) + sanctions/PEP flags from the above signals — the Network Risk
+dimension. **Demo entities**: Coinbase (real listed), Meridian (fictional drift-hero), HashKey
+(real startup). Full state: [../../STATUS.md](../../STATUS.md).
 
 **Meridian Sands is fictional** → it has no live data; its 8 events come from the authored
 fixture and that's correct. **Coinbase is real** → it gets real, cited evidence from the live

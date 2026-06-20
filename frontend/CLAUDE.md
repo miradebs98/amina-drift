@@ -64,6 +64,20 @@ Until the backend is running you can keep the local mock, but **the demo must hi
 (fixtures mode = local mock; `NEXT_PUBLIC_DATA_MODE=live` = real govern). Audit shape = `AuditEntry`
 in `shared/schemas/audit.py`.
 
+## 🥇 GOLD task — the 4-dimension convergence view (current focus)
+The "wow" is showing drift that **no single signal crosses** — the combination across dimensions
+over time (see root `/CLAUDE.md` §1.5). Build a **4-lane convergence timeline**:
+- Four lanes = **Identity & Ownership · Network Risk · Behavioural Drift · Contextual Change**.
+- Plot each event in its lane over time (the API now returns `event.dimension` on every event, and
+  `dimensions_drifted` on the case = which dimensions the headline drift spans).
+- The story the visual tells: weak signals lighting up across lanes over 18 months → the **moment
+  they converge** and re-tier. Headline: *"5 quiet changes nobody connected — we did."*
+- When `dimensions_drifted.length >= 3`, make it loud (that breadth is the real signal).
+- Pair it with the engine's **narrative paragraph** (Miguel adds it to the alert rationale) — the
+  "connect-the-dots" story in plain words next to the visual.
+Startups are the wedge: funding events (new lead investor → Identity dimension) now flow in —
+surface them as the early signal a periodic review would miss.
+
 ## Pitch lines that are yours to deliver
 "Banks look in the rearview mirror." · "The moment perception and reality separate, risk begins."
 · Lead with the *contradicted-assertion* story, not a generic news alert.

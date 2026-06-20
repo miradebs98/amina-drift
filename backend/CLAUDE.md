@@ -32,6 +32,21 @@ you, ready-made:
 Meridian is fictional → stays fixture-based. Env needed: `OPENAI_API_KEY`, `ALPHAVANTAGE_API_KEY`
 (free), `SEC_USER_AGENT`. The grounded SCORING on top is Miguel's (`backend/drift/CLAUDE.md`).
 
+## 🥇 GOLD sources — connect the dots across 4 dimensions (current focus)
+See root `/CLAUDE.md` §1.5. We're moving from "more alerts" to **catching drift no single signal
+crosses** — startups are the wedge (mine public "digital exhaust"). Source roadmap by dimension
+(`shared/schemas/dimensions.py`):
+- **Contextual** — ✅ `funding.py` live (funding rounds + lead investor → UBO re-screen). Next:
+  litigation (CourtListener, free API).
+- **Identity & Ownership** — Companies House PSC + OpenCorporates (officer/UBO changes over time).
+- **Network Risk** — ⭐ the **network graph** (entity → UBOs → directors → connected entities →
+  sanctions) from GLEIF + registry + OpenSanctions. The missing dimension; nobody builds it.
+- **Creative "digital exhaust"** (one, done well, is a stage moment): **crt.sh** (cert transparency
+  → new infra/subdomains before any announcement) or **GitHub org activity** (a SaaS→crypto pivot
+  shows in the code first).
+Each is just one `Connector` subclass + one line in `runner.LIVE_CONNECTORS`. **Don't add 10 shallow
+feeds** — funding + network graph + one digital-exhaust source is the gold set.
+
 ## What you build
 1. **`ingest/` — Layer 1 connectors** (emit `EvidenceEvent`). ✅ **Framework + 5 live connectors
    already built & tested** — see `backend/ingest/SOURCES.md`. `Connector` base + `runner.py`

@@ -23,14 +23,4 @@ class RegistryConnector(Connector):
     def fetch(self, customer: CustomerRef) -> list[EvidenceEvent]:
         return []
 
-
-class FundingConnector(Connector):
-    """Funding / scale signals — Crunchbase / funding news.
-    TODO(Mira): emit FUNDING events (round, amount, investors) → scale-risk drift. Can be derived
-    from the news connectors with a funding filter to avoid a paid Crunchbase key."""
-    name = "funding"
-    source_label = "Funding"
-    live = False
-
-    def fetch(self, customer: CustomerRef) -> list[EvidenceEvent]:
-        return []
+# NOTE: FundingConnector graduated to a real connector → backend/ingest/funding.py

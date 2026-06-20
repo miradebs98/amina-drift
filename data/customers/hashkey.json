@@ -1,0 +1,160 @@
+{
+  "_comment": "BASE CASE 3 — HashKey Group. The LIVE-SOURCES-ON-A-REAL-STARTUP case (non-AMINA).",
+  "_role_in_demo": "Proves the pipeline works on a REAL private crypto startup with live public data, and that drift spans MULTIPLE dimensions (the connect-the-dots thesis). NOT the dramatic LOW->HIGH flip (that's fictional Meridian). HashKey onboards ELEVATED; drift = neutral, legitimate MATERIAL CHANGE -> re-KYC.",
+  "_disclaimer": "ILLUSTRATIVE of a HashKey-LIKE institutional client. We do NOT imply a real AMINA banking relationship. HashKey is NOT an AMINA customer/partner. All Layer-1 facts are REAL & public (sources in notes); the bank-side risk_score / review cadence / onboarding framing are SIMULATED.",
+  "_real_vs_simulated": "Identity, ownership, licences, funding and products are REAL & publicly sourced (mark VERIFY on exact dates/figures). risk_score + 'as an AMINA client' framing are SIMULATED.",
+  "_structure_note": "entity_profile = static identity (not drift-monitored). assertions = the dated beliefs the engine re-validates. Drift signals arrive LIVE from the connectors (funding/news/wayback/gleif).",
+
+  "customer_id": "hashkey-group",
+  "legal_name": "HashKey Group",
+  "onboarded_as_of": "2021-06-01",
+  "purpose_of_relationship": "Institutional account & treasury for a Hong Kong-licensed digital-asset group (SIMULATED onboarding rationale).",
+  "_open_question": "State on stage: illustrative of a HashKey-LIKE client; drift framed as 'material change -> re-KYC', never wrongdoing.",
+
+  "risk_model": {
+    "_note": "A licensed crypto exchange/asset-manager onboards ELEVATED (MEDIUM), not LOW. Drift = upward pressure from rapid multi-jurisdiction expansion + a new major investor; stays MEDIUM (material change -> re-KYC), it does NOT flip HIGH (Meridian holds the flip).",
+    "scale": "0-100",
+    "bands": { "LOW": "0-33", "MEDIUM": "34-66", "HIGH": "67-100" },
+    "onboarding_score": 55,
+    "onboarding_band": "MEDIUM"
+  },
+
+  "kyc_review": {
+    "_note": "MEDIUM band -> 24-month cadence. The 2024 unicorn round + new investor + offshore entities should pull this OFF-CYCLE — the demo point.",
+    "cadence_months_by_band": { "LOW": 36, "MEDIUM": 24, "HIGH": 12 },
+    "last_review": "2021-06-01",
+    "next_periodic_review": "2023-06-01",
+    "_derivation": "MEDIUM -> 24mo -> 2023-06-01. The Series A (Jan 2024) + offshore expansion arrived AFTER the scheduled review — exactly the drift a static clock misses."
+  },
+
+  "entity_profile": {
+    "_note": "Static KYC identity block. REAL facts (VERIFY exact figures); private group (no listed ticker -> tests the startup path, not SEC).",
+    "legal_name": "HashKey Holdings Limited (HashKey Group)",
+    "legal_form": "Private limited company (group holding)",
+    "country_of_incorporation": "HK",
+    "date_of_incorporation": "2018 (founded by Xiao Feng)",
+    "lei": "VERIFY via GLEIF",
+    "registered_address": "Central, Hong Kong",
+    "principal_place_of_business": "Hong Kong",
+    "website": "https://hashkey.com",
+    "listed_on_exchange": false,
+    "ticker": null,
+    "regulated_financial_entity": "Yes — HK SFC-licensed (HashKey Exchange, VATP); later SG/JP/Bermuda/Ireland/Dubai (VERIFY current scope)",
+    "entity_tax_residency": "HK",
+    "_founder": "Xiao Feng (chairman; 'Godfather of Chinese Crypto')"
+  },
+
+  "assertions": [
+    {
+      "id": "HK1",
+      "customer_id": "hashkey-group",
+      "predicate": "business_model",
+      "value": "Hong Kong-focused licensed digital-asset exchange & asset-management group",
+      "as_of": "2021-06-01", "last_verified": "2021-06-01",
+      "source": "HashKey Group (about) / SFC licensing", "source_url": "https://group.hashkey.com/en/about",
+      "confidence": 0.9, "status": "valid",
+      "notes": "REAL. DRIFTS via expansion into a global multi-product Web3 group (Global exchange, OTC, Cloud, Tokenisation)."
+    },
+    {
+      "id": "HK2",
+      "customer_id": "hashkey-group",
+      "predicate": "operating_geographies",
+      "value": "Hong Kong (primary)",
+      "expected_envelope": { "allowed_set": ["HK"], "unit": "operating_jurisdiction" },
+      "as_of": "2021-06-01", "last_verified": "2021-06-01",
+      "source": "onboarding declaration (SIMULATED) + HashKey footprint", "source_url": "https://group.hashkey.com/en/about",
+      "confidence": 0.85, "status": "valid",
+      "notes": "BREACHED — now Singapore, Japan, Bermuda, Ireland, Dubai (VARA) + pursuing EU MiCA. Multi-jurisdiction structural drift."
+    },
+    {
+      "id": "HK3",
+      "customer_id": "hashkey-group",
+      "predicate": "ubo",
+      "value": "{\"Xiao Feng\": \"founder/chairman\", \"early institutional shareholders\": \"majority\"}",
+      "as_of": "2021-06-01", "last_verified": "2021-06-01",
+      "source": "company/press (SIMULATED cap table)", "source_url": "https://group.hashkey.com/en/about",
+      "confidence": 0.8, "status": "valid",
+      "notes": "BREAKS — Jan 2024 Series A brought a NEW major investor (OKX Ventures) at a US$1.2B valuation. New significant shareholder -> re-screen UBO/PEP/sanctions."
+    },
+    {
+      "id": "HK4",
+      "customer_id": "hashkey-group",
+      "predicate": "product_mix",
+      "value": "Spot virtual-asset exchange (HK) + digital-asset asset management",
+      "as_of": "2021-06-01", "last_verified": "2021-06-01",
+      "source": "HashKey product set", "source_url": "https://group.hashkey.com/en/about",
+      "confidence": 0.85, "status": "valid",
+      "notes": "BREAKS — adds HashKey Global (flagship exchange), OTC desk, Cloud (Web3 infra), Tokenisation, and FUTURES/launchpool via Bermuda. Product-scope drift."
+    },
+    {
+      "id": "HK5",
+      "customer_id": "hashkey-group",
+      "predicate": "regulatory_status",
+      "value": "Hong Kong SFC-licensed (VATP via HashKey Exchange)",
+      "as_of": "2021-06-01", "last_verified": "2021-06-01",
+      "source": "HK SFC register", "source_url": "https://group.hashkey.com/en/newsroom/hashkey-s-compliance-journey",
+      "confidence": 0.85, "status": "valid",
+      "notes": "BROADENS — adds MAS (SG), JFSA (JP), Bermuda BMA, Central Bank of Ireland VASP (Jan 2025), Dubai VARA (HashKey MENA FZE, May 2025); pursuing EU MiCA. Regulatory perimeter is itself a moving target."
+    },
+    {
+      "id": "HK6",
+      "customer_id": "hashkey-group",
+      "predicate": "ownership_structure",
+      "value": "Single Hong Kong group holding",
+      "as_of": "2021-06-01", "last_verified": "2021-06-01",
+      "source": "onboarding (SIMULATED)", "source_url": null,
+      "confidence": 0.8, "status": "valid",
+      "notes": "BREAKS — new offshore operating entities (HashKey Global in Bermuda; HashKey MENA FZE in Dubai). Corporate-structure drift -> re-check beneficial ownership chain."
+    },
+    {
+      "id": "HK7",
+      "customer_id": "hashkey-group",
+      "predicate": "digital_asset_holdings",
+      "value": "Holds client + proprietary crypto (exchange/custody)",
+      "as_of": "2021-06-01", "last_verified": "2021-06-01",
+      "source": "exchange/custody disclosures", "source_url": "https://group.hashkey.com/en/about",
+      "confidence": 0.85, "status": "valid",
+      "notes": "REAL — relevant for an AMINA (crypto-bank) client."
+    },
+    {
+      "id": "HK8",
+      "customer_id": "hashkey-group",
+      "predicate": "pep_status",
+      "value": "No PEP among directors / UBOs",
+      "as_of": "2021-06-01", "last_verified": "2021-06-01",
+      "source": "onboarding screening (SIMULATED)", "source_url": null,
+      "confidence": 0.9, "status": "valid",
+      "notes": "Re-screen on the new investor (OKX Ventures) per HK3."
+    },
+    {
+      "id": "HK9",
+      "customer_id": "hashkey-group",
+      "predicate": "sanctions_status",
+      "value": "No sanctions exposure",
+      "as_of": "2021-06-01", "last_verified": "2021-06-01",
+      "source": "onboarding screening (SIMULATED)", "source_url": null,
+      "confidence": 0.95, "status": "valid",
+      "notes": "Stays clean on direct designation; multi-jurisdiction/offshore expansion raises indirect-nexus questions to re-confirm."
+    },
+    {
+      "id": "HK10",
+      "customer_id": "hashkey-group",
+      "predicate": "adverse_media_status",
+      "value": "No material adverse media",
+      "as_of": "2021-06-01", "last_verified": "2021-06-01",
+      "source": "onboarding screening (SIMULATED)", "source_url": null,
+      "confidence": 0.85, "status": "valid",
+      "notes": "Coverage is growth/funding/licensing (neutral). Keep framing neutral — this case is 'material change -> re-KYC', not adverse media."
+    },
+    {
+      "id": "HK11",
+      "customer_id": "hashkey-group",
+      "predicate": "risk_score",
+      "value": "55",
+      "as_of": "2021-06-01", "last_verified": "2021-06-01",
+      "source": "bank internal scoring (SIMULATED)", "source_url": null,
+      "confidence": 1.0, "status": "valid",
+      "notes": "SIMULATED. 55 = mid-MEDIUM. Demo point = real multi-dimensional material change (ownership + jurisdiction + product + scale) -> re-KYC, NOT a dramatic flip."
+    }
+  ]
+}

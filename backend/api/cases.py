@@ -17,7 +17,8 @@ from typing import Optional
 
 from backend.ingest.base import CUSTOMERS_DIR
 from backend.ingest.runner import collect
-from shared.schemas import Assertion, DriftAlert, DriftType, Severity, GovernanceState
+from shared.schemas import (Assertion, DriftAlert, DriftType, Severity, GovernanceState,
+                            dimension_for_predicate, dimension_for_evidence)
 from backend.drift.client_state import ClientState, _MOCK_SNAPSHOTS
 from backend.drift.engine import replay
 from backend.drift.llm import get_llm
@@ -99,6 +100,18 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
     )
     r = replay(state, get_llm())                           # Miguel's engine
 
+    # ── 4-dimension tagging (connect-the-dots): tag each event + which dimensions drifted ──
+    pred_by_id = {a.id: a.predicate.value for a in assertions}
+
+    def _event_json(e):
+        d = _json(e)
+        d["dimension"] = dimension_for_evidence(d["type"]).value
+        return d
+
+    def _dims_for_alert(al) -> list[str]:
+        ids = ([al.contradicted_assertion_id] if al.contradicted_assertion_id else []) + list(al.also_contradicts)
+        return sorted({dimension_for_predicate(pred_by_id.get(i, "")).value for i in ids if i in pred_by_id})
+
     alerts = r["alerts"]
     latest = max((e.published_at for e in events), default=datetime.now(timezone.utc))
     # Headline = the most MATERIAL drift episode (highest resulting score, tie-break latest),
@@ -108,12 +121,14 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
 
     return {
         "customer": cust,
-        "events": [_json(e) for e in events],
+        "events": [_event_json(e) for e in events],        # each tagged with its dimension
         "alert": _overlay_decision(_json(headline)),       # the headline alert (UI contract)
         "alerts": [_overlay_decision(_json(a)) for a in alerts],  # full episode list (richer views)
         "timeline": _safe_timeline(r["timeline"]),         # the risk-score arc
         "cost": r["cost"],                                 # cheap/heavy/tokens/escalation
         "final_score": r["final_score"], "final_tier": r["final_tier"],
+        # connect-the-dots: which of the 4 dimensions the headline drift spans (≥3 = strong signal)
+        "dimensions_drifted": _dims_for_alert(headline),
     }
 
 

@@ -210,11 +210,20 @@ class ApiLLM(LLMClient):
         return content
 
     def classify(self, assertion: Assertion, event: EvidenceEvent) -> Verdict:
-        system = ('You are a KYC drift detector for a regulated bank. Decide whether the EVIDENCE '
-                  'confirms, contradicts, is irrelevant to, or is ambiguous about the BELIEF. '
-                  'Judge CONFIRMS (not contradicts) when the evidence is consistent with the BELIEF\'s '
-                  'existing value — e.g. a crypto exchange launching a new crypto product confirms its '
-                  'model; reserve "contradicts" for a MATERIAL DEVIATION from the belief. '
+        system = ('You are a KYC drift detector for a regulated bank. Compare the EVIDENCE against the '
+                  'on-file BELIEF (a specific KYC value) and classify their relationship. Judge against '
+                  'the SPECIFIC belief value, NOT the topic in general — the SAME crypto news '
+                  'CONTRADICTS a "SaaS, no crypto" belief but CONFIRMS a "crypto exchange" belief.\n'
+                  '- contradicts: the evidence shows something the belief does NOT already state and '
+                  'that materially deviates — a NEW activity/product, a new owner with a significant '
+                  'stake, a new jurisdiction, or a compliance violation. E.g. belief "B2B SaaS, no '
+                  'crypto" + "launches a crypto brokerage" -> contradicts; "licensed/compliant" + '
+                  '"unlicensed or unauthorised activity" -> contradicts; UBO = the founders + "a fund '
+                  'takes a 30% stake" -> contradicts; "UAE-only" + "opens an offshore BVI entity" -> '
+                  'contradicts.\n'
+                  '- confirms: the evidence is consistent with what the belief ALREADY states (e.g. '
+                  '"crypto exchange" + "launches a crypto product").\n'
+                  '- irrelevant: no bearing on this belief. ambiguous: genuinely unclear.\n'
                   'Reply with ONLY one JSON object and nothing else: '
                   '{"verdict":"confirms|contradicts|irrelevant|ambiguous","strength":0.0-1.0,'
                   '"evidence_quote":"<short phrase copied WORD-FOR-WORD from the EVIDENCE text only>",'
@@ -246,18 +255,28 @@ def _parse_json(text: str) -> dict:
     return json.loads(m.group(0) if m else text)
 
 
-def get_llm() -> LLMClient:
-    """Factory: ApiLLM if DRIFT_LLM_BASE_URL + DRIFT_LLM_API_KEY are set, else the offline MockLLM.
+def get_llm(offline: bool | None = None) -> LLMClient:
+    """Factory. REAL Apertus is the DEFAULT whenever DRIFT_LLM_* keys are present — the product IS the
+    Swiss-sovereign LLM cascade, so we run it, not a mock. ApiLLM auto-falls-back to MockLLM *per call*
+    on any endpoint error, so a flaky CSCS degrades gracefully instead of crashing the demo — that's
+    resilience, NOT faking the headline.
 
-    Point the cheap/sensitive tier at **Apertus** (Swiss-sovereign) once you have access (Sat 10:00):
-        export DRIFT_LLM_BASE_URL=<apertus-openai-compatible-endpoint>
-        export DRIFT_LLM_API_KEY=<key>
-        export DRIFT_LLM_CHEAP_MODEL=apertus-8b-instruct      # sensitive Layer-2 stays in CH
-        export DRIFT_LLM_HEAVY_MODEL=apertus-70b-instruct     # or a frontier model for the deep-dive
+    MockLLM is used only when there are NO keys (CI/tests — deterministic, network-free) or you
+    explicitly force it (DRIFT_LLM_MOCK=1 / offline=True) for a fast local dev loop. For a snappy stage
+    demo, PRE-WARM the cache (build each case once) — Apertus reasons them, then the stage serves from
+    cache instantly. NOTE: OFFLINE_DEMO is for the INGEST layer (cached fixtures vs live sources); it
+    no longer forces the LLM to mock — real reasoning runs regardless of where the events come from.
+
+        DRIFT_LLM_BASE_URL=https://api.swissai.svc.cscs.ch/v1
+        DRIFT_LLM_API_KEY=sk-rc-...
+        DRIFT_LLM_CHEAP_MODEL=swiss-ai/Apertus-8B-Instruct-2509   # Stage-2 verdict
+        DRIFT_LLM_HEAVY_MODEL=swiss-ai/Apertus-70B-Instruct-2509  # Stage-3 deep-dive
     """
+    if offline is None:
+        offline = os.environ.get("DRIFT_LLM_MOCK", "").strip().lower() in ("1", "true", "yes", "on")
     base, key = os.environ.get("DRIFT_LLM_BASE_URL"), os.environ.get("DRIFT_LLM_API_KEY")
-    if base and key:
+    if not offline and base and key:
         return ApiLLM(base, key,
-                      os.environ.get("DRIFT_LLM_CHEAP_MODEL", "apertus-8b-instruct"),
-                      os.environ.get("DRIFT_LLM_HEAVY_MODEL", "apertus-70b-instruct"))
+                      os.environ.get("DRIFT_LLM_CHEAP_MODEL", "swiss-ai/Apertus-8B-Instruct-2509"),
+                      os.environ.get("DRIFT_LLM_HEAVY_MODEL", "swiss-ai/Apertus-70B-Instruct-2509"))
     return MockLLM()
