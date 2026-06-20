@@ -15,25 +15,32 @@ import hashkeyAlert from "@/mock/alerts/hashkey.json";
 import meridianNetwork from "@/mock/network/meridian.json";
 import coinbaseNetwork from "@/mock/network/coinbase.json";
 import hashkeyNetwork from "@/mock/network/hashkey.json";
+import meridianInsights from "@/mock/insights/meridian.json";
+import coinbaseInsights from "@/mock/insights/coinbase.json";
+import hashkeyInsights from "@/mock/insights/hashkey.json";
 
 type EventsFile = { events: EvidenceEvent[] };
 type AlertFile = { alert: DriftAlert };
+type Insights = Pick<CustomerCase, "dimensions_drifted" | "breadth" | "assertion_drift">;
 
 const CASES: Record<string, CustomerCase> = {
   "meridian-sands": {
     customer: meridianCustomer as unknown as Customer,
     events: (meridianEvents as unknown as EventsFile).events,
     alert: (meridianAlert as unknown as AlertFile).alert,
+    ...(meridianInsights as unknown as Insights),
   },
   "coinbase-global": {
     customer: coinbaseCustomer as unknown as Customer,
     events: (coinbaseEvents as unknown as EventsFile).events,
     alert: (coinbaseAlert as unknown as AlertFile).alert,
+    ...(coinbaseInsights as unknown as Insights),
   },
   "hashkey-group": {
     customer: hashkeyCustomer as unknown as Customer,
     events: (hashkeyEvents as unknown as EventsFile).events,
     alert: (hashkeyAlert as unknown as AlertFile).alert,
+    ...(hashkeyInsights as unknown as Insights),
   },
 };
 

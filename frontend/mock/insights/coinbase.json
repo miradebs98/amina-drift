@@ -1,0 +1,53 @@
+{
+  "dimensions_drifted": [
+    "contextual_change",
+    "network_risk"
+  ],
+  "breadth": 2,
+  "assertion_drift": [
+    {
+      "assertion_id": "CB7",
+      "predicate": "adverse_media_status",
+      "dimension": "network_risk",
+      "value": "Material litigation exposure \u2014 SEC v. Coinbase (filed 2023)",
+      "status": "contradicted",
+      "surprise": 1.0,
+      "risk_impact": 0.9,
+      "contradiction": 0.995,
+      "staleness": 0.084,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "CB-EV4",
+        "CB-EV7"
+      ],
+      "why": [
+        "Event indicates 'litigation', contradicting the on-file belief (adverse_media_status = Material litigation exposure \u2014 SEC v. Coinbase (filed 2023)).",
+        "Event indicates 'litigation', contradicting the on-file belief (adverse_media_status = Material litigation exposure \u2014 SEC v. Coinbase (filed 2023))."
+      ]
+    },
+    {
+      "assertion_id": "CB4",
+      "predicate": "operating_geographies",
+      "dimension": "contextual_change",
+      "value": "US-origin, expanding globally (EU, UK, APAC)",
+      "status": "contradicted",
+      "surprise": 1.0,
+      "risk_impact": 0.55,
+      "contradiction": 0.85,
+      "staleness": 0.084,
+      "envelope_breach": 0.6,
+      "trajectory": 0.0,
+      "confidence": 0.044,
+      "evidence_ids": [
+        "CB-EV2",
+        "CB-EV6"
+      ],
+      "why": [
+        "Coinbase obtains BaFin crypto-custody licence (Germany) \u2014 EU regulatory footprint expands \u2014 breaches expected envelope.",
+        "Event indicates 'crypto', contradicting the on-file belief (operating_geographies = US-origin, expanding globally (EU, UK, APAC))."
+      ]
+    }
+  ]
+}

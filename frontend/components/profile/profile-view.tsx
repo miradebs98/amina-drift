@@ -11,6 +11,7 @@ import { ReplayControls } from "./replay-controls";
 import { RiskGauge } from "@/components/viz/risk-gauge";
 import { ScoreComparison } from "@/components/viz/score-comparison";
 import { DriftScoreOverTime } from "@/components/viz/drift-score-line";
+import { DimensionLanes } from "@/components/viz/dimension-lanes";
 import { AssertionDiff } from "@/components/customers/assertion-diff";
 import { DriftLog } from "@/components/governance/drift-log";
 import { AuditTrail } from "@/components/governance/audit-trail";
@@ -19,7 +20,7 @@ import { Card } from "@/components/ui/card";
 import { postDecision } from "@/lib/api";
 import { fmtDate, eventTypeLabel } from "@/lib/format";
 import { buildTrajectory } from "@/lib/trajectory";
-import { ExternalLink, TrendingUp, History, GitCompareArrows, ScrollText } from "lucide-react";
+import { ExternalLink, TrendingUp, History, GitCompareArrows, ScrollText, Layers } from "lucide-react";
 
 function SectionTitle({ children, hint }: { children: React.ReactNode; hint?: string }) {
   return (
@@ -31,7 +32,7 @@ function SectionTitle({ children, hint }: { children: React.ReactNode; hint?: st
 }
 
 export function ProfileView({ data }: { data: CustomerCase }) {
-  const { customer, events, alert } = data;
+  const { customer, events, alert, dimensions_drifted, breadth, assertion_drift } = data;
   const qc = useQueryClient();
   const [selected, setSelected] = useState<EvidenceEvent | null>(null);
   const [replayIdx, setReplayIdx] = useState<number | null>(null);
@@ -141,6 +142,24 @@ export function ProfileView({ data }: { data: CustomerCase }) {
                   ))}
                 </div>
               </div>
+            </Card>
+
+            {/* DIMENSION CONVERGENCE — connect the dots across the 4 risk dimensions */}
+            <Card className="rounded-card border-surface-line p-6 shadow-card">
+              <SectionTitle hint="No single signal crosses a threshold — KYC drift is several kinds of change moving together. Lit lanes drove the alert.">
+                <span className="inline-flex items-center gap-2">
+                  <Layers className="size-4 text-ink-muted" /> Dimension convergence
+                </span>
+              </SectionTitle>
+              <DimensionLanes
+                events={events}
+                dimensionsDrifted={dimensions_drifted}
+                breadth={breadth}
+                assertionDrift={assertion_drift}
+                selectedId={selected?.id}
+                onSelectEvent={setSelected}
+                replayT={replayT}
+              />
             </Card>
 
             {/* TWIN DIFF — perception vs reality */}

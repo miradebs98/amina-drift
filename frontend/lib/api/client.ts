@@ -49,7 +49,24 @@ type CaseResponse = CustomerCase & Record<string, unknown>;
 export async function getCase(customerId: string): Promise<CustomerCase | null> {
   try {
     const c = await j<CaseResponse>(`/cases/${encodeURIComponent(customerId)}`);
-    return { customer: c.customer, events: c.events, alert: c.alert };
+    return {
+      customer: c.customer,
+      events: c.events,
+      alert: c.alert,
+      // connect-the-dots extras (pass through for the 4-lane view)
+      dimensions_drifted: c.dimensions_drifted as CustomerCase["dimensions_drifted"],
+      breadth: c.breadth as number | undefined,
+      assertion_drift: c.assertion_drift as CustomerCase["assertion_drift"],
+    };
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 404) return null;
+    throw e;
+  }
+}
+
+export async function getNetwork(customerId: string): Promise<unknown | null> {
+  try {
+    return await j(`/cases/${encodeURIComponent(customerId)}/network`);
   } catch (e) {
     if (e instanceof ApiError && e.status === 404) return null;
     throw e;

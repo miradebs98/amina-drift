@@ -1,0 +1,245 @@
+{
+  "dimensions_drifted": [
+    "behavioural_drift",
+    "contextual_change",
+    "identity_ownership",
+    "network_risk"
+  ],
+  "breadth": 4,
+  "assertion_drift": [
+    {
+      "assertion_id": "MS10",
+      "predicate": "pep_status",
+      "dimension": "identity_ownership",
+      "value": "No PEP among founders or UBOs",
+      "status": "contradicted",
+      "surprise": 0.875,
+      "risk_impact": 0.831,
+      "contradiction": 0.85,
+      "staleness": 0.062,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.073,
+      "evidence_ids": [
+        "MS-EV3"
+      ],
+      "why": [
+        "Event indicates 'stake', contradicting the on-file belief (pep_status = No PEP among founders or UBOs)."
+      ]
+    },
+    {
+      "assertion_id": "MS3",
+      "predicate": "ubo",
+      "dimension": "identity_ownership",
+      "value": "{\"Layla Haddad\": \"55% \u2014 co-founder/CEO\", \"Omar Said\": \"45% \u2014 co-founder/CTO\"}",
+      "status": "contradicted",
+      "surprise": 0.875,
+      "risk_impact": 0.787,
+      "contradiction": 0.85,
+      "staleness": 0.062,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.073,
+      "evidence_ids": [
+        "MS-EV3"
+      ],
+      "why": [
+        "Event indicates 'stake', contradicting the on-file belief (ubo = {\"Layla Haddad\": \"55% \u2014 co-founder/CEO\", \"Omar Said\": \"45% \u2014 co-founder/CTO\"})."
+      ]
+    },
+    {
+      "assertion_id": "MS9",
+      "predicate": "regulatory_status",
+      "dimension": "contextual_change",
+      "value": "ADGM commercial licence only; not FSRA-authorised",
+      "status": "contradicted",
+      "surprise": 0.875,
+      "risk_impact": 0.744,
+      "contradiction": 0.85,
+      "staleness": 0.062,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.066,
+      "evidence_ids": [
+        "MS-EV5"
+      ],
+      "why": [
+        "Event indicates 'crypto', contradicting the on-file belief (regulatory_status = ADGM commercial licence only; not FSRA-authorised)."
+      ]
+    },
+    {
+      "assertion_id": "MS1",
+      "predicate": "business_model",
+      "dimension": "contextual_change",
+      "value": "B2B SaaS \u2014 financial-data analytics dashboards for regional SMEs",
+      "status": "contradicted",
+      "surprise": 1.0,
+      "risk_impact": 0.7,
+      "contradiction": 0.999,
+      "staleness": 0.062,
+      "envelope_breach": 0.0,
+      "trajectory": 0.8,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "MS-EV1",
+        "MS-EV4",
+        "MS-EV5",
+        "MS-EV8"
+      ],
+      "why": [
+        "Event indicates 'crypto', contradicting the on-file belief (business_model = B2B SaaS \u2014 financial-data analytics dashboards for regional SMEs).",
+        "Event indicates 'crypto', contradicting the on-file belief (business_model = B2B SaaS \u2014 financial-data analytics dashboards for regional SMEs)."
+      ]
+    },
+    {
+      "assertion_id": "MS4",
+      "predicate": "product_mix",
+      "dimension": "contextual_change",
+      "value": "SaaS analytics subscriptions only; no trading or custody services",
+      "status": "contradicted",
+      "surprise": 1.0,
+      "risk_impact": 0.7,
+      "contradiction": 0.999,
+      "staleness": 0.062,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "MS-EV1",
+        "MS-EV4",
+        "MS-EV5",
+        "MS-EV8"
+      ],
+      "why": [
+        "Event indicates 'crypto', contradicting the on-file belief (product_mix = SaaS analytics subscriptions only; no trading or custody services).",
+        "Event indicates 'crypto', contradicting the on-file belief (product_mix = SaaS analytics subscriptions only; no trading or custody services)."
+      ]
+    },
+    {
+      "assertion_id": "MS5",
+      "predicate": "digital_asset_policy",
+      "dimension": "contextual_change",
+      "value": "No corporate digital-asset treasury; crypto out of scope",
+      "status": "contradicted",
+      "surprise": 1.0,
+      "risk_impact": 0.7,
+      "contradiction": 0.999,
+      "staleness": 0.062,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "MS-EV1",
+        "MS-EV4",
+        "MS-EV5",
+        "MS-EV8"
+      ],
+      "why": [
+        "Event indicates 'crypto', contradicting the on-file belief (digital_asset_policy = No corporate digital-asset treasury; crypto out of scope).",
+        "Event indicates 'crypto', contradicting the on-file belief (digital_asset_policy = No corporate digital-asset treasury; crypto out of scope)."
+      ]
+    },
+    {
+      "assertion_id": "MS12",
+      "predicate": "adverse_media_status",
+      "dimension": "network_risk",
+      "value": "No adverse media; no investigation or litigation",
+      "status": "contradicted",
+      "surprise": 0.775,
+      "risk_impact": 0.697,
+      "contradiction": 0.75,
+      "staleness": 0.062,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.151,
+      "evidence_ids": [
+        "MS-EV7"
+      ],
+      "why": [
+        "Event indicates 'fraud', contradicting the on-file belief (adverse_media_status = No adverse media; no investigation or litigation)."
+      ]
+    },
+    {
+      "assertion_id": "MS8",
+      "predicate": "expected_monthly_volume",
+      "dimension": "behavioural_drift",
+      "value": "Small early-stage volumes",
+      "status": "contradicted",
+      "surprise": 0.925,
+      "risk_impact": 0.647,
+      "contradiction": 0.0,
+      "staleness": 0.062,
+      "envelope_breach": 1.0,
+      "trajectory": 0.0,
+      "confidence": 0.738,
+      "evidence_ids": [
+        "MS-EV6"
+      ],
+      "why": [
+        "Monthly account flows jump to ~6M AED \u2014 order-of-magnitude above the onboarding envelope (SIMULATED, Layer-2 signal) \u2014 breaches expected envelope."
+      ]
+    },
+    {
+      "assertion_id": "MS7",
+      "predicate": "source_of_funds",
+      "dimension": "contextual_change",
+      "value": "SaaS subscription revenue (AED)",
+      "status": "contradicted",
+      "surprise": 0.825,
+      "risk_impact": 0.619,
+      "contradiction": 0.8,
+      "staleness": 0.062,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.098,
+      "evidence_ids": [
+        "MS-EV4"
+      ],
+      "why": [
+        "Event indicates 'crypto', contradicting the on-file belief (source_of_funds = SaaS subscription revenue (AED))."
+      ]
+    },
+    {
+      "assertion_id": "MS2",
+      "predicate": "operating_geographies",
+      "dimension": "contextual_change",
+      "value": "UAE-only operations",
+      "status": "contradicted",
+      "surprise": 1.0,
+      "risk_impact": 0.55,
+      "contradiction": 0.85,
+      "staleness": 0.062,
+      "envelope_breach": 0.6,
+      "trajectory": 0.5,
+      "confidence": 0.066,
+      "evidence_ids": [
+        "MS-EV2",
+        "MS-EV3"
+      ],
+      "why": [
+        "New offshore subsidiary incorporated in BVI \u2014 expansion beyond UAE-only scope (SIMULATED) \u2014 breaches expected envelope.",
+        "Event indicates 'stake', contradicting the on-file belief (operating_geographies = UAE-only operations)."
+      ]
+    },
+    {
+      "assertion_id": "MS6",
+      "predicate": "source_of_wealth",
+      "dimension": "contextual_change",
+      "value": "Founder equity + seed venture funding",
+      "status": "contradicted",
+      "surprise": 0.825,
+      "risk_impact": 0.165,
+      "contradiction": 0.8,
+      "staleness": 0.062,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.098,
+      "evidence_ids": [
+        "MS-EV4"
+      ],
+      "why": [
+        "Event indicates 'crypto', contradicting the on-file belief (source_of_wealth = Founder equity + seed venture funding)."
+      ]
+    }
+  ]
+}

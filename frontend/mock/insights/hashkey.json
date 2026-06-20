@@ -1,0 +1,53 @@
+{
+  "dimensions_drifted": [
+    "contextual_change",
+    "identity_ownership"
+  ],
+  "breadth": 2,
+  "assertion_drift": [
+    {
+      "assertion_id": "HK8",
+      "predicate": "pep_status",
+      "dimension": "identity_ownership",
+      "value": "No PEP among directors / UBOs",
+      "status": "contradicted",
+      "surprise": 1.0,
+      "risk_impact": 0.95,
+      "contradiction": 0.974,
+      "staleness": 0.101,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "sanctions-ac598ff8ba",
+        "sanctions-b7662fd3ba",
+        "sanctions-9295117bd4",
+        "sanctions-3d6f2c0854"
+      ],
+      "why": [
+        "Event indicates 'pep', contradicting the on-file belief (pep_status = No PEP among directors / UBOs).",
+        "Event indicates 'pep', contradicting the on-file belief (pep_status = No PEP among directors / UBOs)."
+      ]
+    },
+    {
+      "assertion_id": "HK2",
+      "predicate": "operating_geographies",
+      "dimension": "contextual_change",
+      "value": "Hong Kong (primary)",
+      "status": "contradicted",
+      "surprise": 0.94,
+      "risk_impact": 0.517,
+      "contradiction": 0.9,
+      "staleness": 0.101,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "gleif-b9312e4810"
+      ],
+      "why": [
+        "Event indicates 'digital asset', contradicting the on-file belief (operating_geographies = Hong Kong (primary))."
+      ]
+    }
+  ]
+}

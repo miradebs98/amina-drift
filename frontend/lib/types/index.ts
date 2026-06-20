@@ -82,6 +82,13 @@ export type EvidenceType =
   | "funding"
   | "transaction";
 
+// The 4 KYC-drift dimensions (shared/schemas/dimensions.py)
+export type Dimension =
+  | "identity_ownership"
+  | "network_risk"
+  | "behavioural_drift"
+  | "contextual_change";
+
 export interface EvidenceEvent {
   id: string;
   entity_ref: string;
@@ -95,6 +102,25 @@ export interface EvidenceEvent {
   published_at: string; // datetime
   confidence: number;
   raw_ref?: string | null;
+  dimension?: Dimension; // which of the 4 risk dimensions this signal belongs to
+}
+
+// per-belief drift decomposition (API: assertion_drift) — WHY each belief moved
+export interface AssertionDrift {
+  assertion_id: string;
+  predicate: string;
+  dimension: Dimension;
+  value: string;
+  status: AssertionStatus;
+  surprise: number;
+  risk_impact: number;
+  contradiction: number;
+  staleness: number;
+  envelope_breach: number;
+  trajectory: number;
+  confidence: number;
+  evidence_ids: string[];
+  why: string[];
 }
 
 // ── DriftAlert (alert.py) ──────────────────────────────────────────────────
@@ -134,6 +160,10 @@ export interface CustomerCase {
   customer: Customer;
   events: EvidenceEvent[];
   alert: DriftAlert;
+  // connect-the-dots extras (API emits these; optional so fixtures-lite still type-checks)
+  dimensions_drifted?: Dimension[];
+  breadth?: number;
+  assertion_drift?: AssertionDrift[];
 }
 
 // ── Governance (backend/govern) ────────────────────────────────────────────
