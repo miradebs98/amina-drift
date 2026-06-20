@@ -60,6 +60,13 @@ TIER_BANDS = [("LOW", 0), ("MEDIUM", 34), ("HIGH", 67)]   # 0–100 bands
 SURPRISE_FLAG_THRESHOLD = 0.30      # below this = case (a): score drifts gently, visualize only
 RISK_DELTA_FLAG_POINTS = 6          # min risk_score jump (points) to raise a flag
 
+# --- Breadth: connect-the-dots — co-movement ACROSS dimensions is the real KYC-drift signal ------
+BREADTH_MIN_DIMS = 3                 # ≥ this many distinct dimensions drifting → combination alert + score boost
+BREADTH_BONUS = 0.12                # ×Σimpact per dimension beyond 2 (3 dims = +0.12, 4 = +0.24)
+MATERIAL_IMPACT = 0.05              # a per-assertion risk_impact above this counts toward breadth
+CRITICAL_PREDICATES = ("sanctions_status", "pep_status", "adverse_media_status")
+CRITICAL_CONTRA = 0.7               # one high-severity hit on these fires an alert regardless of tier/breadth
+
 # --- Slow-drift trajectory alarms (early warning, before any hard contradiction) ----------------
 TRAJECTORY_NOISE_FLOOR = 0.10
 TRAJECTORY_ALARM_DISTANCE = 0.33

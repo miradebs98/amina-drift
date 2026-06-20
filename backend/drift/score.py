@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from datetime import date
 
 from shared.schemas import Assertion
+from shared.schemas.dimensions import dimension_for_predicate
 from backend.drift import config
 from backend.drift.classify import is_candidate, check_envelope_breach, classify_event
 from backend.drift.llm import LLMClient
@@ -78,6 +79,8 @@ class Assessment:
     trajectory: Trajectory
     evidence_ids: list[str]
     llm_used: bool = False
+    breadth: int = 0                            # # distinct risk dimensions co-moving (connect-the-dots)
+    dimensions_drifted: list[str] = field(default_factory=list)
 
 
 def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | None = None) -> Assessment:
@@ -137,7 +140,14 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
         ))
         all_evidence_ids.extend(ev_ids)
 
-    total_impact = sum(ad.risk_impact for ad in per)
+    # Breadth — the "connect-the-dots" core: count distinct dimensions among MATERIAL contributors;
+    # ≥3 co-moving gets a combination boost (5 quiet changes across dimensions > 1 loud one).
+    material_dims = sorted({dimension_for_predicate(ad.assertion.predicate.value).value
+                            for ad in per if ad.risk_impact > config.MATERIAL_IMPACT})
+    breadth = len(material_dims)
+    breadth_factor = 1.0 + config.BREADTH_BONUS * max(0, breadth - 2)
+
+    total_impact = sum(ad.risk_impact for ad in per) * breadth_factor
     saturate = min(1.0, total_impact / config.RISK_SCORE_FULL_DRIFT)
     risk_score = int(round(state.baseline_risk_score + (100 - state.baseline_risk_score) * saturate))
     risk_score = max(0, min(100, risk_score))
@@ -148,4 +158,5 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
         risk_delta=risk_score - state.baseline_risk_score, tier=tier_for(risk_score),
         surprise_max=surprise_max, per_assertion=per, trajectory=traj,
         evidence_ids=list(dict.fromkeys(all_evidence_ids)), llm_used=llm_used,
+        breadth=breadth, dimensions_drifted=material_dims,
     )
