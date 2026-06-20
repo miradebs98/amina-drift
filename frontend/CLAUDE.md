@@ -5,12 +5,13 @@
 
 ## 🚩 FIRST TASK (before building the UI)
 Help decide the schemas (see root `/CLAUDE.md` §0 + `shared/schemas/README.md`). **Your angle:**
-- Open `data/customers/gentwo-ag.json` — does the `Assertion` shape capture how a *real* KYC
-  profile is structured? What fields is an ex-RM missing (e.g. source-of-funds, expected products,
-  PEP status, sector codes)?
-- Open `eval/scenarios/gentwo-drift.example.json` — as the person who'll *render* this, answer
-  **Q3.1**: do you want ONE alert per customer (cleaner screen) or one per contradicted assertion?
-- Confirm the GenTwo onboarding beliefs are realistic; fix the values you can verify.
+- The two base-case profiles are authored: `data/customers/coinbase.json` (real, citable) and
+  `data/customers/meridian-sands.json` (the drift hero). The `Assertion` shape now carries the
+  full RM field set (source-of-wealth/funds, PEP/sanctions/adverse-media, digital-asset policy,
+  0–100 `risk_score`).
+- `eval/scenarios/{coinbase,meridian}-drift.example.json` answer **Q3.1** with ONE alert per
+  customer aggregating contradictions (the cleaner screen) — confirm at kickoff.
+- Verify the Coinbase facts flagged VERIFY (CIK/LEI/licences); Meridian is fully simulated.
 Bring these to the kickoff. Don't build screens until the `DriftAlert` shape is agreed.
 
 ## Your mission

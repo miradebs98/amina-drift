@@ -1,0 +1,180 @@
+{
+  "_comment": "BASE CASE 1 of 2 — Coinbase. Demonstrates CREATIVE PUBLIC-SOURCE COLLECTION (every assertion is REAL & citable).",
+  "_role_in_demo": "The 'breadth of sources' showcase: SEC/EDGAR filings, GLEIF, OFAC, regulators (BaFin/MiCA), on-chain, news. Not the silent LOW->HIGH drift hero (that's the ADGM startup) — Coinbase onboards already-elevated; its drift is continuous profile/regulatory expansion.",
+  "_real_vs_simulated": "Identity, business, ownership and regulatory facts are REAL & publicly sourced (URLs given; mark VERIFY on exact IDs/figures). The bank-side risk_score, review cadence, and the 'as an AMINA institutional client' framing are SIMULATED — illustrative only.",
+  "_structure_note": "entity_profile = static identity (not drift-monitored). assertions = the dated, sourced beliefs the engine re-validates.",
+
+  "customer_id": "coinbase-global",
+  "legal_name": "Coinbase Global, Inc.",
+  "onboarded_as_of": "2021-04-14",
+  "purpose_of_relationship": "Institutional custody & treasury for a listed digital-asset exchange group (SIMULATED onboarding rationale).",
+  "_open_question": "Coinbase is illustrative of a Coinbase-LIKE institutional client; state this on stage so we don't imply a real banking relationship.",
+
+  "risk_model": {
+    "_note": "A regulated crypto exchange onboards ELEVATED, not LOW. Drift here = upward pressure from regulatory actions + global expansion, not a tier flip.",
+    "scale": "0-100",
+    "bands": { "LOW": "0-33", "MEDIUM": "34-66", "HIGH": "67-100" },
+    "onboarding_score": 60,
+    "onboarding_band": "MEDIUM"
+  },
+
+  "kyc_review": {
+    "_note": "Risk-based periodic review. MEDIUM band -> 24-month cadence.",
+    "cadence_months_by_band": { "LOW": 36, "MEDIUM": 24, "HIGH": 12 },
+    "last_review": "2021-04-14",
+    "next_periodic_review": "2023-04-14",
+    "_derivation": "MEDIUM -> 24mo -> 2021-04-14 + 24mo = 2023-04-14. Regulatory escalation (SEC suit 2023) should have pulled this off-cycle — a point the demo can make."
+  },
+
+  "entity_profile": {
+    "_note": "Static KYC identity block — collected at onboarding, not monitored for drift.",
+    "legal_name": "Coinbase Global, Inc.",
+    "legal_form": "Delaware C-Corporation",
+    "country_of_incorporation": "US",
+    "date_of_incorporation": "2014 (Coinbase Global, Inc.; operating business founded 2012)",
+    "sec_cik": "0001679788 (SEC EDGAR — VERIFY)",
+    "lei": "VERIFY via GLEIF",
+    "registered_address": "Delaware, US (remote-first; no central HQ since 2020)",
+    "principal_place_of_business": "Remote-first (formerly San Francisco, CA)",
+    "website": "https://www.coinbase.com",
+    "listed_on_exchange": true,
+    "ticker": "NASDAQ: COIN (direct listing 2021-04-14)",
+    "regulated_financial_entity": "Partially — NYDFS BitLicense, multiple US MTLs, EU MiCA & BaFin (VERIFY current scope)",
+    "entity_tax_residency": "US",
+    "entity_tin": "VERIFY"
+  },
+
+  "assertions": [
+    {
+      "id": "CB1",
+      "customer_id": "coinbase-global",
+      "predicate": "business_model",
+      "value": "Retail & institutional digital-asset exchange + custody",
+      "as_of": "2021-04-14",
+      "last_verified": "2021-04-14",
+      "source": "Coinbase S-1 / Form 10-K (SEC EDGAR)",
+      "source_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001679788",
+      "confidence": 0.95,
+      "status": "valid",
+      "notes": "REAL. Drifts via continuous expansion into staking, derivatives (Deribit acq. 2025), stablecoins (USDC), L2 (Base), payments."
+    },
+    {
+      "id": "CB2",
+      "customer_id": "coinbase-global",
+      "predicate": "listing_status",
+      "value": "Public — NASDAQ: COIN (direct listing 2021-04-14)",
+      "as_of": "2021-04-14",
+      "last_verified": "2021-04-14",
+      "source": "NASDAQ / SEC",
+      "source_url": "https://www.nasdaq.com/market-activity/stocks/coin",
+      "confidence": 1.0,
+      "status": "valid",
+      "notes": "REAL — first major crypto exchange to list on a US exchange."
+    },
+    {
+      "id": "CB3",
+      "customer_id": "coinbase-global",
+      "predicate": "ubo",
+      "value": "{\"Brian Armstrong\": \"co-founder/CEO — majority voting via Class B (20 votes/share)\", \"Fred Ehrsam\": \"co-founder/director\"}",
+      "as_of": "2021-04-14",
+      "last_verified": "2021-04-14",
+      "source": "Coinbase proxy statement (DEF 14A) / S-1 — dual-class structure",
+      "source_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001679788&type=DEF+14A",
+      "confidence": 0.9,
+      "status": "valid",
+      "notes": "REAL — dual-class (Class A 1 vote / Class B 20 votes) concentrates voting control in founders. A genuine UBO/control nuance for a listed entity."
+    },
+    {
+      "id": "CB4",
+      "customer_id": "coinbase-global",
+      "predicate": "operating_geographies",
+      "value": "US-origin, expanding globally (EU, UK, APAC)",
+      "expected_envelope": { "allowed_set": ["US", "EU", "UK"], "unit": "operating_region" },
+      "as_of": "2021-04-14",
+      "last_verified": "2021-04-14",
+      "source": "10-K geographic segment disclosure",
+      "source_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001679788",
+      "confidence": 0.85,
+      "status": "valid",
+      "notes": "REAL — international footprint widened post-listing (EU MiCA, Ireland, Germany, etc.)."
+    },
+    {
+      "id": "CB5",
+      "customer_id": "coinbase-global",
+      "predicate": "regulatory_status",
+      "value": "NYDFS BitLicense + US MTLs; later EU MiCA & BaFin crypto-custody licence",
+      "as_of": "2021-04-14",
+      "last_verified": "2021-04-14",
+      "source": "NYDFS register; BaFin; ESMA/MiCA",
+      "source_url": "https://www.dfs.ny.gov/virtual_currency_businesses",
+      "confidence": 0.85,
+      "status": "valid",
+      "notes": "REAL — regulatory perimeter is itself a moving target (drift signal). VERIFY current licence list."
+    },
+    {
+      "id": "CB6",
+      "customer_id": "coinbase-global",
+      "predicate": "sanctions_status",
+      "value": "Historic OFAC settlement (2020, apparent sanctions-screening failures); no entity designation",
+      "as_of": "2021-04-14",
+      "last_verified": "2021-04-14",
+      "source": "US OFAC enforcement action",
+      "source_url": "https://ofac.treasury.gov/recent-actions",
+      "confidence": 0.8,
+      "status": "valid",
+      "notes": "REAL — a settled compliance finding, NOT a designation. Good example of nuanced screening (a hit that needs human judgement, not auto-escalation). VERIFY exact figures."
+    },
+    {
+      "id": "CB7",
+      "customer_id": "coinbase-global",
+      "predicate": "adverse_media_status",
+      "value": "Material litigation exposure — SEC v. Coinbase (filed 2023)",
+      "as_of": "2021-04-14",
+      "last_verified": "2021-04-14",
+      "source": "SEC litigation release / court docket / press",
+      "source_url": "https://www.sec.gov/litigation",
+      "confidence": 0.85,
+      "status": "valid",
+      "notes": "REAL — SEC suit filed Jun 2023, later dropped (2025). The clean->litigation->resolved arc is a strong adverse-media DRIFT demonstration over the relationship lifetime."
+    },
+    {
+      "id": "CB8",
+      "customer_id": "coinbase-global",
+      "predicate": "digital_asset_holdings",
+      "value": "Holds BTC, ETH and other crypto on the corporate balance sheet (custodial + proprietary)",
+      "as_of": "2021-04-14",
+      "last_verified": "2021-04-14",
+      "source": "10-K balance sheet / crypto asset disclosures",
+      "source_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001679788",
+      "confidence": 0.85,
+      "status": "valid",
+      "notes": "REAL — relevant for an AMINA (crypto-bank) client; proof-of-reserves style disclosures are public."
+    },
+    {
+      "id": "CB9",
+      "customer_id": "coinbase-global",
+      "predicate": "source_of_funds",
+      "value": "Transaction fees + subscription & services (custody, staking, interest income)",
+      "as_of": "2021-04-14",
+      "last_verified": "2021-04-14",
+      "source": "10-K revenue disaggregation",
+      "source_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001679788",
+      "confidence": 0.9,
+      "status": "valid",
+      "notes": "REAL — revenue mix shifted toward subscription & services over time (another slow-drift signal)."
+    },
+    {
+      "id": "CB10",
+      "customer_id": "coinbase-global",
+      "predicate": "risk_score",
+      "value": "60",
+      "as_of": "2021-04-14",
+      "last_verified": "2021-04-14",
+      "source": "bank internal scoring (SIMULATED)",
+      "source_url": null,
+      "confidence": 1.0,
+      "status": "valid",
+      "notes": "SIMULATED. 60 = top of MEDIUM band. For Coinbase the demo point is sourcing breadth + steady upward pressure (regulatory actions), not a dramatic LOW->HIGH flip."
+    }
+  ]
+}

@@ -3,29 +3,31 @@
 > **Read this before writing any feature code.** The three schemas here are the *contracts* that
 > let three people build three pieces in parallel and have them snap together. Get them right →
 > smooth handoffs. Get them wrong → everyone reworks on Sunday. So we **reason them through
-> together first** (~1 hour, all three founders), using the GenTwo worked example as the test case.
+> together first** (~1 hour, all three founders), using the two base-case worked examples
+(Coinbase + Meridian Sands) as the test cases.
 
 ## What's here
 - `assertion.py` / `evidence.py` / `alert.py` / `audit.py` — a **DRAFT proposal** to react to, not gospel.
-- The GenTwo example is already filled in against this draft, split across the three lanes:
-  - **Assertions** (Giacomo's input):   `data/customers/gentwo-ag.json`
-  - **EvidenceEvents** (Mira's output): `data/fixtures/gentwo-events.example.json`
-  - **DriftAlert** (Miguel's output):   `eval/scenarios/gentwo-drift.example.json`
-- Open the three files side by side — that *is* the whole product in three steps.
+- Two base-case examples are filled in against this draft, each split across the three lanes:
+  - **Coinbase** (real, citable — public-source breadth):
+    `data/customers/coinbase.json` · `data/fixtures/coinbase-events.example.json` · `eval/scenarios/coinbase-drift.example.json`
+  - **Meridian Sands** (simulated ADGM startup — the drift hero, LOW→HIGH):
+    `data/customers/meridian-sands.json` · `data/fixtures/meridian-events.example.json` · `eval/scenarios/meridian-drift.example.json`
+- Open one entity's three files side by side — that *is* the whole product in three steps.
 
 ## The one principle
 A schema is just **the agreed shape of the data passed between people.** It is NOT real logic —
 it's a handshake. Once agreed, each of you mocks the others' data in that shape and builds alone.
 **The point of doing it first is parallelism.** Don't over-design it; design just enough that the
-GenTwo example flows cleanly from belief → evidence → alert → screen.
+each base case flows cleanly from belief → evidence → alert → screen.
 
 ---
 
 ## The kickoff session: decide these, write the answers in the Decision Log below
 
 Each schema has a few real design choices. For each: the question, the options, and a recommended
-default to argue against. **Make GenTwo concrete as you go** — if a choice doesn't change how the
-GenTwo example looks, it doesn't matter yet; skip it.
+default to argue against. **Make the base cases concrete as you go** — if a choice doesn't change
+how Coinbase/Meridian look, it doesn't matter yet; skip it.
 
 ### 1. `Assertion` (Giacomo's lane — what the bank believes)
 - **Q1.1 — Granularity of a multi-part fact.** Is `UBO` one assertion holding a structure
@@ -77,7 +79,7 @@ GenTwo example looks, it doesn't matter yet; skip it.
 
 ## Definition of done for the kickoff
 ✅ The 3 shapes are agreed and the open questions above have answers in the Decision Log.
-✅ The GenTwo example files validate against the agreed shapes (belief → evidence → alert flows).
+✅ The base-case example files validate against the agreed shapes (belief → evidence → alert flows).
 ✅ Everyone can now go to their own lane and build against mocked data in these shapes.
 
 After this, **don't change a schema without pinging the other two** — it's the one thing that

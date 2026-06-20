@@ -15,14 +15,28 @@ through together first** (~1h), then build. Direction for every agent:
 
 1. Read **[`shared/schemas/README.md`](shared/schemas/README.md)** — it frames the open design
    questions (with options + recommended defaults) to reason about, not a finished answer.
-2. The **locked demo entity is GenTwo AG.** It's already filled into the draft schemas, split
-   across the lanes so you can see your part:
-   - Giacomo → `data/customers/gentwo-ag.json` (the beliefs / `Assertion`s)
-   - Mira → `data/fixtures/gentwo-events.example.json` (the public signals / `EvidenceEvent`s)
-   - Miguel → `eval/scenarios/gentwo-drift.example.json` (the mismatch / `DriftAlert`)
+2. **Base cases — set 2026-06-20 per AMINA partner feedback (Giacomo).** We run **TWO** entities,
+   each proving one judging axis.
+   - **Coinbase** — the *public-source breadth* case. Every assertion is REAL & citable
+     (SEC/EDGAR, GLEIF, OFAC, BaFin/MiCA, on-chain). Onboards ELEVATED (score 60/MEDIUM); drift =
+     regulatory + global expansion, not a tier flip. Files: `data/customers/coinbase.json` ·
+     `data/fixtures/coinbase-events.example.json` · `eval/scenarios/coinbase-drift.example.json`.
+   - **Meridian Sands Technologies Ltd** — the **DRIFT HERO**. A *fictional* ADGM startup that
+     silently re-tiers **LOW (28) → HIGH (~82)** over ~30 months (SaaS → crypto pivot, offshore
+     expansion, new >25% PEP-adjacent UBO, volume breach, co-founder investigation). 100%
+     SIMULATED — the model-strength case, where drift actually bites in AMINA's book. Files:
+     `data/customers/meridian-sands.json` · `data/fixtures/meridian-events.example.json` ·
+     `eval/scenarios/meridian-drift.example.json`.
+   - **Starter examples authored (build on top):** Giacomo authored both customer `Assertion`
+     profiles; the matching `EvidenceEvent` fixtures + `DriftAlert`s are seeded as starters. Mira
+     extends the connectors/events, Miguel refines the drift engine/alerts.
+   - **⚠️ Schema note:** risk is now a **0–100 `risk_score`** (band derived); split
+     `operating_geographies` vs `counterparty_geographies` and `source_of_wealth` vs
+     `source_of_funds`; `DriftAlert` carries `old_risk_score`/`new_risk_score`. Both alerts use a
+     proposed `also_contradicts[]` field not yet in the model — Miguel to formalize.
 3. Each agent's job *right now* is to pressure-test the draft schema **from its own lane's needs**
    (see the lane `CLAUDE.md`) and bring those points to the kickoff. Only after the schemas are
-   agreed and the GenTwo example validates do we start building features.
+   agreed and the worked examples validate do we start building features.
 
 > Why first: once the data shapes are agreed, each person mocks the others' data in that shape and
 > builds alone. Skip this and everyone waits on everyone — a single-file queue instead of parallel.

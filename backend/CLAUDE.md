@@ -5,8 +5,9 @@
 
 ## 🚩 FIRST TASK (before building connectors)
 Help decide the schemas (see root `/CLAUDE.md` §0 + `shared/schemas/README.md`). **Your angle:**
-- Open `data/fixtures/gentwo-events.example.json` — can every connector (news, registry, sanctions,
-  Wayback) realistically fill this `EvidenceEvent` shape? Is the `payload` flexible enough?
+- Open the base-case fixtures — `data/fixtures/coinbase-events.example.json` (real/citable) and
+  `data/fixtures/meridian-events.example.json` (simulated) — can every connector (news, registry,
+  sanctions, Wayback) realistically fill this `EvidenceEvent` shape? Is the `payload` flexible enough?
 - Own the call on **Q2.1 (the big one)**: do we detect slow drift from *events only*, or do you
   also emit periodic `Snapshot`s? This decides how much you build — weigh it.
 - **Q2.3**: confirm connectors stay dumb (just emit facts) and Miguel's engine does evidence→

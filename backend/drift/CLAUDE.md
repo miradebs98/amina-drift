@@ -8,10 +8,12 @@
 ## 🚩 FIRST TASK (before building the engine)
 Help decide the schemas (see root `/CLAUDE.md` §0 + `shared/schemas/README.md`). **Your angle:**
 - You consume `Assertion` + `EvidenceEvent` and produce `DriftAlert` — so you have the biggest
-  stake. Open all three GenTwo files (`data/customers/gentwo-ag.json`,
-  `data/fixtures/gentwo-events.example.json`, `eval/scenarios/gentwo-drift.example.json`).
-- Drive **Q2.1**: can you detect the GenTwo slow drift (SaaS→crypto) from events alone, or do you
-  need `Snapshot`s + an embedding trajectory? Your answer sets Mira's scope.
+  stake. Open the two base-case sets — esp. the drift hero **Meridian Sands**
+  (`data/customers/meridian-sands.json`, `data/fixtures/meridian-events.example.json`,
+  `eval/scenarios/meridian-drift.example.json`) plus **Coinbase** (`*coinbase*`).
+- Drive **Q2.1**: can you detect Meridian's silent re-tiering (LOW 28 → HIGH 82; SaaS→crypto
+  pivot + offshore + new UBO) from events alone, or do you need `Snapshot`s + an embedding
+  trajectory? Your answer sets Mira's scope.
 - **Q3.2**: does `DriftAlert` need a per-factor score breakdown for explainability? **Q1.4**:
   confirm you get `last_verified` for confidence decay.
 Bring these to the kickoff. Don't build the engine until the three shapes are agreed.

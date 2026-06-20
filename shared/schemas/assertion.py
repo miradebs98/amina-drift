@@ -16,18 +16,61 @@ from pydantic import BaseModel, Field
 
 
 class Predicate(str, Enum):
-    """The attribute of the customer this assertion is about. Extend as needed (ping team)."""
-    BUSINESS_MODEL = "business_model"            # e.g. "B2B SaaS / payments software"
+    """The attribute of the customer an assertion is about.
+
+    Grouped by KYC section, mirroring a real AMINA B2B onboarding file (Giacomo, ex-RM).
+    KEY DISTINCTION: not every field a bank collects is a *monitorable* assertion. Immutable
+    identity (incorporation date, commercial-register number, TIN) lives in the `entity_profile`
+    header of the customer file, NOT here — the drift engine never re-validates it. Predicates
+    are the dated, testable BELIEFS the engine re-checks against public intelligence.
+
+    ⭐ = high-value drift target exercised by the demo. Extend as needed (ping team).
+    """
+    # --- Business & activity (categorical beliefs that get CONTRADICTED) ---
+    BUSINESS_MODEL = "business_model"            # ⭐ "B2B securitization" → broken by a crypto pivot
+    INDUSTRY_SECTOR = "industry_sector"          # NOGA/NAICS-style classification
+    PRODUCT_MIX = "product_mix"                  # products/services used (incl. services requested at AMINA)
+    LISTING_STATUS = "listing_status"            # private vs listed on a stock exchange
+
+    # --- Identity / legal (slow-moving, but material when they change) ---
     LEGAL_FORM = "legal_form"                    # e.g. "AG", "GmbH"
-    DOMICILE = "domicile"                        # e.g. "Zug, CH"
-    UBO = "ubo"                                  # beneficial owners {name: pct}
-    DIRECTORS = "directors"                      # board / signatories
+    DOMICILE = "domicile"                        # registered seat: country of incorporation + reg. address
+    PRINCIPAL_PLACE_OF_BUSINESS = "principal_place_of_business"  # where actually managed/operated
     DOMAIN = "domain"                            # primary website domain
+
+    # --- Ownership & control ---
+    UBO = "ubo"                                  # ⭐ beneficial owners >25% {name: pct/role}
+    DIRECTORS = "directors"                      # board / authorised signatories
+    OWNERSHIP_STRUCTURE = "ownership_structure"  # type + chain (holding / organigram)
+
+    # --- Geographic footprint (behavioural envelopes) ---
+    OPERATING_GEOGRAPHIES = "operating_geographies"       # where the business operates
+    COUNTERPARTY_GEOGRAPHIES = "counterparty_geographies" # clients/suppliers country set
+
+    # --- Financial profile & funds (envelopes + source) ---
     EXPECTED_MONTHLY_VOLUME = "expected_monthly_volume"   # behavioural envelope (CHF)
-    COUNTERPARTY_GEOGRAPHIES = "counterparty_geographies" # expected country set
-    PRODUCT_MIX = "product_mix"                  # expected products/services used
-    RISK_TIER = "risk_tier"                      # LOW / MEDIUM / HIGH (the rolled-up belief)
+    FINANCIAL_PROFILE = "financial_profile"      # turnover / total assets band
+    SOURCE_OF_WEALTH = "source_of_wealth"        # ⭐ how the entity's wealth was historically generated
+    SOURCE_OF_FUNDS = "source_of_funds"          # ⭐ origin of the funds transacting through AMINA
     ACTIVITY_LEVEL = "activity_level"            # e.g. "dormant", "active"
+
+    # --- Digital assets (AMINA-specific — the crypto KYC core) ---
+    DIGITAL_ASSET_POLICY = "digital_asset_policy"      # ⭐ digital-asset treasury policy on file?
+    DIGITAL_ASSET_HOLDINGS = "digital_asset_holdings"  # ⭐ classes held + source (exchange/mining)
+
+    # --- Tax ---
+    TAX_RESIDENCY = "tax_residency"              # entity tax residence + TIN
+    TAX_CLASSIFICATION = "tax_classification"    # FATCA / CRS status
+
+    # --- Screening & compliance status (the headline drift targets) ---
+    REGULATORY_STATUS = "regulatory_status"      # regulated/supervised? licenses held + regulator
+    PEP_STATUS = "pep_status"                    # ⭐ any PEP among directors / UBOs
+    SANCTIONS_STATUS = "sanctions_status"        # ⭐ entity / director / UBO sanctions exposure
+    ADVERSE_MEDIA_STATUS = "adverse_media_status"# ⭐ investigations/litigation/financial-crime media
+
+    # --- Rolled-up output (the KYC's verdict; drift is framed as movement of this) ---
+    RISK_SCORE = "risk_score"                    # ⭐ 0–100 composite KYC risk score — the demo re-scores it LOW→HIGH
+    RISK_TIER = "risk_tier"                      # derived band of risk_score (LOW 0–33 / MED 34–66 / HIGH 67–100), display only
 
 
 class AssertionStatus(str, Enum):

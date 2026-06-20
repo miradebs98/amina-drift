@@ -39,9 +39,11 @@ class DriftAlert(BaseModel):
     flag: str                              # maps to a brief use-case flag, e.g.
                                            # "Ownership Change – KYC Drift", "Material Business Model Change"
     severity: Severity
-    drift_score: float                     # contribution to risk re-tiering
-    old_risk_tier: str                     # e.g. "LOW"
-    new_risk_tier: str                     # e.g. "HIGH"  → the green→amber→red moment
+    drift_score: float                     # contribution to risk re-tiering (0..1)
+    old_risk_score: Optional[int] = None   # 0–100 score BEFORE drift (rolled-up KYC output)
+    new_risk_score: Optional[int] = None   # 0–100 score AFTER drift → the number that moves on stage
+    old_risk_tier: str                     # derived band of old_risk_score, e.g. "LOW"
+    new_risk_tier: str                     # derived band of new_risk_score, e.g. "HIGH" → green→amber→red
 
     # --- explainability (no alert without these) ---
     contradicted_assertion_id: Optional[str] = None   # the specific belief invalidated

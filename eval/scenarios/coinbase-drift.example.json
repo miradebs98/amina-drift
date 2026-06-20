@@ -1,0 +1,39 @@
+{
+  "_comment": "STARTER EXAMPLE — Miguel's lane. The MISMATCH for Coinbase, derived from beliefs (coinbase.json) vs signals (coinbase-events.example.json).",
+  "_status": "DRAFT — Miguel refines the drift engine on top of this.",
+  "_framing": "NEUTRAL: 'material change -> re-KYC needed', NOT an accusation. A human analyst decides.",
+  "_note_score": "Risk now expressed as old/new risk_score (0-100); tier is the derived band.",
+
+  "alert": {
+    "id": "alert-coinbase-001",
+    "customer_id": "coinbase-global",
+    "drift_type": "structural",
+    "flag": "Regulatory Posture & Business Expansion (Scope Drift)",
+    "severity": "medium",
+    "drift_score": 0.55,
+    "old_risk_score": 60,
+    "new_risk_score": 70,
+    "old_risk_tier": "MEDIUM",
+    "new_risk_tier": "HIGH",
+
+    "contradicted_assertion_id": "CB7",
+    "also_contradicts": ["CB1", "CB4", "CB5"],
+    "evidence_ids": ["CB-EV4", "CB-EV3", "CB-EV5", "CB-EV6"],
+
+    "rationale": "Onboarded as a US exchange/custodian with a contained product set (CB1) and footprint (CB4). Public record since shows material litigation (SEC suit, CB-EV4), product expansion into L2 infrastructure (CB-EV3) and derivatives (CB-EV6), and a widening EU regulatory perimeter (MiCA/BaFin, CB-EV5). The onboarding risk baseline understates the current profile.",
+    "what_would_flip": "Resolution of the SEC litigation and confirmation the new segments/jurisdictions are within licensed scope — note the SEC later dismissed its case (CB-EV7), which would re-baseline this downward.",
+    "recommended_action": "Refresh KYC scope; confirm licence coverage for derivatives & EU activity; re-baseline risk on litigation resolution.",
+    "confidence": 0.85,
+
+    "stage_reached": 2,
+    "model_used": "<heavy-tier-llm>",
+    "tokens_used": 1980,
+
+    "governance_state": "pending",
+    "reviewer": null,
+    "decided_at": null,
+    "created_at": "2026-06-20T10:00:00Z",
+
+    "_note": "Coinbase is the SOURCING-breadth case: notice every evidence_id resolves to a real public citation. The drift is upward pressure + a resolvable overhang, not a LOW->HIGH flip."
+  }
+}
