@@ -104,6 +104,27 @@ Startups are the wedge (AMINA's hardest case) — Mira is adding funding/investo
 investor = a likely NEW beneficial owner → that should light the Identity dimension and feed the
 combination.
 
+## 💡 Suggestions on the scoring algorithm (OPTIONAL — your call, from a code read)
+> Not directives — the engine is genuinely well-designed (both drift types unified into one
+> transparent per-assertion `surprise`; interpretable concept-axis embedding; principled
+> `baseline + headroom·saturate` mapping; surprise vs. risk-impact decoupled for case (c)). These
+> are just ideas if/when you pick up the GOLD task. Ignore freely.
+
+1. **Reward BREADTH, not just magnitude (the core "connect-the-dots" idea).** `saturate(Σimpact/10)`
+   is a flat sum — one loud assertion ≈ five quiet ones across dimensions. Consider a dimension-aware
+   term: count distinct `dimension_for_predicate()` among contributors and add a multiplier / noisy-OR
+   when ≥3 co-move. This is what makes "5 quiet changes > 1 loud one" real in the *score*.
+2. **Decouple alerting from tier-crossing.** Right now an alert needs a band crossing, so within-band
+   multi-dimension drift fires nothing — e.g. **HashKey (55→63, stays MEDIUM, 0 alerts)**, which is
+   exactly the "no single threshold crossed" case the challenge is about. Consider firing on
+   `(tier crossing) OR (breadth ≥ N) OR (a critical single hit like sanctions)`.
+3. **Make slow-drift work on REAL entities.** `trajectory` needs `signal_mix` snapshots, which only
+   Meridian has (hand-authored) → Coinbase/HashKey fall back to event-drift only. Idea: derive
+   per-period `signal_mix` from the live event stream (crypto/offshore/expansion keyword density from
+   news/Wayback/crt.sh), and make the concept axes per-customer rather than the Meridian-tuned set.
+4. **(minor)** Model negative `direction` for *resolving* events (e.g. Coinbase's SEC-suit-dismissed)
+   so "what would flip" affects the score, not only the narrative.
+
 ## 🎯 SCORING — exactly what you build (you REUSE grain_lite, don't rebuild it)
 We vendored Sablier's GRAIN scorer into `backend/grain_lite/`. It already gives you the hard
 infra. **Your job is the drift-specific scoring on top.** Read `backend/grain_lite/README.md`.
