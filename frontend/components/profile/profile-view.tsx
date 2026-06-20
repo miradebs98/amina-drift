@@ -45,8 +45,8 @@ export function ProfileView({ data }: { data: CustomerCase }) {
   const qc = useQueryClient();
   const [selected, setSelected] = useState<EvidenceEvent | null>(null);
   const [replayIdx, setReplayIdx] = useState<number | null>(null);
-  const [twinOpen, setTwinOpen] = useState(true);
-  const [driftLogOpen, setDriftLogOpen] = useState(true);
+  const [twinOpen, setTwinOpen] = useState(false);
+  const [driftLogOpen, setDriftLogOpen] = useState(false);
 
   // governance / HITL
   const [role, setRole] = useState<Role>("analyst");

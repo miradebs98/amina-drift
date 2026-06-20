@@ -95,6 +95,7 @@ export interface EvidenceEvent {
   published_at: string; // datetime
   confidence: number;
   raw_ref?: string | null;
+  dimension?: string | null; // one of the 4 drift dimensions (identity_ownership, network_risk, behavioural_drift, contextual_change)
 }
 
 // ── DriftAlert (alert.py) ──────────────────────────────────────────────────

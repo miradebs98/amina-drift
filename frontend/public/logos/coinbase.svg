@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-label="Coinbase">
+  <defs>
+    <mask id="coinbase-c">
+      <rect width="1024" height="1024" fill="black"/>
+      <circle cx="512" cy="512" r="350" fill="white"/>
+      <circle cx="512" cy="512" r="196" fill="black"/>
+      <rect x="512" y="316" width="372" height="392" fill="black"/>
+    </mask>
+  </defs>
+  <rect width="1024" height="1024" rx="232" fill="#0052FF"/>
+  <rect width="1024" height="1024" fill="#ffffff" mask="url(#coinbase-c)"/>
+</svg>

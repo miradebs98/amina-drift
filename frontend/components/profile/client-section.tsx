@@ -18,7 +18,8 @@ import {
   UserCog,
 } from "lucide-react";
 import type { Customer, DriftAlert, DecisionAction, DecisionResult, Role } from "@/lib/types";
-import { bandForScore, colorsForScore, fmtDate, monogram } from "@/lib/format";
+import { bandForScore, colorsForScore, fmtDate } from "@/lib/format";
+import { CompanyLogo } from "@/components/shared/company-logo";
 
 const ACTION_LABEL: Record<DecisionAction, string> = {
   approve: "Approve",
@@ -100,12 +101,7 @@ export function ClientSection({
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center gap-4 p-5 text-left transition-colors hover:bg-surface-subtle"
       >
-        <div
-          className="flex size-12 shrink-0 items-center justify-center rounded-xl text-base font-bold text-white shadow-card"
-          style={{ background: "linear-gradient(135deg,#0d2936,#14b8a6)" }}
-        >
-          {monogram(customer.legal_name)}
-        </div>
+        <CompanyLogo customerId={customer.customer_id} name={customer.legal_name} size={48} className="shadow-card" />
         <div className="min-w-0 flex-1">
           <h2 className="truncate font-display text-xl font-semibold leading-tight text-ink">{customer.legal_name}</h2>
           <div className="mt-0.5 flex items-center gap-2 text-xs text-ink-muted">
