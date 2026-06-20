@@ -20,6 +20,9 @@ Layer 2 (internal) data/customers/  ──┘   (engine) (cost)   (HITL+audit) (
 ```
 Full context + ownership: **[CLAUDE.md](CLAUDE.md)**. Each lane has its own `CLAUDE.md`.
 
+Architecture, the data contracts, and procedures to add a new source or signal:
+**[docs/MECHANISM_AND_EXTENSION.md](docs/MECHANISM_AND_EXTENSION.md)**.
+
 ## Team & ownership
 | Lane | Owner | Directories |
 |---|---|---|
