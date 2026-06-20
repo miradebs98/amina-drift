@@ -256,20 +256,24 @@ def _parse_json(text: str) -> dict:
 
 
 def get_llm(offline: bool | None = None) -> LLMClient:
-    """Factory: the offline MockLLM, or ApiLLM (Apertus) when keys are set AND we're not offline.
+    """Factory. REAL Apertus is the DEFAULT whenever DRIFT_LLM_* keys are present — the product IS the
+    Swiss-sovereign LLM cascade, so we run it, not a mock. ApiLLM auto-falls-back to MockLLM *per call*
+    on any endpoint error, so a flaky CSCS degrades gracefully instead of crashing the demo — that's
+    resilience, NOT faking the headline.
 
-    `OFFLINE_DEMO=true` (the demo default) FORCES the deterministic offline MockLLM even when Apertus
-    keys are present — so the stage demo is instant, network-independent and reproducible (Meridian
-    28->80). Set `OFFLINE_DEMO=false` (+ DRIFT_LLM_* keys) for the live Apertus cascade (Meridian
-    28->83). Pass offline=False to force the live path regardless (used by smoke_apertus).
+    MockLLM is used only when there are NO keys (CI/tests — deterministic, network-free) or you
+    explicitly force it (DRIFT_LLM_MOCK=1 / offline=True) for a fast local dev loop. For a snappy stage
+    demo, PRE-WARM the cache (build each case once) — Apertus reasons them, then the stage serves from
+    cache instantly. NOTE: OFFLINE_DEMO is for the INGEST layer (cached fixtures vs live sources); it
+    no longer forces the LLM to mock — real reasoning runs regardless of where the events come from.
 
         DRIFT_LLM_BASE_URL=https://api.swissai.svc.cscs.ch/v1
         DRIFT_LLM_API_KEY=sk-rc-...
-        DRIFT_LLM_CHEAP_MODEL=swiss-ai/Apertus-8B-Instruct-2509   # sensitive Layer-2 stays in CH
-        DRIFT_LLM_HEAVY_MODEL=swiss-ai/Apertus-70B-Instruct-2509  # deep-dive
+        DRIFT_LLM_CHEAP_MODEL=swiss-ai/Apertus-8B-Instruct-2509   # Stage-2 verdict
+        DRIFT_LLM_HEAVY_MODEL=swiss-ai/Apertus-70B-Instruct-2509  # Stage-3 deep-dive
     """
     if offline is None:
-        offline = os.environ.get("OFFLINE_DEMO", "true").strip().lower() in ("1", "true", "yes", "on")
+        offline = os.environ.get("DRIFT_LLM_MOCK", "").strip().lower() in ("1", "true", "yes", "on")
     base, key = os.environ.get("DRIFT_LLM_BASE_URL"), os.environ.get("DRIFT_LLM_API_KEY")
     if not offline and base and key:
         return ApiLLM(base, key,
