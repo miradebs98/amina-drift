@@ -31,3 +31,6 @@ build/
 # grain_lite file cache + temp filings
 .grain_cache/
 /tmp/grain_data/
+
+# transient live connector caches
+data/fixtures/*.cache.json

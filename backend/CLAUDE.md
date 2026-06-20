@@ -33,10 +33,12 @@ Meridian is fictional → stays fixture-based. Env needed: `OPENAI_API_KEY`, `AL
 (free), `SEC_USER_AGENT`. The grounded SCORING on top is Miguel's (`backend/drift/CLAUDE.md`).
 
 ## What you build
-1. **`ingest/` — Layer 1 connectors** (emit `EvidenceEvent` / `Snapshot`): **SEC + earnings via
-   `grain_lite` (reuse!)**, plus GDELT, Google News RSS, GLEIF (LEI/ownership), **ZEFIX** (Swiss
-   registry), **yente/OpenSanctions** (sanctions+PEP), Wayback CDX (website diff). Cache every
-   response into `data/fixtures/` → **offline-safe demo.**
+1. **`ingest/` — Layer 1 connectors** (emit `EvidenceEvent`). ✅ **Framework + 5 live connectors
+   already built & tested** — see `backend/ingest/SOURCES.md`. `Connector` base + `runner.py`
+   merge stream; LIVE: SEC/earnings (grain_lite), Wayback, Google News, GLEIF, GDELT; FixtureConnector
+   for Meridian + offline demo. **Add a source = subclass `Connector`, add one line to
+   `runner.LIVE_CONNECTORS`.** Still STUBS to fill: `sanctions` (OpenSanctions/yente), `registry`
+   (ZEFIX/ADGM), `funding`. Every live fetch caches to `data/fixtures/` → **offline-safe demo.**
 2. **`resolve/` — entity resolution** (the silent demo-killer): match a public event to one of our
    customers with exact + fuzzy matching behind a **confidence gate**. Keep the customer set small.
 3. **`cascade/` — the cost-aware staged pipeline**:
