@@ -82,6 +82,55 @@ _BREAKABLE = {
     "source_of_wealth", "regulatory_status", "pep_status", "sanctions_status", "adverse_media_status",
 }
 
+# --- baseline-consistency: drift = DEVIATION from the baseline, not mere topicality ----------------
+# A signal the baseline ALREADY asserts is not surprising — Coinbase onboarded as a global, regulated
+# crypto exchange, so its crypto/expansion/MiCA news CONFIRMS the profile. Only a deviation contradicts.
+# This is the offline stand-in for what a real LLM reasons; it holds Coinbase at MEDIUM while Meridian
+# (SaaS, UAE-only, no crypto) still flips. Restrictive baselines ("no crypto", "UAE-only") assert the
+# ABSENCE of a theme, so an event in that theme is a genuine deviation.
+_THEMES = {
+    "crypto": {"crypto", "web3", "bitcoin", "btc", "eth", "ether", "stablecoin", "usdc", "token",
+               "digital asset", "digital-asset", "brokerage", "custody", "exchange", "blockchain", "defi"},
+    "global": {"global", "globally", "international", "worldwide", "expansion", "expanding", "abroad",
+               "multinational", "cross-border", "europe", "european"},
+    "offshore": {"offshore", "bvi", "seychelles", "cayman", "mauritius"},
+}
+_THEME_PREDICATES = {
+    "business_model", "product_mix", "industry_sector", "operating_geographies",
+    "counterparty_geographies", "digital_asset_policy", "digital_asset_holdings",
+}
+_NEGATIONS = ("no ", "not ", "none", "without", "only", "sole", "exclusively", "prohibit", "exclud", "never", "non-")
+
+
+def _event_theme(text: str) -> str | None:
+    for name, words in _THEMES.items():
+        if any(w in text for w in words):
+            return name
+    return None
+
+
+def consistent_with_baseline(predicate: str, baseline: str, event_text: str) -> bool:
+    """True when the event's signal is already part of the on-file baseline (→ confirms, not drift)."""
+    base = f" {baseline.lower()} "
+    if predicate in _THEME_PREDICATES:
+        theme = _event_theme(event_text)
+        if theme is None:
+            return False
+        if any(neg in base for neg in _NEGATIONS):          # restrictive baseline → deviation-capable
+            return False
+        return any(w in base for w in _THEMES[theme])
+    if predicate == "regulatory_status":
+        # a positive licensing event confirms an already-regulated entity; an unlicensed/adverse one drifts
+        adverse = (any(w in event_text for w in ("unlicensed", "unauthor", "unregist", "violat",
+                                                 "illegal", "breach", "non-compli", "revoked", "suspend"))
+                   or (any(n in event_text for n in ("without", " no ", "not ", "lacks", "absent"))
+                       and any(w in event_text for w in ("authoris", "licen", "fsra", "approval", "registration"))))
+        if adverse:
+            return False
+        return any(w in base for w in ("regulated", "licen", "bitlicense", "mtl", "mica",
+                                       "authoris", "registered", "nydfs"))
+    return False    # adverse_media / pep / sanctions / source_of_funds / volume → always genuine
+
 
 class MockLLM(LLMClient):
     """Offline, deterministic stand-in. A clean/narrow onboarding belief is 'contradicted' when a
@@ -93,10 +142,15 @@ class MockLLM(LLMClient):
         text = f"{event.summary} {event.payload}".lower()
         hit = next((kw for kw in _DRIFT_KW if kw in text), None)
         if hit and assertion.predicate.value in _BREAKABLE:
-            strength = max(0.5, min(0.95, float(event.confidence)))
-            v = Verdict("contradicts", strength,
-                        f"Event indicates '{hit}', contradicting the on-file belief "
-                        f"({assertion.predicate.value} = {assertion.value}).", hit)
+            if consistent_with_baseline(assertion.predicate.value, str(assertion.value), text):
+                v = Verdict("confirms", 0.0,
+                            f"Consistent with the on-file baseline ({assertion.predicate.value} = "
+                            f"{assertion.value}) — no drift.", "")
+            else:
+                strength = max(0.5, min(0.95, float(event.confidence)))
+                v = Verdict("contradicts", strength,
+                            f"Event indicates '{hit}', contradicting the on-file belief "
+                            f"({assertion.predicate.value} = {assertion.value}).", hit)
         else:
             v = Verdict("irrelevant", 0.0, "No bearing on this assertion.", "")
         self.meter.record("cheap", str(assertion.value) + text, v.verdict + v.rationale)
@@ -149,6 +203,9 @@ class ApiLLM(LLMClient):
     def classify(self, assertion: Assertion, event: EvidenceEvent) -> Verdict:
         system = ('You are a KYC drift detector for a regulated bank. Decide whether the EVIDENCE '
                   'confirms, contradicts, is irrelevant to, or is ambiguous about the BELIEF. '
+                  'Judge CONFIRMS (not contradicts) when the evidence is consistent with the BELIEF\'s '
+                  'existing value — e.g. a crypto exchange launching a new crypto product confirms its '
+                  'model; reserve "contradicts" for a MATERIAL DEVIATION from the belief. '
                   'Reply with ONLY one JSON object and nothing else: '
                   '{"verdict":"confirms|contradicts|irrelevant|ambiguous","strength":0.0-1.0,'
                   '"evidence_quote":"<short phrase copied WORD-FOR-WORD from the EVIDENCE text only>",'
