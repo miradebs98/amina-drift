@@ -22,6 +22,7 @@ from backend.drift.client_state import ClientState, _MOCK_SNAPSHOTS
 from backend.drift.engine import replay
 from backend.drift.llm import get_llm
 from backend.drift.score import tier_for
+from backend.govern.decisions import get_decision
 
 
 def _customer_files():
@@ -42,6 +43,16 @@ def _load_customer(key: str) -> Optional[dict]:
 
 def _json(model) -> dict:
     return json.loads(model.model_dump_json())
+
+
+def _overlay_decision(alert: dict) -> dict:
+    """Overlay any persisted HITL decision so an actioned alert stays actioned across rebuilds."""
+    d = get_decision(alert["id"])
+    if d:
+        alert["governance_state"] = d["governance_state"]
+        alert["reviewer"] = d["reviewer"]
+        alert["decided_at"] = d["decided_at"]
+    return alert
 
 
 def _safe_timeline(timeline: list[dict]) -> list[dict]:
@@ -98,8 +109,8 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
     return {
         "customer": cust,
         "events": [_json(e) for e in events],
-        "alert": _json(headline),                          # the headline alert (UI contract)
-        "alerts": [_json(a) for a in alerts],              # full episode list (extra, for richer views)
+        "alert": _overlay_decision(_json(headline)),       # the headline alert (UI contract)
+        "alerts": [_overlay_decision(_json(a)) for a in alerts],  # full episode list (richer views)
         "timeline": _safe_timeline(r["timeline"]),         # the risk-score arc
         "cost": r["cost"],                                 # cheap/heavy/tokens/escalation
         "final_score": r["final_score"], "final_tier": r["final_tier"],

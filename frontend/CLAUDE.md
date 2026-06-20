@@ -45,6 +45,25 @@ Explainability** axis and co-own **20% Compliance** (the human-facing governance
 - Don't invent risk scores in the UI — display what the engine returns + its rationale/citations.
 - Don't fake the audit log or HITL in the demo — wire them to the real `govern/` endpoints.
 
+## 🏛️ Governance backend contract (wire your HITL to this — it's now REAL)
+`backend/govern/` + the API now provide a real, immutable, hash-chained audit log. **The HITL in
+`components/profile/client-section.tsx` is currently FAKED** (`dispose()` = local state + a toast).
+That's the one thing the brief says never to fake — swap it to the real endpoints:
+
+1. **Replace `dispose(label)`** with a POST:
+   `POST /alerts/{alert_id}/decision` body `{ action, reviewer, note }`
+   - your buttons → `action`: **Approve→`approve`** · **Override→`override`** · **Escalate → Re-KYC→`escalate`**
+   - send `reviewer` (e.g. "G. Cozzio"); the server stamps model/policy version + timestamp + hashes
+   - response = the updated `DriftAlert` (its `governance_state` now persists across refreshes)
+2. **Render the real trail** from `GET /audit?customer_id=…&alert_id=…` (instead of the toast text).
+   Optional: `GET /audit/verify` → show a ✅ "tamper-evident / chain intact" badge (compliance flourish).
+3. **RBAC is server-side**: the API may reject an action for the role (e.g. closing a HIGH re-tier
+   needs MLRO — four-eyes). Surface the 403 reason ("requires MLRO sign-off") rather than failing silently.
+
+Until the backend is running you can keep the local mock, but **the demo must hit the real endpoints**
+(fixtures mode = local mock; `NEXT_PUBLIC_DATA_MODE=live` = real govern). Audit shape = `AuditEntry`
+in `shared/schemas/audit.py`.
+
 ## Pitch lines that are yours to deliver
 "Banks look in the rearview mirror." · "The moment perception and reality separate, risk begins."
 · Lead with the *contradicted-assertion* story, not a generic news alert.
