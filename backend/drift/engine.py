@@ -73,11 +73,11 @@ def build_alert(state, a: Assessment, prev_score: int, prev_tier: str, llm: LLMC
     drift_type = DriftType.EVENT if hard else DriftType.STRUCTURAL
 
     preds = [ad.assertion.predicate.value for ad in contributors[:2]]
-    flag = " + ".join(_FLAGS.get(p, ("Risk Profile Drift", _DEFAULT_ACTION))[0] for p in preds) or "Risk Profile Drift"
-    action = _FLAGS.get(preds[0], ("", _DEFAULT_ACTION))[1] if preds else _DEFAULT_ACTION
-
+    # --- static fallbacks (the deterministic MockLLM path keeps today's flags + wording) ---
+    static_flag = " + ".join(_FLAGS.get(p, ("Risk Profile Drift", _DEFAULT_ACTION))[0] for p in preds) or "Risk Profile Drift"
+    static_action = _FLAGS.get(preds[0], ("", _DEFAULT_ACTION))[1] if preds else _DEFAULT_ACTION
     moved = ", ".join(a.trajectory.moved_axes) or "n/a"
-    rationale = (
+    static_rationale = (
         f"Onboarded {state.onboarded_as_of:%Y} ({state.baseline_risk_score}/{tier_of(state.baseline_risk_score)}) as: {_baseline_desc(state)}. "
         f"Public record up to {a.as_of:%Y-%m} now shows: "
         + "; ".join(r for ad in contributors[:4] for r in ad.rationales[:1])
@@ -85,9 +85,27 @@ def build_alert(state, a: Assessment, prev_score: int, prev_tier: str, llm: LLMC
         f"Composite KYC risk re-scored {prev_score}→{a.risk_score} ({prev_tier}→{a.tier})."
     )
 
+    # --- Stage-3 risk interpretation: the LLM judges the drift EPISODE -> flag / action / why ---
+    from shared.schemas.dimensions import dimension_for_predicate
+    drifts = [{
+        "predicate": ad.assertion.predicate.value,
+        "belief": str(ad.assertion.value)[:120],
+        "evidence": ad.rationales[:2],
+        "surprise": round(ad.surprise, 3),
+        "dimension": dimension_for_predicate(ad.assertion.predicate.value).value,
+    } for ad in contributors[:5]]
+    context = {
+        "client": state.legal_name, "onboarded": f"{state.onboarded_as_of:%Y}",
+        "baseline_score": state.baseline_risk_score,
+        "now_score": a.risk_score, "now_tier": a.tier, "moved_from": f"{prev_score}/{prev_tier}",
+    }
     before = llm.meter.heavy_tokens
-    llm.synthesize(rationale)
+    judgment = llm.interpret_risk(drifts, context)      # ApiLLM = real interpretation; MockLLM = static
     heavy_tokens = llm.meter.heavy_tokens - before
+
+    flag = judgment.flag or static_flag
+    action = judgment.recommended_action or static_action
+    rationale = judgment.reasoning or static_rationale
 
     return DriftAlert(
         id=f"alert-{state.customer_id}-{a.as_of:%Y%m%d}",

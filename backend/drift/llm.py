@@ -41,6 +41,22 @@ class Verdict:
 
 
 @dataclass
+class RiskJudgment:
+    """Stage-3 risk interpretation of a drift episode — the LLM judging drift -> RISK (not just change).
+
+    `risk_delta` is SIGNED in impact-units (+ raises risk; negative = de-risking, e.g. a lawsuit
+    dismissed). flag/action/reasoning may be "" → the caller falls back to its static map (so the
+    deterministic MockLLM path keeps today's behaviour, while ApiLLM produces the real interpretation).
+    """
+    risk_relevant: bool
+    risk_delta: float
+    flag: str
+    recommended_action: str
+    reasoning: str
+    evidence_quote: str
+
+
+@dataclass
 class CostMeter:
     cheap_calls: int = 0
     heavy_calls: int = 0
@@ -74,6 +90,9 @@ class LLMClient:
         raise NotImplementedError
 
     def synthesize(self, prompt: str) -> str:
+        raise NotImplementedError
+
+    def interpret_risk(self, drifts: list[dict], context: dict) -> "RiskJudgment":
         raise NotImplementedError
 
 
@@ -171,6 +190,23 @@ class MockLLM(LLMClient):
         self.meter.record("heavy", prompt, out)
         return out
 
+    def interpret_risk(self, drifts: list[dict], context: dict) -> RiskJudgment:
+        """Deterministic stand-in: risk_delta = the static surprise×weight×direction; flag/action/
+        reasoning left empty so the caller keeps its static map (today's numbers + flags preserved).
+        ApiLLM does the real contextual judgement."""
+        from backend.drift import config
+        delta = 0.0
+        for d in drifts:
+            pred = d.get("predicate", "")
+            w = config.RISK_WEIGHT.get(pred, config.DEFAULT_RISK_WEIGHT)
+            sign = config.RISK_DIRECTION.get(pred, config.DEFAULT_RISK_DIRECTION)
+            delta += float(d.get("surprise", 0.0)) * w * sign
+        quote = (drifts[0].get("evidence") or [""])[0] if drifts else ""
+        j = RiskJudgment(risk_relevant=delta > 0.02, risk_delta=round(delta, 3),
+                         flag="", recommended_action="", reasoning="", evidence_quote=str(quote)[:160])
+        self.meter.record("heavy", str(context) + str(drifts), "risk")
+        return j
+
 
 class ApiLLM(LLMClient):
     """OpenAI-compatible client — works with OpenAI, Azure, a local vLLM, or **Apertus** (Swiss-
@@ -248,6 +284,34 @@ class ApiLLM(LLMClient):
             out = "[deep-dive] " + prompt.strip().split("\n")[0][:200]
             self.meter.record("heavy", prompt, out)
             return out
+
+    def interpret_risk(self, drifts: list[dict], context: dict) -> RiskJudgment:
+        system = (
+            "You are a KYC risk officer at a regulated bank (AMINA). You receive a set of DRIFTS — "
+            "on-file beliefs about a client that recent public evidence has challenged — plus the client "
+            "CONTEXT. Judge the episode for RISK (not mere change): is it risk-relevant, which risk FLAG "
+            "it raises, the recommended ACTION, and HOW risk moves. risk_delta is SIGNED in [-1,1] on a "
+            "risk-contribution scale (+ raises risk; NEGATIVE for de-risking/resolving events, e.g. a "
+            "lawsuit dismissed). CONNECT THE DOTS across the drifts/dimensions — the danger is the "
+            "combination, even when each change is individually minor. Reply with ONLY one JSON object: "
+            '{"risk_relevant":true|false,"risk_delta":-1.0..1.0,'
+            '"flag":"<short risk category, e.g. Ownership Change - KYC Drift>",'
+            '"recommended_action":"<concise compliance action>",'
+            '"reasoning":"<2-4 sentences citing the dated drifts + their dimensions; why risk moved or held>",'
+            '"evidence_quote":"<short phrase copied verbatim from one drift\'s evidence>"}'
+        )
+        user = ("CONTEXT: " + str(context) + "\nDRIFTS:\n" + "\n".join(
+            f"- [{d.get('dimension', '')}] {d.get('predicate')}: on file '{d.get('belief')}'"
+            f" ; evidence: {'; '.join(d.get('evidence', [])[:2])}" for d in drifts))
+        try:
+            obj = _parse_json(self._chat(self.heavy_model, system, user, "heavy"))
+            return RiskJudgment(
+                bool(obj.get("risk_relevant", True)), float(obj.get("risk_delta") or 0.0),
+                str(obj.get("flag", "")), str(obj.get("recommended_action", "")),
+                str(obj.get("reasoning", "")), str(obj.get("evidence_quote", "")),
+            )
+        except Exception:
+            return self._fallback.interpret_risk(drifts, context)
 
 
 def _parse_json(text: str) -> dict:
