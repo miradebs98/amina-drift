@@ -98,6 +98,7 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
             continue
 
         strengths: list[float] = []
+        resolve_strengths: list[float] = []
         envelope_mag = 0.0
         ev_ids: list[str] = []
         rationales: list[str] = []
@@ -117,8 +118,13 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
                 strengths.append(v.strength)
                 ev_ids.append(e.id)
                 rationales.append(v.rationale)
+            elif v.verdict == "resolves":
+                resolve_strengths.append(v.strength)
+                ev_ids.append(e.id)
+                rationales.append(v.rationale)
 
-        contra = _noisy_or(strengths)
+        # de-risking events RETRACT the accumulated concern → contra (and the score) can come back DOWN
+        contra = _clamp(_noisy_or(strengths) - _noisy_or(resolve_strengths))
         staleness = min(config.STALENESS_CAP, _years_between(A.last_verified, as_of) * config.STALENESS_DECAY_PER_YEAR)
         traj_term = _clamp(traj.per_predicate.get(pred, 0.0))
 

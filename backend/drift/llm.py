@@ -29,7 +29,7 @@ try:
 except Exception:
     pass
 
-VERDICTS = ("confirms", "contradicts", "irrelevant", "ambiguous")
+VERDICTS = ("confirms", "contradicts", "irrelevant", "ambiguous", "resolves")
 
 
 @dataclass
@@ -104,6 +104,11 @@ _DRIFT_KW = (
     "pep", "politically exposed", "fraud", "investigation", "probe", "litigation", "scandal",
     "fsra", "unlicensed", "regulated activity", "proceeds",
 )
+# events that RETRACT a prior concern → risk comes back DOWN (the signed down-move).
+_RESOLVE_KW = (
+    "dismiss", "dropped", "cleared", "resolved", "acquitted", "withdrawn", "exonerat",
+    "divest", "in favour", "in favor", "ruling for", "overturned", "case closed",
+)
 _BREAKABLE = {
     "business_model", "product_mix", "digital_asset_policy", "digital_asset_holdings",
     "operating_geographies", "counterparty_geographies", "ubo", "source_of_funds",
@@ -168,6 +173,12 @@ class MockLLM(LLMClient):
 
     def classify(self, assertion: Assertion, event: EvidenceEvent) -> Verdict:
         text = f"{event.summary} {event.payload}".lower()
+        if assertion.predicate.value in _BREAKABLE and any(rk in text for rk in _RESOLVE_KW):
+            v = Verdict("resolves", max(0.5, min(0.95, float(event.confidence))),
+                        f"De-risking event — retracts a prior concern on {assertion.predicate.value}.",
+                        event.summary[:120])
+            self.meter.record("cheap", str(assertion.value) + text, v.verdict)
+            return v
         hit = next((kw for kw in _DRIFT_KW if kw in text), None)
         if hit and assertion.predicate.value in _BREAKABLE:
             if consistent_with_baseline(assertion.predicate.value, str(assertion.value), text):
@@ -260,8 +271,10 @@ class ApiLLM(LLMClient):
                   '- confirms: the evidence is consistent with what the belief ALREADY states (e.g. '
                   '"crypto exchange" + "launches a crypto product").\n'
                   '- irrelevant: no bearing on this belief. ambiguous: genuinely unclear.\n'
+                  '- resolves: a DE-RISKING event that retracts a prior concern (lawsuit dismissed, '
+                  'investigation closed, risky unit divested) — lowers risk.\n'
                   'Reply with ONLY one JSON object and nothing else: '
-                  '{"verdict":"confirms|contradicts|irrelevant|ambiguous","strength":0.0-1.0,'
+                  '{"verdict":"confirms|contradicts|irrelevant|ambiguous|resolves","strength":0.0-1.0,'
                   '"evidence_quote":"<short phrase copied WORD-FOR-WORD from the EVIDENCE text only>",'
                   '"rationale":"<1-2 sentences; do NOT put the quote here>"}. '
                   'If verdict is "contradicts", evidence_quote MUST be a non-empty phrase taken '

@@ -75,6 +75,14 @@ def test_meridian_breadth_combination():
     assert a.breadth >= 3, f"expected >=3 dimensions, got {a.breadth}: {a.dimensions_drifted}"
 
 
+def test_risk_can_fall_when_resolved():
+    """Risk is NOT a ratchet: Coinbase's score rises with the SEC suit and FALLS when it's dismissed
+    (a 'resolves' event retracts the adverse-media concern)."""
+    r = replay(load_client_state_from_fixtures("coinbase"))
+    scores = [t["risk_score"] for t in r["timeline"]]
+    assert max(scores) > scores[-1], "a resolving event (SEC dismissal) must bring the score back down"
+
+
 if __name__ == "__main__":
     import subprocess
     raise SystemExit(subprocess.call(["python", "-m", "pytest", __file__, "-q"]))
