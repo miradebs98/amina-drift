@@ -116,6 +116,17 @@ def verify_audit():
     return audit.verify_chain()
 
 
+@app.get("/cases/{customer_key}/network")
+def network(customer_key: str):
+    """Network Risk dimension: connected entities (investors/partners/UBOs) + sanctions/PEP flags."""
+    from backend.api.cases import _load_customer
+    from backend.network.graph import build_graph
+    cust = _load_customer(customer_key)
+    if cust is None:
+        raise HTTPException(404, f"unknown customer '{customer_key}'")
+    return build_graph(cust["customer_id"])
+
+
 @app.get("/roles")
 def roles():
     return {"roles": rbac.ROLES}
