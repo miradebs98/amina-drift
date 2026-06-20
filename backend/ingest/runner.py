@@ -21,7 +21,9 @@ from backend.ingest.gdelt import GdeltConnector
 from backend.ingest.news_rss import NewsRssConnector
 from backend.ingest.wayback import WaybackConnector
 from backend.ingest.gleif import GleifConnector
-from backend.ingest.stubs import SanctionsConnector, RegistryConnector, FundingConnector
+from backend.ingest.sanctions import SanctionsConnector
+from backend.ingest.event_registry import EventRegistryConnector
+from backend.ingest.stubs import RegistryConnector, FundingConnector
 
 # SEC_LEVEL2=true → also read 10-K text and emit cited passages relevant to each assertion
 # (uses OpenAI embeddings if OPENAI_API_KEY is set, else lexical). Off by default (extra latency).
@@ -30,11 +32,12 @@ _LEVEL2 = os.getenv("SEC_LEVEL2", "false").lower() == "true"
 # The full source roster. Add a source = add a line here.
 LIVE_CONNECTORS: list[Connector] = [
     SecEarningsConnector(with_text=_LEVEL2),   # SEC filings + earnings calls (grain_lite)
+    EventRegistryConnector(), # rich news + sentiment (partner key)
     GdeltConnector(),         # adverse media / news tone
     NewsRssConnector(),       # Google News
     WaybackConnector(),       # website change over time
     GleifConnector(),         # legal entity + ownership graph
-    SanctionsConnector(),     # stub → OpenSanctions/yente
+    SanctionsConnector(),     # OpenSanctions/yente — sanctions + PEP screening (entity + UBOs)
     RegistryConnector(),      # stub → ZEFIX/Companies House/ADGM
     FundingConnector(),       # stub → Crunchbase/funding news
 ]

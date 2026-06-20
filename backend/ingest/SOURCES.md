@@ -14,8 +14,9 @@ care which source an event came from. **Add a source = subclass `Connector`, add
 | `news_rss.py` | **Google News RSS** | none | ✅ **live, tested** (12 articles) | NEWS | both |
 | `gleif.py` | **GLEIF** LEI + ownership graph | none | ✅ **live, tested** (real LEI record) | REGISTRY_CHANGE, OWNERSHIP_CHANGE | Coinbase |
 | `gdelt.py` | **GDELT** adverse media + tone | none | ✅ live (rate-limited on burst → degrades gracefully) | NEWS | both |
+| `event_registry.py` | **Event Registry** news + sentiment + concepts | partner key | ✅ **live, tested** (8 sentiment-tagged Coinbase articles) | NEWS (+ `sentiment`, `concepts`) | both |
+| `sanctions.py` | **OpenSanctions / yente** — entity + UBO/director screening | free key or self-host | ✅ **live, tested** (flagged a NAME-ONLY UBO match → needs human verify) | SANCTIONS_HIT, PEP_HIT | both |
 | `fixtures.py` | authored/cached events | none | ✅ tested (8 Meridian, 7 Coinbase) | all | both (Meridian only) |
-| `stubs.py::SanctionsConnector` | OpenSanctions / yente | none (free) | ⬜ stub | SANCTIONS_HIT, PEP_HIT | both |
 | `stubs.py::RegistryConnector` | ZEFIX / Companies House / ADGM | varies | ⬜ stub | REGISTRY_CHANGE | both |
 | `stubs.py::FundingConnector` | Crunchbase / funding news | — | ⬜ stub (derivable from news) | FUNDING | both |
 
@@ -57,7 +58,15 @@ sentence-transformers — not wired yet) or `openai` (paid). `payload.relevance_
 ran. The relevance filter (`relevance.py`) IS the cost cascade's **Stage-1 cheap gate** — reusable
 for any source. Whole project runs at **zero API cost**: cascade LLM → Apertus, relevance → lexical.
 
+## Sanctions/PEP screening — the false-positive lesson (demo-gold)
+The screen matches on **name**, so a 1.00 score is a *potential* match, NOT a confirmed identity
+(e.g. "Brian Armstrong" hit a debarment list — almost certainly a DIFFERENT person). Events are
+emitted with `match_basis="name-only"`, `needs_human_verification=true`, and **capped confidence** —
+so the engine/UI treats them as "review required," never auto-escalate. This is exactly why HITL is
+graded. **To improve precision:** add DOB / nationality to the person assertions (note for Giacomo)
+so the screen can disambiguate; pass them as match properties here.
+
 ## Next (Mira's creative space)
-1. Fill the **sanctions** stub (OpenSanctions match API — doubles as entity resolution).
-2. Add a **registry** for non-US entities (ZEFIX/ADGM) so future non-listed customers work live.
-3. Wire the **cost meter** around any LLM use (Level-2 embeddings) for the Cost-Efficiency axis.
+1. Add a **registry** for non-US entities (ZEFIX/ADGM) so future non-listed customers work live.
+2. Wire the **cost meter** around any LLM use (Level-2 embeddings) for the Cost-Efficiency axis.
+3. De-dupe near-identical Event Registry articles (same story across outlets) by normalised title.

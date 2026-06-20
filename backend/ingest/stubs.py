@@ -9,18 +9,7 @@ from __future__ import annotations
 from shared.schemas import EvidenceEvent
 from backend.ingest.base import Connector, CustomerRef
 
-
-class SanctionsConnector(Connector):
-    """OpenSanctions / yente — sanctions + PEP screening (entity + UBOs).
-    TODO(Mira): POST name to https://api.opensanctions.org/match/default (free non-commercial) or
-    self-host yente; emit SANCTIONS_HIT / PEP_HIT events with the matched list + score.
-    Doubles as entity resolution (fuzzy match). Coinbase has a real historic OFAC settlement (CB6)."""
-    name = "sanctions"
-    source_label = "OpenSanctions"
-    live = False
-
-    def fetch(self, customer: CustomerRef) -> list[EvidenceEvent]:
-        return []
+# NOTE: SanctionsConnector graduated to a real connector → backend/ingest/sanctions.py
 
 
 class RegistryConnector(Connector):
