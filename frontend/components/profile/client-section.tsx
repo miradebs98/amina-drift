@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import {
   Check,
   ShieldAlert,
@@ -15,9 +15,21 @@ import {
   ChevronDown,
   CheckCircle2,
   TriangleAlert,
+  UserCog,
 } from "lucide-react";
-import type { Customer, DriftAlert } from "@/lib/types";
+import type { Customer, DriftAlert, DecisionAction, DecisionResult, Role } from "@/lib/types";
 import { bandForScore, colorsForScore, fmtDate, monogram } from "@/lib/format";
+
+const ACTION_LABEL: Record<DecisionAction, string> = {
+  approve: "Approve",
+  override: "Override",
+  escalate: "Escalate → Re-KYC",
+};
+const STATE_LABEL: Record<string, string> = {
+  approved: "Approved",
+  dismissed: "Overridden",
+  escalated: "Escalated → Re-KYC",
+};
 
 function Fact({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value?: string }) {
   return (
@@ -33,20 +45,52 @@ function Fact({ icon: Icon, label, value }: { icon: React.ElementType; label: st
   );
 }
 
-export function ClientSection({ customer, alert }: { customer: Customer; alert: DriftAlert }) {
+export function ClientSection({
+  customer,
+  alert,
+  role,
+  onRoleChange,
+  dispo,
+  onDispose,
+}: {
+  customer: Customer;
+  alert: DriftAlert;
+  role: Role;
+  onRoleChange: (r: Role) => void;
+  dispo: DecisionResult | null;
+  onDispose: (action: DecisionAction, note: string) => Promise<void>;
+}) {
   const [open, setOpen] = useState(false);
-  const [disposed, setDisposed] = useState<string | null>(null);
+  const [action, setAction] = useState<DecisionAction | null>(null);
+  const [note, setNote] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const ep = customer.entity_profile;
   const score = alert.new_risk_score ?? customer.risk_model.onboarding_score;
   const band = bandForScore(score);
   const c = colorsForScore(score);
   const materialChanges = (alert.contradicted_assertion_id ? 1 : 0) + alert.also_contradicts.length;
+  const pending = alert.governance_state === "pending" && !dispo;
 
-  // The disposition surface only appears when there's a PENDING trigger to action.
-  const pending = alert.governance_state === "pending" && !disposed;
-  function dispose(label: string) {
-    setDisposed(label);
-    toast.success(`${label} — written to audit log`, { description: "by G. Cozzio · drift-model v2.3" });
+  function openDialog(a: DecisionAction) {
+    setAction(a);
+    setNote("");
+    setError(null);
+  }
+
+  async function confirm() {
+    if (!action) return;
+    setSubmitting(true);
+    setError(null);
+    try {
+      await onDispose(action, note);
+      setAction(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Decision failed");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -62,7 +106,6 @@ export function ClientSection({ customer, alert }: { customer: Customer; alert: 
         >
           {monogram(customer.legal_name)}
         </div>
-
         <div className="min-w-0 flex-1">
           <h2 className="truncate font-display text-xl font-semibold leading-tight text-ink">{customer.legal_name}</h2>
           <div className="mt-0.5 flex items-center gap-2 text-xs text-ink-muted">
@@ -73,7 +116,6 @@ export function ClientSection({ customer, alert }: { customer: Customer; alert: 
             <span>RM: G. Cozzio</span>
           </div>
         </div>
-
         <div className="flex items-center gap-3">
           <div className="flex flex-col items-end">
             <span className="rounded-pill px-3 py-1 text-sm font-bold tracking-wide tabular" style={{ background: c.bg, color: c.fg }}>
@@ -120,22 +162,89 @@ export function ClientSection({ customer, alert }: { customer: Customer; alert: 
           <span className="mr-auto inline-flex items-center gap-1.5 text-xs font-medium text-risk-high">
             <TriangleAlert className="size-4" /> Material drift detected — disposition required (written to audit log)
           </span>
-          <Button size="sm" className="gap-1.5 bg-teal text-white hover:bg-teal-hover" onClick={() => dispose("Approved")}>
+          <span className="inline-flex items-center gap-1 rounded-pill bg-white px-2 py-0.5 text-[11px] text-ink-muted">
+            <UserCog className="size-3" /> {role}
+          </span>
+          <Button size="sm" className="gap-1.5 bg-teal text-white hover:bg-teal-hover" onClick={() => openDialog("approve")}>
             <Check className="size-4" /> Approve
           </Button>
-          <Button size="sm" variant="outline" className="gap-1.5" onClick={() => dispose("Overridden")}>
+          <Button size="sm" variant="outline" className="gap-1.5" onClick={() => openDialog("override")}>
             <ArrowUpRight className="size-4" /> Override
           </Button>
-          <Button size="sm" className="gap-1.5 bg-risk-high text-white hover:bg-risk-high/90" onClick={() => dispose("Escalated to Re-KYC")}>
+          <Button size="sm" className="gap-1.5 bg-risk-high text-white hover:bg-risk-high/90" onClick={() => openDialog("escalate")}>
             <ShieldAlert className="size-4" /> Escalate → Re-KYC
           </Button>
         </div>
-      ) : disposed ? (
+      ) : dispo ? (
         <div className="flex items-center gap-2 border-t border-surface-line bg-surface-subtle px-5 py-3 text-xs text-ink-body">
           <CheckCircle2 className="size-4 text-risk-low" />
-          <span className="font-medium">{disposed}</span> by G. Cozzio · just now · written to the audit log
+          <span className="font-medium">{STATE_LABEL[dispo.governance_state] ?? dispo.governance_state}</span> by{" "}
+          {dispo.reviewer} ({dispo.role}) · written to the audit log · entry{" "}
+          <span className="tabular">{dispo.audit_id}</span>
         </div>
       ) : null}
+
+      {/* DISPOSITION DIALOG — note capture + four-eyes role */}
+      <Dialog open={action !== null} onOpenChange={(o) => !o && setAction(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{action ? ACTION_LABEL[action] : ""} — disposition</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-ink-muted">
+              This decision is written to the immutable, hash-chained audit log with your ID, the model version,
+              a timestamp, and your note.
+            </p>
+
+            {/* role (four-eyes) */}
+            <div>
+              <div className="mb-1.5 text-xs font-medium uppercase tracking-wide text-ink-muted">Acting as</div>
+              <div className="inline-flex overflow-hidden rounded-md border border-surface-line">
+                {(["analyst", "mlro"] as Role[]).map((r) => (
+                  <button
+                    key={r}
+                    onClick={() => onRoleChange(r)}
+                    className={`px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
+                      role === r ? "bg-brand text-white" : "bg-white text-ink-muted hover:bg-surface-subtle"
+                    }`}
+                  >
+                    {r === "mlro" ? "MLRO" : "Analyst"}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* note */}
+            <div>
+              <div className="mb-1.5 text-xs font-medium uppercase tracking-wide text-ink-muted">Reviewer note</div>
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                rows={3}
+                placeholder="Why this disposition? (recorded in the audit trail)"
+                className="w-full resize-none rounded-md border border-surface-line bg-white p-2.5 text-sm outline-none focus:border-teal focus:ring-1 focus:ring-teal"
+              />
+            </div>
+
+            {error && (
+              <div className="inline-flex items-start gap-1.5 rounded-md bg-risk-high-bg px-3 py-2 text-xs font-medium text-risk-high">
+                <TriangleAlert className="mt-0.5 size-3.5 shrink-0" /> {error}
+                {role !== "mlro" && /mlro/i.test(error) && (
+                  <span className="font-normal"> — switch to MLRO above and retry.</span>
+                )}
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" size="sm" onClick={() => setAction(null)} disabled={submitting}>
+              Cancel
+            </Button>
+            <Button size="sm" className="bg-teal text-white hover:bg-teal-hover" onClick={confirm} disabled={submitting}>
+              {submitting ? "Recording…" : `Confirm ${action ? ACTION_LABEL[action] : ""}`}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { CustomerCase, EvidenceEvent } from "@/lib/types";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import type { CustomerCase, EvidenceEvent, Role, DecisionAction, DecisionResult } from "@/lib/types";
 import { AppShell } from "@/components/shell/app-shell";
 import { ClientSection } from "./client-section";
 import { NewsPanel } from "./news-panel";
@@ -11,11 +13,13 @@ import { ScoreComparison } from "@/components/viz/score-comparison";
 import { DriftScoreOverTime } from "@/components/viz/drift-score-line";
 import { AssertionDiff } from "@/components/customers/assertion-diff";
 import { DriftLog } from "@/components/governance/drift-log";
+import { AuditTrail } from "@/components/governance/audit-trail";
 import { AskChat } from "@/components/chat/ask-chat";
 import { Card } from "@/components/ui/card";
+import { postDecision } from "@/lib/api";
 import { fmtDate, eventTypeLabel } from "@/lib/format";
 import { buildTrajectory } from "@/lib/trajectory";
-import { ExternalLink, TrendingUp, History, GitCompareArrows } from "lucide-react";
+import { ExternalLink, TrendingUp, History, GitCompareArrows, ScrollText } from "lucide-react";
 
 function SectionTitle({ children, hint }: { children: React.ReactNode; hint?: string }) {
   return (
@@ -28,8 +32,28 @@ function SectionTitle({ children, hint }: { children: React.ReactNode; hint?: st
 
 export function ProfileView({ data }: { data: CustomerCase }) {
   const { customer, events, alert } = data;
+  const qc = useQueryClient();
   const [selected, setSelected] = useState<EvidenceEvent | null>(null);
   const [replayIdx, setReplayIdx] = useState<number | null>(null);
+
+  // governance / HITL
+  const [role, setRole] = useState<Role>("analyst");
+  const [dispo, setDispo] = useState<DecisionResult | null>(null);
+  async function handleDispose(action: DecisionAction, note: string) {
+    const r = await postDecision({
+      alert_id: alert.id,
+      action,
+      reviewer: "G. Cozzio",
+      role,
+      note,
+      customer_id: customer.customer_id,
+      severity: alert.severity,
+    });
+    setDispo(r);
+    const verb = action === "approve" ? "Approved" : action === "override" ? "Overridden" : "Escalated";
+    toast.success(`${verb} — written to audit log`, { description: `by G. Cozzio (${role}) · entry ${r.audit_id}` });
+    qc.invalidateQueries({ queryKey: ["audit", customer.customer_id] });
+  }
 
   const { frames, old, now } = useMemo(
     () => buildTrajectory(customer, events, alert),
@@ -61,7 +85,14 @@ export function ProfileView({ data }: { data: CustomerCase }) {
   return (
     <AppShell title="Risk Profile" subtitle={customer.legal_name}>
       <div className="mx-auto w-full max-w-[1500px] space-y-5 px-6 py-6">
-        <ClientSection customer={customer} alert={alert} />
+        <ClientSection
+          customer={customer}
+          alert={alert}
+          role={role}
+          onRoleChange={setRole}
+          dispo={dispo}
+          onDispose={handleDispose}
+        />
 
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1fr_340px]">
           <div className="space-y-5">
@@ -183,6 +214,16 @@ export function ProfileView({ data }: { data: CustomerCase }) {
                 selectedId={selected?.id}
                 onSelect={setSelected}
               />
+            </Card>
+
+            {/* AUDIT TRAIL — immutable, hash-chained, tamper-evident */}
+            <Card className="rounded-card border-surface-line p-6 shadow-card">
+              <SectionTitle hint="Immutable, hash-chained record of every decision — reconstruct exactly why this client was re-tiered, by whom, with which model.">
+                <span className="inline-flex items-center gap-2">
+                  <ScrollText className="size-4 text-ink-muted" /> Audit trail &amp; integrity
+                </span>
+              </SectionTitle>
+              <AuditTrail customerId={customer.customer_id} alertId={alert.id} />
             </Card>
           </div>
 

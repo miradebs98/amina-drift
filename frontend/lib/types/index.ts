@@ -135,3 +135,51 @@ export interface CustomerCase {
   events: EvidenceEvent[];
   alert: DriftAlert;
 }
+
+// ── Governance (backend/govern) ────────────────────────────────────────────
+export type Role = "analyst" | "mlro" | "compliance" | "admin";
+export type DecisionAction = "approve" | "override" | "escalate";
+
+export interface DecisionInput {
+  alert_id: string;
+  action: DecisionAction;
+  reviewer: string;
+  role: Role;
+  note: string;
+  customer_id?: string; // fallback so the backend can resolve a cold-cache alert
+  severity?: string;
+}
+
+export interface DecisionResult {
+  alert_id: string;
+  governance_state: GovernanceState;
+  reviewer: string;
+  role: Role;
+  decided_at: string;
+  audit_id: string;
+}
+
+export interface AuditRow {
+  seq: number;
+  id: string;
+  timestamp: string;
+  action: string;
+  actor: string;
+  role: string;
+  customer_id?: string | null;
+  alert_id?: string | null;
+  model_name?: string | null;
+  model_version?: string | null;
+  inputs_hash?: string | null;
+  policy_version?: string | null;
+  details?: Record<string, unknown>;
+  prev_hash?: string | null;
+  entry_hash?: string | null;
+}
+
+export interface VerifyResult {
+  ok: boolean;
+  length: number;
+  head?: string;
+  broken_at_seq?: number;
+}
