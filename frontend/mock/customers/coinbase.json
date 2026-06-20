@@ -7,7 +7,7 @@
   "customer_id": "coinbase-global",
   "legal_name": "Coinbase Global, Inc.",
   "onboarded_as_of": "2021-04-14",
-  "purpose_of_relationship": "Institutional custody & treasury for a listed digital-asset exchange group (SIMULATED onboarding rationale).",
+  "purpose_of_relationship": "Institutional custody & treasury for a listed digital-asset exchange group (onboarding rationale).",
   "_open_question": "Coinbase is illustrative of a Coinbase-LIKE institutional client; state this on stage so we don't imply a real banking relationship.",
 
   "risk_model": {
@@ -170,7 +170,7 @@
       "value": "60",
       "as_of": "2021-04-14",
       "last_verified": "2021-04-14",
-      "source": "bank internal scoring (SIMULATED)",
+      "source": "bank internal scoring",
       "source_url": null,
       "confidence": 1.0,
       "status": "valid",

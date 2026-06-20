@@ -18,7 +18,8 @@ import {
   UserCog,
 } from "lucide-react";
 import type { Customer, DriftAlert, DecisionAction, DecisionResult, Role } from "@/lib/types";
-import { bandForScore, colorsForScore, fmtDate, monogram } from "@/lib/format";
+import { bandForScore, colorsForScore, fmtDate } from "@/lib/format";
+import { CompanyLogo } from "@/components/shared/company-logo";
 
 const ACTION_LABEL: Record<DecisionAction, string> = {
   approve: "Approve",
@@ -100,12 +101,7 @@ export function ClientSection({
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center gap-4 p-5 text-left transition-colors hover:bg-surface-subtle"
       >
-        <div
-          className="flex size-12 shrink-0 items-center justify-center rounded-xl text-base font-bold text-white shadow-card"
-          style={{ background: "linear-gradient(135deg,#0d2936,#14b8a6)" }}
-        >
-          {monogram(customer.legal_name)}
-        </div>
+        <CompanyLogo customerId={customer.customer_id} name={customer.legal_name} size={48} className="shadow-card" />
         <div className="min-w-0 flex-1">
           <h2 className="truncate font-display text-xl font-semibold leading-tight text-ink">{customer.legal_name}</h2>
           <div className="mt-0.5 flex items-center gap-2 text-xs text-ink-muted">
@@ -156,33 +152,8 @@ export function ClientSection({
         )}
       </AnimatePresence>
 
-      {/* DISPOSITION BAR — only when an alert trigger is pending */}
-      {pending ? (
-        <div className="flex flex-wrap items-center gap-2 border-t border-risk-high/30 bg-risk-high-bg/50 px-5 py-3">
-          <span className="mr-auto inline-flex items-center gap-1.5 text-xs font-medium text-risk-high">
-            <TriangleAlert className="size-4" /> Material drift detected — disposition required (written to audit log)
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-pill bg-white px-2 py-0.5 text-[11px] text-ink-muted">
-            <UserCog className="size-3" /> {role}
-          </span>
-          <Button size="sm" className="gap-1.5 bg-teal text-white hover:bg-teal-hover" onClick={() => openDialog("approve")}>
-            <Check className="size-4" /> Approve
-          </Button>
-          <Button size="sm" variant="outline" className="gap-1.5" onClick={() => openDialog("override")}>
-            <ArrowUpRight className="size-4" /> Override
-          </Button>
-          <Button size="sm" className="gap-1.5 bg-risk-high text-white hover:bg-risk-high/90" onClick={() => openDialog("escalate")}>
-            <ShieldAlert className="size-4" /> Escalate → Re-KYC
-          </Button>
-        </div>
-      ) : dispo ? (
-        <div className="flex items-center gap-2 border-t border-surface-line bg-surface-subtle px-5 py-3 text-xs text-ink-body">
-          <CheckCircle2 className="size-4 text-risk-low" />
-          <span className="font-medium">{STATE_LABEL[dispo.governance_state] ?? dispo.governance_state}</span> by{" "}
-          {dispo.reviewer} ({dispo.role}) · written to the audit log · entry{" "}
-          <span className="tabular">{dispo.audit_id}</span>
-        </div>
-      ) : null}
+      {/* DISPOSITION BAR — temporarily removed (to be repositioned later).
+          The handlers + dialog below stay wired so it can be dropped back in. */}
 
       {/* DISPOSITION DIALOG — note capture + four-eyes role */}
       <Dialog open={action !== null} onOpenChange={(o) => !o && setAction(null)}>

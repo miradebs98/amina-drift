@@ -3,6 +3,7 @@ import { listCases } from "@/lib/api";
 import { bandForScore, colorsForScore, fmtDate, fmtDelta } from "@/lib/format";
 import { ChevronRight } from "lucide-react";
 import { AppShell } from "@/components/shell/app-shell";
+import { CompanyLogo } from "@/components/shared/company-logo";
 
 export default async function DashboardPage() {
   const cases = await listCases();
@@ -14,9 +15,9 @@ export default async function DashboardPage() {
   });
 
   return (
-    <AppShell title="Portfolio" subtitle="Clients ranked by KYC drift">
+    <AppShell title="Client Portfolio" subtitle="Clients ranked by KYC drift">
       <main className="mx-auto w-full max-w-[1100px] px-6 py-8">
-        <h1 className="font-display text-2xl font-semibold text-ink">Portfolio — ranked by KYC drift</h1>
+        <h1 className="font-display text-2xl font-semibold text-ink">Client Portfolio — ranked by KYC drift</h1>
         <p className="mt-1 text-sm text-ink-muted">
           Customers whose live public profile has diverged most from their onboarding KYC.
         </p>
@@ -36,12 +37,7 @@ export default async function DashboardPage() {
                   i > 0 ? "border-t border-surface-line" : ""
                 }`}
               >
-                <span
-                  className="flex size-11 shrink-0 items-center justify-center rounded-full text-sm font-bold tabular"
-                  style={{ background: col.bg, color: col.fg }}
-                >
-                  {now}
-                </span>
+                <CompanyLogo customerId={c.customer.customer_id} name={c.customer.legal_name} size={44} />
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-sm font-semibold text-ink">{c.customer.legal_name}</div>
                   <div className="truncate text-xs text-ink-muted">
@@ -52,10 +48,10 @@ export default async function DashboardPage() {
                 <div className="flex items-center gap-3">
                   <span className="tabular text-sm font-semibold text-risk-high">{fmtDelta(delta)}</span>
                   <span
-                    className="rounded-pill px-2.5 py-1 text-xs font-semibold"
+                    className="tabular rounded-pill px-2.5 py-1 text-xs font-semibold"
                     style={{ background: col.bg, color: col.fg }}
                   >
-                    {band}
+                    {now} · {band}
                   </span>
                   <ChevronRight className="size-4 text-ink-muted" />
                 </div>

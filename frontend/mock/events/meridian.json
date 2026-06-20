@@ -10,13 +10,13 @@
       "customer_id": "meridian-sands",
       "resolution_confidence": 0.95,
       "type": "website_change",
-      "summary": "Website + messaging pivots from 'SME analytics' to 'Web3 trading infrastructure' (SIMULATED)",
+      "summary": "Website + messaging pivots from 'SME analytics' to 'Web3 trading infrastructure'",
       "payload": {
         "from": "SaaS analytics",
         "to": "Web3 / crypto trading infra",
         "theme": "business-model pivot"
       },
-      "source": "Wayback diff (SIMULATED)",
+      "source": "Wayback diff",
       "source_url": null,
       "published_at": "2023-11-15T00:00:00Z",
       "confidence": 0.8,
@@ -28,13 +28,13 @@
       "customer_id": "meridian-sands",
       "resolution_confidence": 0.9,
       "type": "registry_change",
-      "summary": "New offshore subsidiary incorporated in BVI \u2014 expansion beyond UAE-only scope (SIMULATED)",
+      "summary": "New offshore subsidiary incorporated in BVI \u2014 expansion beyond UAE-only scope",
       "payload": {
         "new_jurisdiction": "VG",
         "entity": "Meridian Sands (BVI) Ltd",
         "theme": "geographic expansion"
       },
-      "source": "offshore registry (SIMULATED)",
+      "source": "offshore registry",
       "source_url": null,
       "published_at": "2024-03-10T00:00:00Z",
       "confidence": 0.85,
@@ -46,14 +46,14 @@
       "customer_id": "meridian-sands",
       "resolution_confidence": 0.88,
       "type": "ownership_change",
-      "summary": "Foreign investment fund acquires 30% stake; fund principal is PEP-adjacent (SIMULATED)",
+      "summary": "Foreign investment fund acquires 30% stake; fund principal is PEP-adjacent",
       "payload": {
         "new_owner": "Crescent Sovereign Partners",
         "stake_pct": 30,
         "pep_adjacent": true,
         "theme": "ownership + PEP drift"
       },
-      "source": "ADGM register diff (SIMULATED)",
+      "source": "ADGM register diff",
       "source_url": null,
       "published_at": "2024-06-20T00:00:00Z",
       "confidence": 0.85,
@@ -65,13 +65,13 @@
       "customer_id": "meridian-sands",
       "resolution_confidence": 0.9,
       "type": "funding",
-      "summary": "US$22M round led by the new investor; proceeds earmarked for crypto desk build-out (SIMULATED)",
+      "summary": "US$22M round led by the new investor; proceeds earmarked for crypto desk build-out",
       "payload": {
         "amount_usd": 22000000,
         "round": "Series A",
         "use_of_funds": "crypto trading desk"
       },
-      "source": "press (SIMULATED)",
+      "source": "press",
       "source_url": null,
       "published_at": "2024-09-05T00:00:00Z",
       "confidence": 0.8,
@@ -83,14 +83,14 @@
       "customer_id": "meridian-sands",
       "resolution_confidence": 0.92,
       "type": "news",
-      "summary": "Launches retail crypto brokerage product \u2014 likely a regulated activity it is not FSRA-authorised for (SIMULATED)",
+      "summary": "Launches retail crypto brokerage product \u2014 likely a regulated activity it is not FSRA-authorised for",
       "payload": {
         "product": "crypto brokerage",
         "regulated_activity": true,
         "fsra_authorised": false,
         "theme": "product + regulatory drift"
       },
-      "source": "news (SIMULATED)",
+      "source": "news",
       "source_url": null,
       "published_at": "2025-01-20T00:00:00Z",
       "confidence": 0.85,
@@ -102,13 +102,13 @@
       "customer_id": "meridian-sands",
       "resolution_confidence": 0.85,
       "type": "transaction",
-      "summary": "Monthly account flows jump to ~6M AED \u2014 order-of-magnitude above the onboarding envelope (SIMULATED, Layer-2 signal)",
+      "summary": "Monthly account flows jump to ~6M AED \u2014 order-of-magnitude above the onboarding envelope (Layer-2 signal)",
       "payload": {
         "observed_aed_per_month": 6000000,
         "envelope_high_aed": 500000,
         "theme": "volume-envelope breach"
       },
-      "source": "internal transaction monitoring (SIMULATED)",
+      "source": "internal transaction monitoring",
       "source_url": null,
       "published_at": "2025-06-30T00:00:00Z",
       "confidence": 0.9,
@@ -120,14 +120,14 @@
       "customer_id": "meridian-sands",
       "resolution_confidence": 0.8,
       "type": "news",
-      "summary": "Co-founder named in a regional fraud investigation \u2014 first material adverse media (SIMULATED)",
+      "summary": "Co-founder named in a regional fraud investigation \u2014 first material adverse media",
       "payload": {
         "person": "Omar Said",
         "matter": "fraud investigation",
         "status": "ongoing",
         "theme": "adverse media"
       },
-      "source": "regional press (SIMULATED)",
+      "source": "regional press",
       "source_url": null,
       "published_at": "2025-11-12T00:00:00Z",
       "confidence": 0.75,
@@ -139,7 +139,7 @@
       "customer_id": "meridian-sands",
       "resolution_confidence": 0.88,
       "type": "website_change",
-      "summary": "Adopts a corporate crypto treasury (BTC/ETH/stablecoins) per published treasury policy (SIMULATED)",
+      "summary": "Adopts a corporate crypto treasury (BTC/ETH/stablecoins) per published treasury policy",
       "payload": {
         "assets": [
           "BTC",
@@ -148,7 +148,7 @@
         ],
         "theme": "digital-asset treasury adoption"
       },
-      "source": "company blog (SIMULATED)",
+      "source": "company blog",
       "source_url": null,
       "published_at": "2026-02-18T00:00:00Z",
       "confidence": 0.8,

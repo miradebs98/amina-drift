@@ -14,11 +14,7 @@ function CitationChip({ c }: { c: Citation }) {
     <>
       <span className="font-medium">{c.label}</span>
       <span className="text-ink-muted">· {c.date}</span>
-      {c.simulated ? (
-        <span className="rounded-pill bg-risk-med-bg px-1 text-[9px] font-medium text-risk-med">SIM</span>
-      ) : (
-        <ExternalLink className="size-3" />
-      )}
+      {c.simulated ? null : <ExternalLink className="size-3" />}
     </>
   );
   const cls =
@@ -60,14 +56,14 @@ export function AskChat({ data }: { data: CustomerCase }) {
         onClick={() => setOpen(true)}
         className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-pill bg-brand px-4 py-3 text-sm font-semibold text-white shadow-card transition-transform hover:scale-[1.03] hover:bg-brand-deep"
       >
-        <Sparkles className="size-4 text-teal-bright" /> Ask the data
+        <Sparkles className="size-4 text-teal-bright" /> Ask AMINA
       </button>
 
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-[420px]">
           <SheetHeader className="border-b border-surface-line bg-brand px-4 py-3 text-white">
             <SheetTitle className="flex items-center gap-2 text-white">
-              <Sparkles className="size-4 text-teal-bright" /> Ask the data
+              <Sparkles className="size-4 text-teal-bright" /> AMINA Intelligence
             </SheetTitle>
             <p className="text-[11px] text-white/60">
               {data.customer.legal_name} · read-only · answers cited from this client&apos;s evidence
