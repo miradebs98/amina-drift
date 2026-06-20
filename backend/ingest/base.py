@@ -22,6 +22,25 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 FIXTURES_DIR = REPO_ROOT / "data" / "fixtures"
 CUSTOMERS_DIR = REPO_ROOT / "data" / "customers"
 
+# Load .env (repo root) so OPENAI_API_KEY / SEC_USER_AGENT / ALPHAVANTAGE_API_KEY are picked up.
+try:
+    from dotenv import load_dotenv
+    load_dotenv(REPO_ROOT / ".env")
+except Exception:
+    pass
+
+
+def load_assertions(customer_id: str) -> list[dict]:
+    """Return the authored assertions for a customer (used as relevance queries in Level-2)."""
+    for p in CUSTOMERS_DIR.glob("*.json"):
+        try:
+            data = json.loads(p.read_text())
+        except Exception:
+            continue
+        if data.get("customer_id") == customer_id:
+            return data.get("assertions", [])
+    return []
+
 
 def offline() -> bool:
     """Offline demo mode: connectors replay cached fixtures, no network."""

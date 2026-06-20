@@ -10,6 +10,7 @@ The merged, de-duplicated, time-sorted stream is what the drift engine (Miguel) 
 """
 from __future__ import annotations
 
+import os
 import sys
 
 from shared.schemas import EvidenceEvent
@@ -22,9 +23,13 @@ from backend.ingest.wayback import WaybackConnector
 from backend.ingest.gleif import GleifConnector
 from backend.ingest.stubs import SanctionsConnector, RegistryConnector, FundingConnector
 
+# SEC_LEVEL2=true → also read 10-K text and emit cited passages relevant to each assertion
+# (uses OpenAI embeddings if OPENAI_API_KEY is set, else lexical). Off by default (extra latency).
+_LEVEL2 = os.getenv("SEC_LEVEL2", "false").lower() == "true"
+
 # The full source roster. Add a source = add a line here.
 LIVE_CONNECTORS: list[Connector] = [
-    SecEarningsConnector(),   # SEC filings + earnings calls (grain_lite)
+    SecEarningsConnector(with_text=_LEVEL2),   # SEC filings + earnings calls (grain_lite)
     GdeltConnector(),         # adverse media / news tone
     NewsRssConnector(),       # Google News
     WaybackConnector(),       # website change over time

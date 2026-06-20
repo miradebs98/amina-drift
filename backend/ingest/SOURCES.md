@@ -8,7 +8,8 @@ care which source an event came from. **Add a source = subclass `Connector`, add
 ## Status (2026-06-20)
 | Connector | Source | Key needed | Status | Emits | Cases |
 |---|---|---|---|---|---|
-| `sec_earnings.py` | **SEC EDGAR** filings (+ earnings calls) | none (UA) / AV for calls | ✅ **live, tested** (12 real Coinbase filings) | NEWS, OWNERSHIP_CHANGE | Coinbase |
+| `sec_earnings.py` (L1) | **SEC EDGAR** filing list | none (UA) | ✅ **live, tested** (12 real Coinbase filings) | NEWS, OWNERSHIP_CHANGE | Coinbase |
+| `sec_earnings.py` (L2) | **SEC 10-K full text → cited passages** vs assertions | none (lexical) / OpenAI (embeddings) | ✅ **live, tested** (6 cited 10-K passages, incl. the real OFAC-program text) | NEWS (+ `quote`, `related_assertion_hint`) | Coinbase |
 | `wayback.py` | **Wayback Machine** CDX (website change over time) | none | ✅ **live, tested** (8 real homepage changes 2019→2024) | WEBSITE_CHANGE | Coinbase |
 | `news_rss.py` | **Google News RSS** | none | ✅ **live, tested** (12 articles) | NEWS | both |
 | `gleif.py` | **GLEIF** LEI + ownership graph | none | ✅ **live, tested** (real LEI record) | REGISTRY_CHANGE, OWNERSHIP_CHANGE | Coinbase |
@@ -44,9 +45,17 @@ OFFLINE_DEMO=false python -m backend.ingest.runner coinbase-global --live
 - **Cost**: these connectors are ~free HTTP (no LLM). The optional Level-2 SEC enhancement
   (filing text → embed → relevance-filter) is where grain_lite's embedder = the Stage-1 gate.
 
+## Level-2 SEC — how to run it
+```bash
+# adds 10-K full-text → cited passages relevant to each assertion (lexical without a key)
+SEC_LEVEL2=true OFFLINE_DEMO=false SEC_USER_AGENT="amina-drift (you@email)" \
+  python -m backend.ingest.runner coinbase-global --live
+```
+Add `OPENAI_API_KEY` to `.env` → the relevance filter switches from lexical to embeddings and the
+passage matches sharpen automatically (`payload.relevance_mode` shows which ran). The relevance
+filter (`relevance.py`) IS the cost cascade's **Stage-1 cheap gate** — it's reusable for any source.
+
 ## Next (Mira's creative space)
 1. Fill the **sanctions** stub (OpenSanctions match API — doubles as entity resolution).
-2. Add **Level-2 SEC**: download filing text → `grain_lite` chunk/embed → keep passages relevant
-   to each assertion → richer cited events.
-3. Add a **registry** for non-US entities (ZEFIX/ADGM) so future non-listed customers work live.
-4. Wire the **cost meter** around any LLM use (Level-2) for the Cost-Efficiency axis.
+2. Add a **registry** for non-US entities (ZEFIX/ADGM) so future non-listed customers work live.
+3. Wire the **cost meter** around any LLM use (Level-2 embeddings) for the Cost-Efficiency axis.
