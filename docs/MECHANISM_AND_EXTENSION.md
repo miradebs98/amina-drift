@@ -265,3 +265,54 @@ Real companies with authored KYC baselines, real public events, scored on Apertu
 
 Additional: `eval/gate/` (Stage-1 relevance recall), `eval/stage2/` (verdict precision), and the
 offline regression suite (`backend/drift/test_calibration.py`).
+
+---
+
+## 8. Cost model
+
+`replay()` returns a `cost` block (`backend/drift/llm.py::cost_report`) that reports token usage per
+workflow, the cascade funnel, and dollar figures. Measured on Coinbase (Apertus), per customer-run:
+
+```
+63 (belief × event) pairs
+  → Stage-1 gate filtered 28 (44%)        no LLM, $0
+  → Stage-2 cheap model    35 calls       35,284 tokens
+  → Stage-3 heavy model     2 calls        2,151 tokens   (5.4% escalation)
+```
+
+The fields:
+- `cost_usd` — this run's cost; `cost_per_1000_analyses` and `cost_per_1000_alerts` — extrapolated
+  figures (one "analysis" = monitoring one customer once across its timeline).
+- `stage1_filtered_pct`, `stage2_cheap_calls`, `stage3_heavy_calls` — the funnel: where light vs.
+  heavy models run.
+- `savings_vs_all_heavy_pct` — saving vs. routing every Stage-2 pair through the heavy model (≈ 88%).
+
+### Model choice
+
+The default model is **Apertus** (`swiss-ai/Apertus-8B/70B-Instruct`, hosted on CSCS): Swiss-built,
+open-weights, and run within Swiss jurisdiction, so Layer-2 KYC data is not sent off-jurisdiction —
+the driver was data sovereignty and compliance, not price (it is also $0 for us on CSCS access).
+
+The cascade is **model-agnostic**. Both tiers are configured at runtime —
+`DRIFT_LLM_CHEAP_MODEL` / `DRIFT_LLM_HEAVY_MODEL` select any OpenAI-compatible endpoint, and
+`PRICE_USD_PER_MTOK_CHEAP` / `PRICE_USD_PER_MTOK_HEAVY` in `config.py` set the prices the report uses.
+Any "small model → frontier sibling" pair works; the cost figures recompute automatically.
+
+### Estimated cost across model pairs
+
+Using the measured per-analysis volume (≈ **35.3M** cheap + **2.15M** heavy tokens **per 1,000
+analyses**), at approximate early-2026 blended rates (verify current provider pricing):
+
+| Cheap tier → Heavy tier | ~$/Mtok (cheap / heavy) | Cost / 1,000 analyses |
+|---|---|---|
+| **Apertus-8B → 70B (CSCS, ours)** | 0 / 0 | **$0** (sovereign access) |
+| Apertus / open 8B→70B, self-hosted (config default) | 0.20 / 3.00 | ~$13.5 |
+| Open small→large (e.g. Llama/Mistral via Groq/Together) | 0.10 / 0.80 | ~$5 |
+| Google Gemini Flash → Pro | 0.10 / 2.50 | ~$9 |
+| OpenAI GPT-4o-mini → GPT-4o | 0.25 / 5.00 | ~$20 |
+| Anthropic Claude Haiku → Sonnet | 0.80 / 6.00 | ~$41 |
+
+Two points hold across every row: the **Stage-1 gate** removes ~40–60% of pairs before any model
+runs, and the **cheap→heavy cascade** keeps cost ~88% below running everything on the heavy model —
+so the absolute price scales with the chosen models, but the cascade's efficiency does not depend on
+them. (Cost per 1,000 *alerts* is the same figure divided by the alerts-per-customer rate.)
