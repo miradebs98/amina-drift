@@ -39,8 +39,12 @@ PREDICATE_SIGNALS = {
                               "types": ["registry_change", "ownership_change"]},
     "counterparty_geographies": {"kw": ["offshore", "expansion", "corridor", "international"],
                                  "types": ["registry_change", "ownership_change"]},
-    "ubo": {"kw": ["stake", "investor", "acquire", "acquires", "ownership", "shareholder"],
-            "types": ["ownership_change"]},
+    # INBOUND ownership change only — an ownership_change event or a stake-in-the-customer payload.
+    # (Deliberately NOT bare "acquire/stake/investor": those also match the customer acquiring OTHERS,
+    # e.g. Coinbase buying Deribit, which doesn't change Coinbase's own UBO.)
+    "ubo": {"kw": ["new shareholder", "new owner", "takes a stake", "acquires a stake", "stake in"],
+            "types": ["ownership_change"],
+            "payload_flags": ["pep_adjacent", "new_owner", "stake_pct"]},
     "pep_status": {"kw": ["pep", "politically exposed"], "payload_flags": ["pep_adjacent"]},
     "digital_asset_policy": {"kw": ["crypto", "treasury", "btc", "eth", "stablecoin", "digital asset", "custody"]},
     "digital_asset_holdings": {"kw": ["btc", "eth", "stablecoin", "usdc", "treasury", "holdings"]},
