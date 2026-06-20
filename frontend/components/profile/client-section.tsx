@@ -156,33 +156,8 @@ export function ClientSection({
         )}
       </AnimatePresence>
 
-      {/* DISPOSITION BAR — only when an alert trigger is pending */}
-      {pending ? (
-        <div className="flex flex-wrap items-center gap-2 border-t border-risk-high/30 bg-risk-high-bg/50 px-5 py-3">
-          <span className="mr-auto inline-flex items-center gap-1.5 text-xs font-medium text-risk-high">
-            <TriangleAlert className="size-4" /> Material drift detected — disposition required (written to audit log)
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-pill bg-white px-2 py-0.5 text-[11px] text-ink-muted">
-            <UserCog className="size-3" /> {role}
-          </span>
-          <Button size="sm" className="gap-1.5 bg-teal text-white hover:bg-teal-hover" onClick={() => openDialog("approve")}>
-            <Check className="size-4" /> Approve
-          </Button>
-          <Button size="sm" variant="outline" className="gap-1.5" onClick={() => openDialog("override")}>
-            <ArrowUpRight className="size-4" /> Override
-          </Button>
-          <Button size="sm" className="gap-1.5 bg-risk-high text-white hover:bg-risk-high/90" onClick={() => openDialog("escalate")}>
-            <ShieldAlert className="size-4" /> Escalate → Re-KYC
-          </Button>
-        </div>
-      ) : dispo ? (
-        <div className="flex items-center gap-2 border-t border-surface-line bg-surface-subtle px-5 py-3 text-xs text-ink-body">
-          <CheckCircle2 className="size-4 text-risk-low" />
-          <span className="font-medium">{STATE_LABEL[dispo.governance_state] ?? dispo.governance_state}</span> by{" "}
-          {dispo.reviewer} ({dispo.role}) · written to the audit log · entry{" "}
-          <span className="tabular">{dispo.audit_id}</span>
-        </div>
-      ) : null}
+      {/* DISPOSITION BAR — temporarily removed (to be repositioned later).
+          The handlers + dialog below stay wired so it can be dropped back in. */}
 
       {/* DISPOSITION DIALOG — note capture + four-eyes role */}
       <Dialog open={action !== null} onOpenChange={(o) => !o && setAction(null)}>
