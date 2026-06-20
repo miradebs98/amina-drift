@@ -63,6 +63,11 @@ def risk_direction(predicate: str) -> float:
     return config.RISK_DIRECTION.get(predicate, config.DEFAULT_RISK_DIRECTION)
 
 
+def evidence_weight(event_type: str) -> float:
+    """How much a cheap-LLM verdict counts by SOURCE TYPE — a website diff is softer than a filing."""
+    return config.EVIDENCE_WEIGHT.get(event_type, config.DEFAULT_EVIDENCE_WEIGHT)
+
+
 @dataclass
 class AssertionDrift:
     assertion: Assertion
@@ -117,6 +122,7 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
 
         strengths: list[float] = []
         resolve_strengths: list[float] = []     # de-risking events that retract a prior concern
+        screen_strengths: list[float] = []      # sanctions/PEP screen hits — re-flags do NOT compound
         envelope_mag = 0.0
         ev_ids: list[str] = []
         rationales: list[str] = []
@@ -128,7 +134,7 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
             # confirmed → strong, name-only/unverified → capped potential (+ needs human verification).
             screen = check_screen_match(A, e)
             if screen is not None:
-                strengths.append(screen.strength)
+                screen_strengths.append(screen.strength)
                 ev_ids.append(e.id)
                 rationales.append(screen.rationale)
                 continue
@@ -144,15 +150,21 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
                 v = classify_event(A, e, llm)        # cheap-LLM verdict — metered once per unique pair
                 verdict_cache[key] = v
             llm_used = True                           # an LLM verdict backs this assessment (cached or fresh)
+            ew = evidence_weight(e.type.value)        # soft sources (website diff) count less
             if v.verdict == "contradicts":
-                strengths.append(v.strength)
+                strengths.append(v.strength * ew)
                 ev_ids.append(e.id)
                 rationales.append(v.rationale)
             elif v.verdict == "resolves":
-                resolve_strengths.append(v.strength)
+                resolve_strengths.append(v.strength * ew)
                 ev_ids.append(e.id)
                 rationales.append(v.rationale)
 
+        # Screen matches (sanctions/PEP) combine by MAX, not noisy-OR: re-flagging the SAME unverified
+        # name 4× is one open verification item, not 4 independent hits — it must not compound toward
+        # certainty. The strongest single match stands; a human clears or confirms it (HITL).
+        if screen_strengths:
+            strengths.append(max(screen_strengths))
         # Risk is NOT a ratchet: de-risking events (suit dismissed, licence granted) RETRACT the
         # accumulated concern, so the contradiction — and the score — can come back DOWN over time.
         contra = _clamp(_noisy_or(strengths) - _noisy_or(resolve_strengths))

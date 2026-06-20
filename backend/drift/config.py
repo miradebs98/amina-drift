@@ -44,6 +44,19 @@ RISK_WEIGHT = {
 }
 DEFAULT_RISK_WEIGHT = 0.4
 
+# --- Evidence reliability by SOURCE TYPE: how much a contradiction from this kind of event counts ---
+# A homepage/website diff is SOFT evidence (a marketing tweak, not a confirmed change), so it must not
+# score like a regulatory filing — this is what separates organic expansion (HashKey, website-driven)
+# from confirmed escalation (enforcement/registry/screen). Scales the cheap-LLM verdict strength; the
+# deterministic paths (sanctions/PEP screen, envelope) are authoritative and already full-weight.
+EVIDENCE_WEIGHT = {
+    "sanctions_hit": 1.0, "pep_hit": 1.0, "registry_change": 1.0,   # authoritative records
+    "ownership_change": 0.95, "transaction": 0.9, "news": 0.85,     # reported / confirmed events
+    "funding": 0.8,
+    "website_change": 0.45,                                         # a site diff is a SOFT signal
+}
+DEFAULT_EVIDENCE_WEIGHT = 0.7
+
 # direction of the risk impact when this predicate drifts (+1 up, 0 neutral, -1 down/positive).
 # Most KYC drifts increase risk; SoW/funding is a *question* not a hit, so a softer +.
 # This is the seam for case (c) — a big surprise with ~0 risk impact. TODO: LLM/taxonomy sets sign.
