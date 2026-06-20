@@ -103,6 +103,25 @@ export function AuditTrail({ customerId, alertId }: { customerId: string; alertI
                 </span>
                 <span className="tabular ml-auto text-xs text-ink-muted">{fmtDate(r.timestamp)}</span>
               </div>
+              {/* WHAT was decided — the frozen decision snapshot */}
+              {(() => {
+                const d = r.details?.decision as
+                  | { flag?: string; old_risk?: string; new_risk?: string; evidence_count?: number; recommended_action?: string }
+                  | undefined;
+                if (!d) return null;
+                return (
+                  <div className="mt-1.5 rounded-md border border-surface-line bg-surface-subtle px-2.5 py-1.5">
+                    <div className="text-[13px] font-medium text-ink">{d.flag ?? "—"}</div>
+                    <div className="mt-0.5 flex flex-wrap items-center gap-x-3 text-[11px] text-ink-muted">
+                      {d.old_risk && d.new_risk && (
+                        <span className="tabular">risk {d.old_risk} → {d.new_risk}</span>
+                      )}
+                      {typeof d.evidence_count === "number" && <span>{d.evidence_count} cited signals</span>}
+                      {d.recommended_action && <span className="truncate">action: {d.recommended_action}</span>}
+                    </div>
+                  </div>
+                );
+              })()}
               {typeof r.details?.note === "string" && r.details.note && (
                 <div className="mt-1 text-sm text-ink-body">“{r.details.note}”</div>
               )}

@@ -70,27 +70,45 @@ class Decision(BaseModel):
 
 
 def _find_alert(alert_id: str):
-    """Authoritative (customer_id, severity, model_used) from the cached cases."""
+    """Return (customer_id, full alert dict) from the cached cases."""
     for case in _CASE_CACHE.values():
         for a in [case["alert"], *case.get("alerts", [])]:
             if a["id"] == alert_id:
-                return case["customer"]["customer_id"], a["severity"], a.get("model_used")
+                return case["customer"]["customer_id"], case["customer"].get("legal_name"), a
     return None
+
+
+def _decision_context(alert: dict, customer_name: Optional[str]) -> dict:
+    """A human-readable, hashed snapshot of WHAT was decided (frozen into the audit entry)."""
+    return {
+        "alert_id": alert.get("id"),
+        "customer": customer_name,
+        "flag": alert.get("flag"),
+        "severity": alert.get("severity"),
+        "old_risk": f'{alert.get("old_risk_tier")} {alert.get("old_risk_score")}',
+        "new_risk": f'{alert.get("new_risk_tier")} {alert.get("new_risk_score")}',
+        "contradicted_assertion": alert.get("contradicted_assertion_id"),
+        "also_contradicts": alert.get("also_contradicts", []),
+        "evidence_count": len(alert.get("evidence_ids", [])),
+        "recommended_action": alert.get("recommended_action"),
+    }
 
 
 @app.post("/alerts/{alert_id}/decision")
 def decide(alert_id: str, body: Decision):
     """HITL disposition → persisted + written to the immutable audit log (RBAC-gated)."""
     found = _find_alert(alert_id)
+    alert = found[2] if found else None
     cid = found[0] if found else body.customer_id
-    severity = found[1] if found else body.severity
-    model = found[2] if found else None
+    severity = (alert["severity"] if alert else None) or body.severity
+    model = alert.get("model_used") if alert else None
+    context = _decision_context(alert, found[1]) if alert else {"alert_id": alert_id, "severity": severity}
     if not cid or not severity:
         raise HTTPException(404, f"alert '{alert_id}' not found — load its case first (or pass customer_id+severity)")
     try:
         result = decisions.apply_decision(
             alert_id=alert_id, customer_id=cid, severity=severity, action=body.action,
-            reviewer=body.reviewer, role=body.role, note=body.note, model_used=model)
+            reviewer=body.reviewer, role=body.role, note=body.note, model_used=model, context=context)
     except PermissionError as e:        # RBAC denied (four-eyes)
         raise HTTPException(403, str(e))
     # Update the cached alert in place so it stays fresh AND findable for a follow-up decision
