@@ -1,0 +1,49 @@
+{
+  "customer_id": "coinbase-global",
+  "nodes": [
+    {
+      "id": "coinbase-global-inc",
+      "label": "Coinbase Global, Inc.",
+      "type": "customer",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    },
+    {
+      "id": "brian-armstrong",
+      "label": "Brian Armstrong",
+      "type": "person",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    },
+    {
+      "id": "fred-ehrsam",
+      "label": "Fred Ehrsam",
+      "type": "person",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    }
+  ],
+  "edges": [
+    {
+      "source": "coinbase-global-inc",
+      "target": "brian-armstrong",
+      "relation": "founder",
+      "source_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001679788&type=DEF+14A"
+    },
+    {
+      "source": "coinbase-global-inc",
+      "target": "fred-ehrsam",
+      "relation": "founder",
+      "source_url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001679788&type=DEF+14A"
+    }
+  ],
+  "network_risk": {
+    "connected_entities": 2,
+    "flagged_nodes": [],
+    "elevated": false,
+    "summary": "2 connected entities; no screening hits."
+  }
+}

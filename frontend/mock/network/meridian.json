@@ -1,0 +1,49 @@
+{
+  "customer_id": "meridian-sands",
+  "nodes": [
+    {
+      "id": "meridian-sands-technologies-ltd",
+      "label": "Meridian Sands Technologies Ltd",
+      "type": "customer",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    },
+    {
+      "id": "layla-haddad",
+      "label": "Layla Haddad",
+      "type": "person",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    },
+    {
+      "id": "omar-said",
+      "label": "Omar Said",
+      "type": "person",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    }
+  ],
+  "edges": [
+    {
+      "source": "meridian-sands-technologies-ltd",
+      "target": "layla-haddad",
+      "relation": "founder",
+      "source_url": null
+    },
+    {
+      "source": "meridian-sands-technologies-ltd",
+      "target": "omar-said",
+      "relation": "founder",
+      "source_url": null
+    }
+  ],
+  "network_risk": {
+    "connected_entities": 2,
+    "flagged_nodes": [],
+    "elevated": false,
+    "summary": "2 connected entities; no screening hits."
+  }
+}

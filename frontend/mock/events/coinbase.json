@@ -1,8 +1,7 @@
 {
-  "_comment": "STARTER EXAMPLE — Mira's lane. Public SIGNALS for Coinbase. Mira builds connectors on top of this.",
+  "_comment": "STARTER EXAMPLE \u2014 Mira's lane. Public SIGNALS for Coinbase. Mira builds connectors on top of this.",
   "_role": "The PUBLIC-SOURCE BREADTH case: every event is a REAL, citable public signal (SEC, NASDAQ, regulators, news).",
   "_note": "Source TYPES are real; exact filing/press IDs marked VERIFY. Cache fetched payloads into data/fixtures/ for the offline demo.",
-
   "events": [
     {
       "id": "CB-EV1",
@@ -11,11 +10,16 @@
       "resolution_confidence": 1.0,
       "type": "registry_change",
       "summary": "Coinbase Global direct-lists on NASDAQ (COIN); becomes a US-listed public company",
-      "payload": { "ticker": "COIN", "exchange": "NASDAQ", "method": "direct listing" },
+      "payload": {
+        "ticker": "COIN",
+        "exchange": "NASDAQ",
+        "method": "direct listing"
+      },
       "source": "NASDAQ / SEC EDGAR",
       "source_url": "https://www.nasdaq.com/market-activity/stocks/coin",
       "published_at": "2021-04-14T00:00:00Z",
-      "confidence": 1.0
+      "confidence": 1.0,
+      "dimension": "identity_ownership"
     },
     {
       "id": "CB-EV2",
@@ -23,13 +27,18 @@
       "customer_id": "coinbase-global",
       "resolution_confidence": 0.97,
       "type": "registry_change",
-      "summary": "Coinbase obtains BaFin crypto-custody licence (Germany) — EU regulatory footprint expands",
-      "payload": { "regulator": "BaFin", "jurisdiction": "DE", "permission": "crypto custody" },
+      "summary": "Coinbase obtains BaFin crypto-custody licence (Germany) \u2014 EU regulatory footprint expands",
+      "payload": {
+        "regulator": "BaFin",
+        "jurisdiction": "DE",
+        "permission": "crypto custody"
+      },
       "source": "BaFin",
       "source_url": "https://www.bafin.de/EN/",
       "published_at": "2023-06-26T00:00:00Z",
       "confidence": 0.85,
-      "raw_ref": "VERIFY exact BaFin register entry"
+      "raw_ref": "VERIFY exact BaFin register entry",
+      "dimension": "identity_ownership"
     },
     {
       "id": "CB-EV3",
@@ -37,12 +46,16 @@
       "customer_id": "coinbase-global",
       "resolution_confidence": 0.98,
       "type": "news",
-      "summary": "Coinbase launches 'Base', an Ethereum Layer-2 network — material product/business-model expansion",
-      "payload": { "product": "Base L2", "theme": "on-chain infrastructure" },
+      "summary": "Coinbase launches 'Base', an Ethereum Layer-2 network \u2014 material product/business-model expansion",
+      "payload": {
+        "product": "Base L2",
+        "theme": "on-chain infrastructure"
+      },
       "source": "Coinbase / Base",
       "source_url": "https://www.base.org/",
       "published_at": "2023-08-09T00:00:00Z",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "dimension": "network_risk"
     },
     {
       "id": "CB-EV4",
@@ -50,13 +63,18 @@
       "customer_id": "coinbase-global",
       "resolution_confidence": 1.0,
       "type": "news",
-      "summary": "SEC sues Coinbase for operating as an unregistered securities exchange — material litigation",
-      "payload": { "authority": "US SEC", "action": "civil enforcement", "status": "filed" },
+      "summary": "SEC sues Coinbase for operating as an unregistered securities exchange \u2014 material litigation",
+      "payload": {
+        "authority": "US SEC",
+        "action": "civil enforcement",
+        "status": "filed"
+      },
       "source": "US SEC (press release 2023-102)",
       "source_url": "https://www.sec.gov/newsroom/press-releases/2023-102",
       "published_at": "2023-06-06T00:00:00Z",
       "confidence": 0.95,
-      "raw_ref": "VERIFY exact press-release number"
+      "raw_ref": "VERIFY exact press-release number",
+      "dimension": "network_risk"
     },
     {
       "id": "CB-EV5",
@@ -64,13 +82,18 @@
       "customer_id": "coinbase-global",
       "resolution_confidence": 0.96,
       "type": "registry_change",
-      "summary": "Coinbase secures MiCA licence (EU CASP) via Luxembourg hub — pan-EU passporting",
-      "payload": { "regime": "MiCA", "hub": "LU", "status": "authorised CASP" },
+      "summary": "Coinbase secures MiCA licence (EU CASP) via Luxembourg hub \u2014 pan-EU passporting",
+      "payload": {
+        "regime": "MiCA",
+        "hub": "LU",
+        "status": "authorised CASP"
+      },
       "source": "EU / national regulator",
       "source_url": "https://www.esma.europa.eu/",
       "published_at": "2025-06-20T00:00:00Z",
       "confidence": 0.8,
-      "raw_ref": "VERIFY exact date + authorising NCA"
+      "raw_ref": "VERIFY exact date + authorising NCA",
+      "dimension": "identity_ownership"
     },
     {
       "id": "CB-EV6",
@@ -78,13 +101,18 @@
       "customer_id": "coinbase-global",
       "resolution_confidence": 0.95,
       "type": "news",
-      "summary": "Coinbase to acquire Deribit — major expansion into crypto derivatives",
-      "payload": { "target": "Deribit", "segment": "derivatives", "approx_value_usd": 2900000000 },
+      "summary": "Coinbase to acquire Deribit \u2014 major expansion into crypto derivatives",
+      "payload": {
+        "target": "Deribit",
+        "segment": "derivatives",
+        "approx_value_usd": 2900000000
+      },
       "source": "Coinbase / financial press",
       "source_url": "https://www.coinbase.com/blog",
       "published_at": "2025-05-08T00:00:00Z",
       "confidence": 0.85,
-      "raw_ref": "VERIFY deal value + close date"
+      "raw_ref": "VERIFY deal value + close date",
+      "dimension": "network_risk"
     },
     {
       "id": "CB-EV7",
@@ -92,13 +120,18 @@
       "customer_id": "coinbase-global",
       "resolution_confidence": 1.0,
       "type": "news",
-      "summary": "SEC dismisses its case against Coinbase — litigation overhang resolved",
-      "payload": { "authority": "US SEC", "action": "dismissal", "status": "resolved" },
+      "summary": "SEC dismisses its case against Coinbase \u2014 litigation overhang resolved",
+      "payload": {
+        "authority": "US SEC",
+        "action": "dismissal",
+        "status": "resolved"
+      },
       "source": "US SEC / court docket / press",
       "source_url": "https://www.sec.gov/litigation",
       "published_at": "2025-02-27T00:00:00Z",
       "confidence": 0.9,
-      "raw_ref": "VERIFY exact dismissal date — this is the 'what_would_flip' resolution"
+      "raw_ref": "VERIFY exact dismissal date \u2014 this is the 'what_would_flip' resolution",
+      "dimension": "network_risk"
     }
   ]
 }

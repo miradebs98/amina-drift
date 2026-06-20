@@ -1,0 +1,1199 @@
+{
+  "events": [
+    {
+      "id": "funding-9dd45607b8",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "funding",
+      "summary": "HashKey reaches \u2018unicorn\u2019 valuation after raising US$100 million - South China Morning Post",
+      "payload": {
+        "amount": "$100 m",
+        "round": null,
+        "lead_investor": null,
+        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+      },
+      "source": "Funding intel \u00b7 Google News",
+      "source_url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxQMGQ4R3ZOdDYtdHRud3dsQTM2T1h1YkJOODlKOXg5QmhGYllTcGtzSlhrZzJmczF0ZjB2RlNoZkxmS1VULXhSb2ptR3JuS1gyclFtdWdLbUFsYUxCSE01YmhtM0hMQU5BVGFtWkR6RjFXQWFyc3BJeVE0R1ZHalExdlFTMlFjeHg1WjkzQTQ4LVV4eE1aTlh0RFRVMVJGeGdEUUZHLUxFVzlGXzBpTER1cFVPa1JPVUx0RTV1V2Etel8wYWlWTDdyN2Mxbkg1cjhGRTZBQUZibldQd9IB2gFBVV95cUxObXRwY2xfZ0Zyc3cxZG1VOFI1ekVhM0lXOHJJWVlqaE84R1AzbjNRd0Rfd2JBbVl1ZmlXN19oSXNhQ0NqZ01UbzdzYXlVaUtVU1BQcGxKajVJakJaTV9yZnlSVmhqUnpRdVkyLU1LRW52NHM0MzhRSVg5LXAtZG8yMWU2SG5jM1FUak83LUNSekxFZ19PTlJudnpQMFpYUEU4a01rcmFRcHBqd3hzNjAwbVNEeEo1Um9lTFpPR1JwNjhRZ2tCQU9qTnJ0S1Y1dHF3WGx0U3BjSlh0UQ?oc=5",
+      "published_at": "2024-01-16T00:00:00Z",
+      "confidence": 0.65,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "funding-dbad8108d5",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "funding",
+      "summary": "Hong Kong Crypto Exchange Hashkey Hits Unicorn Status With $100 Million Funding Round - Forbes",
+      "payload": {
+        "amount": "$100 M",
+        "round": null,
+        "lead_investor": null,
+        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+      },
+      "source": "Funding intel \u00b7 Google News",
+      "source_url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxPVHBmamRYSVIwRGotR3hydHhoMWo3dlFWazdnTXQ2RkFSSmo0Wkw3c1lDdDc0U2Z1R09ENENvQ0VnSjlHUERGVWJvY0JrQ1lWNDdKMWpXRGdiMVZiZVI5SmZqUEd5ZDg5UFhfdzEwYXJPOHdlSFNOYUlwbkJvbEUwVnA1Ynh5NXRHWTJsX0hrVEZna3BHcmRfYVB3VzgwVGNLVVUxYld1SFU4Tm9mLTIwWHJEX0E5QzlOZHVFZGd1WnotWkg3bDRUeXJ0bkRndWJT?oc=5",
+      "published_at": "2024-01-16T00:00:00Z",
+      "confidence": 0.65,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "funding-e239a82570",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "funding",
+      "summary": "HashKey Group Raises Nearly $100M; Pre-Money Valued at Over $1.2 Billion - FinSMEs",
+      "payload": {
+        "amount": "$100M",
+        "round": null,
+        "lead_investor": null,
+        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+      },
+      "source": "Funding intel \u00b7 Google News",
+      "source_url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQWHlNNWdKWHZuNThuRlpYWGJWYUZhVVVzLXBDQnRrMzZ0cEpldG0xUkJTeUtyM1JHQ0s3aGllT3I3aXFodGp5N1h1dXg3M3ZRNkI3Z2FKQ2F2cDhfQnUyU2RORTNGdEl5elZ6XzBkTDZwUGF6UHZqMkRYNDVVRG5icFRjcDZqeUZpX3Vya0w5cW9yQlhrbm53ZFlMbzVJZmtXekprc2k1bTQ1QQ?oc=5",
+      "published_at": "2024-01-16T00:00:00Z",
+      "confidence": 0.65,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "wayback-f73cfab8f7",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.9,
+      "type": "website_change",
+      "summary": "HashKey Group homepage content changed (snapshot 20240301)",
+      "payload": {
+        "digest": "VXF6XA5QX7GX6XNCISGV6Q2MITTBEY7T",
+        "snapshot_ts": "20240301041634",
+        "domain": "group.hashkey.com"
+      },
+      "source": "Wayback Machine",
+      "source_url": "http://web.archive.org/web/20240301041634/https://group.hashkey.com:443/",
+      "published_at": "2024-03-01T04:16:34Z",
+      "confidence": 0.7,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "wayback-3fe08dd6c4",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.9,
+      "type": "website_change",
+      "summary": "HashKey Group homepage content changed (snapshot 20240530)",
+      "payload": {
+        "digest": "3JNSDSXDJVIGDLYRS7MA22JTUSPKB3GW",
+        "snapshot_ts": "20240530142655",
+        "domain": "group.hashkey.com"
+      },
+      "source": "Wayback Machine",
+      "source_url": "http://web.archive.org/web/20240530142655/https://group.hashkey.com/",
+      "published_at": "2024-05-30T14:26:55Z",
+      "confidence": 0.7,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "wayback-05e9801af8",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.9,
+      "type": "website_change",
+      "summary": "HashKey Group homepage content changed (snapshot 20240908)",
+      "payload": {
+        "digest": "KNHSFCBWUZHGJBIPQZOQIJJAO5LDBCYY",
+        "snapshot_ts": "20240908235632",
+        "domain": "group.hashkey.com"
+      },
+      "source": "Wayback Machine",
+      "source_url": "http://web.archive.org/web/20240908235632/https://group.hashkey.com/",
+      "published_at": "2024-09-08T23:56:32Z",
+      "confidence": 0.7,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "wayback-8e218cfd40",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.9,
+      "type": "website_change",
+      "summary": "HashKey Group homepage content changed (snapshot 20241212)",
+      "payload": {
+        "digest": "4P7CYM6M2TJULFDZE22ZCACLKJNZPRUK",
+        "snapshot_ts": "20241212165028",
+        "domain": "group.hashkey.com"
+      },
+      "source": "Wayback Machine",
+      "source_url": "http://web.archive.org/web/20241212165028/https://group.hashkey.com/",
+      "published_at": "2024-12-12T16:50:28Z",
+      "confidence": 0.7,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "funding-31c3afc8cd",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "funding",
+      "summary": "HashKey Group Gets $30M Investment From Chinese VC Gaorong Ventures: Report - Yahoo Finance",
+      "payload": {
+        "amount": "$30M",
+        "round": null,
+        "lead_investor": null,
+        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+      },
+      "source": "Funding intel \u00b7 Google News",
+      "source_url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNMEFKUkU5UHJ1LW5XYXRfbnNZeXBpWGs4Z3JBeUZxWmlFTnZFMFBiejFGckU4SEk1UGdpeDhaakVpVHA0M1o1QnhkLWNENkxia0FaQkFZcnFqYW1tY1dMYnZhVTRJWEJBaU43LVNjSDZaSFZsWnpZNmljUHFIQlBZVGhiMHRVUQ?oc=5",
+      "published_at": "2025-02-14T00:00:00Z",
+      "confidence": 0.65,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "funding-62f70c8708",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "funding",
+      "summary": "HashKey Group secures $30 million investment from Gaorong Ventures: Bloomberg - The Block",
+      "payload": {
+        "amount": "$30 m",
+        "round": null,
+        "lead_investor": null,
+        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+      },
+      "source": "Funding intel \u00b7 Google News",
+      "source_url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxOWXhzVDFXaDdUUVVUZVlfTHBjY05zeFRYUjdjTDV5RDRvUlZidzdlOTI5eUU1WEYxSlFtdHcyMjMtVkktVFg1LXJ3bkMwYXY4eXJRZGVGMnFjZE1ETWJoRVdObXA3OFR6a1VyS0puQWlzR2NBTVJNT3lycVptS3YyWmJKWQ?oc=5",
+      "published_at": "2025-02-14T00:00:00Z",
+      "confidence": 0.65,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "funding-f31c36943c",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "funding",
+      "summary": "China\u2019s Gaorong Ventures Invests $30 Million in Crypto Unicorn - Bloomberg.com",
+      "payload": {
+        "amount": "$30 M",
+        "round": null,
+        "lead_investor": null,
+        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+      },
+      "source": "Funding intel \u00b7 Google News",
+      "source_url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQdWllZ29fQ0FEdkZRUE1TVG5wQU1jMlFiXzRMSmxVaUN5YUk2OHZGZGswbHg2VE1MVDlHR0F0Mng5VHBQWWFLUjhvbVRsQzZSOWJ0NHlfOUhpWHprR2JPTGFybldjTVNqX3l1T2hKSTl1YWlHQnhYTDlGNHdSMF9OcmNyRWExbmhMQzR5b3R5cXFXaDBFOVktb2VuRWV3UC1rbktSay1QeEJQQ2Myd3lqVVBB?oc=5",
+      "published_at": "2025-02-14T00:00:00Z",
+      "confidence": 0.65,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "funding-34fbdd3cdd",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "funding",
+      "summary": "HashKey secures $30m investment, now valued at $1.5b - Tech in Asia",
+      "payload": {
+        "amount": "$30m",
+        "round": null,
+        "lead_investor": null,
+        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+      },
+      "source": "Funding intel \u00b7 Google News",
+      "source_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPVUVTbWFpMnhieHQ1eXFmVlBLVkVOX2ozaVV1bXMyWklRMTRCYndfcWhYRGhvbzViU1JtanJ3SWVJeHZzYmM2NWRYVjcwQ1B0UGdqRUNRQlo3Zk9iOUQxTTFpT1dZV3JiV25peTV6VkRjM2ZIYnZRVzhENExBRl9JZEd2alRNZG5j?oc=5",
+      "published_at": "2025-02-15T00:00:00Z",
+      "confidence": 0.65,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "wayback-55b27b1e51",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.9,
+      "type": "website_change",
+      "summary": "HashKey Group homepage content changed (snapshot 20250318)",
+      "payload": {
+        "digest": "2T4ZOKWEJJU2K36YZW6K6TUEKVP7LC5F",
+        "snapshot_ts": "20250318142514",
+        "domain": "group.hashkey.com"
+      },
+      "source": "Wayback Machine",
+      "source_url": "http://web.archive.org/web/20250318142514/https://group.hashkey.com/",
+      "published_at": "2025-03-18T14:25:14Z",
+      "confidence": 0.7,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "funding-5cc9e0e88c",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "funding",
+      "summary": "Digital asset firm HashKey bags $100m Series A funding at unicorn valuation - FinTech Futures",
+      "payload": {
+        "amount": "$100m",
+        "round": "Series A",
+        "lead_investor": null,
+        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+      },
+      "source": "Funding intel \u00b7 Google News",
+      "source_url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxOcEsxWnY2ZmZEUjJnUlc1RndELTh3X2tXZ0tBcEMxdDVDSDZQc0JFeWFoV3pJcnYwaUNReUk5dHFieDZuRlk1WF9wdXlWWF9aSzhldW1JSVY4X3lreW9ETEhxUThKWmlCWWQ3d2JnT0ozS283dlBmNHdrZnkwWXpqRmNPVWZFUW81ZV8wenRCOU5VYTJGUzBMWWpVMzYxc1d0bXhHbnBlOTdFS21RRklIajMxRlFWNEpwREJxLWF5eXJydzhrcEhYbk5jZlVvSjFaeHJLbA?oc=5",
+      "published_at": "2025-03-27T00:00:00Z",
+      "confidence": 0.65,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "wayback-97e81fc9f1",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.9,
+      "type": "website_change",
+      "summary": "HashKey Group homepage content changed (snapshot 20250627)",
+      "payload": {
+        "digest": "N4KONQKF43LLHZUMVNPTI5MJJSATNIW4",
+        "snapshot_ts": "20250627032739",
+        "domain": "group.hashkey.com"
+      },
+      "source": "Wayback Machine",
+      "source_url": "http://web.archive.org/web/20250627032739/https://group.hashkey.com/",
+      "published_at": "2025-06-27T03:27:39Z",
+      "confidence": 0.7,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "wayback-f483d86f83",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.9,
+      "type": "website_change",
+      "summary": "HashKey Group homepage content changed (snapshot 20251007)",
+      "payload": {
+        "digest": "5OPLORWEQ5YKDI5HD6LW5SBDYNTG7DJM",
+        "snapshot_ts": "20251007063557",
+        "domain": "group.hashkey.com"
+      },
+      "source": "Wayback Machine",
+      "source_url": "http://web.archive.org/web/20251007063557/https://group.hashkey.com/",
+      "published_at": "2025-10-07T06:35:57Z",
+      "confidence": 0.7,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "news_rss-74656d8db8",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "news",
+      "summary": "Crypto Operator HashKey Said to Mull Hong Kong Listing This Year - Bloomberg.com",
+      "payload": {
+        "publisher": "Bloomberg.com"
+      },
+      "source": "Google News \u00b7 Bloomberg.com",
+      "source_url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQTUxSaUtXTkZFaFJGLTZmZnJ2UW14RTRvTk1uWTV3bW9FT1dnV3BFdlYzV1NkaGFZaHNwSTBjaE1uSm5SQUFkbE9uR0pnNUJkd3dzSjR0dW5XZk5tbHRKSnFGWXpzYVh3RUlOVlNHQmNDNkh4UTc2TWJMZlV0YTN2OUNsYjF5TDNFVE50cDFoWXFqbHRkbnQtVGE1Y0huQjJpT09yMTAxbGFiYmk5bHk4OWhPUmhvQQ?oc=5",
+      "published_at": "2025-10-09T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "funding-ab30fd0a41",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "funding",
+      "summary": "Crypto exchange HashKey raises $207 million in Hong Kong IPO - Reuters",
+      "payload": {
+        "amount": "$207 m",
+        "round": null,
+        "lead_investor": null,
+        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+      },
+      "source": "Funding intel \u00b7 Google News",
+      "source_url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNd01wSml4TWlpM0toVEgtRU4wdVhpSUoyTm9RTkRjd3BHdFY1Wnl1Y2N0RDMycDdWNjNBTlhUM3pwWU5QTFlhRnFON0Zyb1oxR29CREFrdkZxQnE3Sk8yT3RjZ3poRndMbkstWFdjWE5NZHduNS1YS0hkMFhWWnNQVnJtalN2WGtmaGhjNlp2MmNnb1NqWEhyTk9mejJZeEtSaUgyZHZsSm1wejFpYU1sUFZZNXVRUQ?oc=5",
+      "published_at": "2025-12-16T00:00:00Z",
+      "confidence": 0.65,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "news_rss-6c1c9f4aa9",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "news",
+      "summary": "HashKey shares start trading in Hong Kong, as the city increasingly embraces crypto - Fortune",
+      "payload": {
+        "publisher": "Fortune"
+      },
+      "source": "Google News \u00b7 Fortune",
+      "source_url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNcUg0UHNCUVlDUDlDZ1F1VEVMaTlWRlIxVjE5eVU5Y3NlVEU0b2VQdW9wMXRRUkhXQ2FyV095d3VROF9TTzNXalNRZjBkM25wY0U0c05fOVZWcVZUTFZZbUpYUVJlb09LcXpWRVdqcmdLdVRCYVA0ODJ4a0tuNEhxdGNVWDI?oc=5",
+      "published_at": "2025-12-16T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "news_rss-1113cceece",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "news",
+      "summary": "Hong Kong's largest crypto exchange HashKey sees shares drop 2.5% in disappointing debut - CNBC",
+      "payload": {
+        "publisher": "CNBC"
+      },
+      "source": "Google News \u00b7 CNBC",
+      "source_url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPTjV3OERnVkFVVjJEd1UzNi1rOTRWbERCOE5mV0MwRFUwUEpibmtMY0Q2SW4yVUlLclBmTm1CUnVwODRfYjU1UkN3djZ2Y3NRLXJudWh6VmE4UWtmcnBPTEg3RERvZ3dvS0xJWmhHc0JENTZEUUhHMEg4XzVpWHJzWFBjbWd4M295MW91RWFLVFdZMFZZOGhMRU9jY0VuVlNjT0EtalBjSmpzdzd1OXdWQlRSQ051WjFCb0JXMdIBwgFBVV95cUxOZnpHbGNKdS1QOUxFbl9TeWQ1djI5SlRoN2xfUDBsTi1ZT2gteFA1azdJVGE3N216RU04WU5SZExGSU82dEFIYUc2Y3ZiMzR1aUt1dzdPcWpjLTBXekdLcU1GeXJwQkFyZWp6VzR6NENubndZYWxsNEdrSkNfYThDTFc4UVp1eHdGNnBPdUFOVFFqUlRuV2JWbGlHREZGbzN4dTFZTUhGclI5VkVaOVQ3eGQ5em5UT2JLQ2k5ZVdyWjd2dw?oc=5",
+      "published_at": "2025-12-16T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "news_rss-ab30fd0a41",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "news",
+      "summary": "Crypto exchange HashKey raises $207 million in Hong Kong IPO - Reuters",
+      "payload": {
+        "publisher": "Reuters"
+      },
+      "source": "Google News \u00b7 Reuters",
+      "source_url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNd01wSml4TWlpM0toVEgtRU4wdVhpSUoyTm9RTkRjd3BHdFY1Wnl1Y2N0RDMycDdWNjNBTlhUM3pwWU5QTFlhRnFON0Zyb1oxR29CREFrdkZxQnE3Sk8yT3RjZ3poRndMbkstWFdjWE5NZHduNS1YS0hkMFhWWnNQVnJtalN2WGtmaGhjNlp2MmNnb1NqWEhyTk9mejJZeEtSaUgyZHZsSm1wejFpYU1sUFZZNXVRUQ?oc=5",
+      "published_at": "2025-12-16T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "wayback-0e4ffe2e60",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.9,
+      "type": "website_change",
+      "summary": "HashKey Group homepage content changed (snapshot 20251222)",
+      "payload": {
+        "digest": "WQ3DSBZIMNBUFQHLMC7HS2ZAJPWSQRU3",
+        "snapshot_ts": "20251222002752",
+        "domain": "group.hashkey.com"
+      },
+      "source": "Wayback Machine",
+      "source_url": "http://web.archive.org/web/20251222002752/https://group.hashkey.com/",
+      "published_at": "2025-12-22T00:27:52Z",
+      "confidence": 0.7,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "news_rss-e4fa0d4a1b",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "news",
+      "summary": "HashKey Capital Announces First Closing of US$250 Million Fund IV to Accelerate Global Blockchain Adoption - PR Newswire",
+      "payload": {
+        "publisher": "PR Newswire"
+      },
+      "source": "Google News \u00b7 PR Newswire",
+      "source_url": "https://news.google.com/rss/articles/CBMi-gFBVV95cUxQOFNZdkZFYnRQNU9sTVp5d1dRT1RZcUxaalg2MVdwT1RzNHozYndBSU1aRGVJVUhoVHlRcXlxb0tuUkxwUFhJTkVPR3NiT21mMWh6X2ZhVUxKa1hwNHc1eDcwUkNTSFNJZXRBZVVncEpFYmZLbEF1ZVBmZlVfWW9maE5YMG44U092X3dEc0pZS1FJY0tkSnBqZzZ2cmtyLTJPc1hKbnpYc19FSFpSOFdrUFpCM0xJQW9iLUR1VGY1QXpvS25LY2ZfSXNXZ1p5d2xleXpKVGZ1T2VCYWE4bjVxaU14WkVWVDNkeXBTbWlzbTg0eV9leUVzc2ZB?oc=5",
+      "published_at": "2025-12-24T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "sanctions-407f4e7a50",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.5,
+      "type": "sanctions_hit",
+      "summary": "Potential sanctions/watchlist match (NAME-ONLY, verify identity): 'Xiao Feng' ~ FENG XIAO [crime, wanted], name-score 1.00",
+      "payload": {
+        "screened_name": "Xiao Feng",
+        "matched": "FENG XIAO",
+        "name_score": 1.0,
+        "match_basis": "name-only",
+        "needs_human_verification": true,
+        "topics": [
+          "crime",
+          "wanted"
+        ],
+        "datasets": [
+          "pl_wanted"
+        ]
+      },
+      "source": "OpenSanctions",
+      "source_url": "https://www.opensanctions.org/entities/pl-wanted-d800188e78b7bca1a0d8fb8a2cf2b81d9d801050/",
+      "published_at": "2026-01-01T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "sanctions-ac598ff8ba",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.46,
+      "type": "pep_hit",
+      "summary": "Potential PEP match (NAME-ONLY, verify identity): 'Xiao Feng' ~ Feng Xiaogang [role.pep], name-score 0.92",
+      "payload": {
+        "screened_name": "Xiao Feng",
+        "matched": "Feng Xiaogang",
+        "name_score": 0.92,
+        "match_basis": "name-only",
+        "needs_human_verification": true,
+        "topics": [
+          "role.pep"
+        ],
+        "datasets": [
+          "ann_pep_positions",
+          "wd_categories",
+          "wd_peps",
+          "wikidata"
+        ]
+      },
+      "source": "OpenSanctions",
+      "source_url": "https://www.opensanctions.org/entities/Q716114/",
+      "published_at": "2026-01-01T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "identity_ownership"
+    },
+    {
+      "id": "sanctions-b7662fd3ba",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.43,
+      "type": "pep_hit",
+      "summary": "Potential PEP match (NAME-ONLY, verify identity): 'Xiao Feng' ~ Chang Show-foong [role.pep, role.pol], name-score 0.86",
+      "payload": {
+        "screened_name": "Xiao Feng",
+        "matched": "Chang Show-foong",
+        "name_score": 0.864,
+        "match_basis": "name-only",
+        "needs_human_verification": true,
+        "topics": [
+          "role.pep",
+          "role.pol"
+        ],
+        "datasets": [
+          "wd_categories",
+          "wikidata"
+        ]
+      },
+      "source": "OpenSanctions",
+      "source_url": "https://www.opensanctions.org/entities/Q9092371/",
+      "published_at": "2026-01-01T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "identity_ownership"
+    },
+    {
+      "id": "sanctions-9295117bd4",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.42,
+      "type": "pep_hit",
+      "summary": "Potential PEP match (NAME-ONLY, verify identity): 'Xiao Feng' ~ Wang Xiaofeng [role.pep, role.pol], name-score 0.84",
+      "payload": {
+        "screened_name": "Xiao Feng",
+        "matched": "Wang Xiaofeng",
+        "name_score": 0.841,
+        "match_basis": "name-only",
+        "needs_human_verification": true,
+        "topics": [
+          "role.pep",
+          "role.pol"
+        ],
+        "datasets": [
+          "ann_pep_positions",
+          "wd_categories",
+          "wd_peps",
+          "wikidata"
+        ]
+      },
+      "source": "OpenSanctions",
+      "source_url": "https://www.opensanctions.org/entities/Q9063947/",
+      "published_at": "2026-01-01T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "identity_ownership"
+    },
+    {
+      "id": "sanctions-3d6f2c0854",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.42,
+      "type": "pep_hit",
+      "summary": "Potential PEP match (NAME-ONLY, verify identity): 'Xiao Feng' ~ CHEAM Xiao Feng Michelle [role.pep], name-score 0.83",
+      "payload": {
+        "screened_name": "Xiao Feng",
+        "matched": "CHEAM Xiao Feng Michelle",
+        "name_score": 0.833,
+        "match_basis": "name-only",
+        "needs_human_verification": true,
+        "topics": [
+          "role.pep"
+        ],
+        "datasets": [
+          "sg_gov_dir"
+        ]
+      },
+      "source": "OpenSanctions",
+      "source_url": "https://www.opensanctions.org/entities/sg-gov-23305188d79648a656fb56bf108f8313c59df8d6/",
+      "published_at": "2026-01-01T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "identity_ownership"
+    },
+    {
+      "id": "gleif-b9312e4810",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.7,
+      "type": "registry_change",
+      "summary": "GLEIF LEI record: HashKey Digital Asset Group Limited \u2014 jurisdiction HK, status ACTIVE",
+      "payload": {
+        "lei": "984500D5M8HD6E9B6E38",
+        "jurisdiction": "HK",
+        "status": "ACTIVE"
+      },
+      "source": "GLEIF",
+      "source_url": "https://search.gleif.org/#/record/984500D5M8HD6E9B6E38",
+      "published_at": "2026-03-13T11:00:00Z",
+      "confidence": 0.9,
+      "raw_ref": null,
+      "dimension": "identity_ownership"
+    },
+    {
+      "id": "news_rss-9c77dc64a8",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "news",
+      "summary": "HashKey Group partners with ANAP Holdings on Bitcoin lending - Investing.com",
+      "payload": {
+        "publisher": "Investing.com"
+      },
+      "source": "Google News \u00b7 Investing.com",
+      "source_url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOeXdmSnFRNEFFSU40NGs5S0tnTkNfd3FHUkFTTnhvOXRMcXduQ2M0cmdHZU5zU21Zd2ZGUmNMZVFLQndYdHQtblpFazVxOEVJMXFYcl9GMVRFaDhiOGlWYzF2d1otOVhHLWNWMTduQmk0a3ZSaEpDaUUycF9NMGFFTlBHN1BYWGtKQ1pLeUwwOEhDMlRscXFnem4xUV9icnhXNW14d3RjbjRrSjZjblpZWEJhcGZlQnFh?oc=5",
+      "published_at": "2026-04-22T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "news_rss-7b974146de",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "news",
+      "summary": "CLARITY will strengthen dollar stablecoins, but Asia wins on yield: HashKey Research - CoinDesk",
+      "payload": {
+        "publisher": "CoinDesk"
+      },
+      "source": "Google News \u00b7 CoinDesk",
+      "source_url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNLTJQeVNwM0Z3b0R5YmNTX2VFd21yeEJOWUtWaS11T0kzUkZOMzlUUHQ5TnYtLWNnajBMWE16V3NCb3djNnVFM3RBdHFUbzhYZ1RoTm0zOWthcVhWNXV1VlJIRFJuMUc3ekFWNHktZmo1WVBsQVotVnhxSnJoNkVod0RySTJicmFpei1vRVFQN05qVTV5VVlfblNyT0RwXzFJbzhEVlk3b1lHcUZaVElXZEZ4MkcwM2xOZFN1Y2pVSTdvb1k?oc=5",
+      "published_at": "2026-05-14T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "funding-3b97993472",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "funding",
+      "summary": "SignalPlus Raises $40M to Expand Crypto Trading Tools - Ventureburn",
+      "payload": {
+        "amount": "$40M",
+        "round": null,
+        "lead_investor": null,
+        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+      },
+      "source": "Funding intel \u00b7 Google News",
+      "source_url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNUnJMbHFxZC1XZ3lJRXRHaGdYbnNYNFFMZXBGM2tlbmwtdUhZckJneVE4WGhhYjE2Vm53NlRJZ2RMVHpoM0xpZ195VjhWTWk4YmxuaUR5dFAzMHpwbjFWUGN3emRjN25VSDF0dVNvYURsYlVYREUzODBlTDNRaDVVVmdnY9IBgwFBVV95cUxNUnJMbHFxZC1XZ3lJRXRHaGdYbnNYNFFMZXBGM2tlbmwtdUhZckJneVE4WGhhYjE2Vm53NlRJZ2RMVHpoM0xpZ195VjhWTWk4YmxuaUR5dFAzMHpwbjFWUGN3emRjN25VSDF0dVNvYURsYlVYREUzODBlTDNRaDVVVmdnYw?oc=5",
+      "published_at": "2026-05-21T00:00:00Z",
+      "confidence": 0.65,
+      "raw_ref": null,
+      "dimension": "contextual_change"
+    },
+    {
+      "id": "news_rss-fbcf7d540b",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "news",
+      "summary": "SignalPlus: $40 Million Strategic Investment From HashKey Capital To Expand Crypto Derivatives Infrastructure - Pulse 2.0",
+      "payload": {
+        "publisher": "Pulse 2.0"
+      },
+      "source": "Google News \u00b7 Pulse 2.0",
+      "source_url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNb25xMjZyQjQydVotVlU2dEoyaFYyNzlSUE9hQ2lHMFpYYTZkMWR4VHB2RlpOQmRjT1haeXItdFhTMkVudk5XNkk2U2JOTDhzMURONHpINzQ1Q3ZZNEtOVVNjZ19HWXVfdGpnNFF2Z1dxdUotcHlqTTFITEJoTGNEVElsU1YxNUlMMTZ6eEx0Y0JjWExDVHRzYU04WDlWY1BvX2ZacVBrenVMdU9mZHRTMmI2cDAzZmxFOW1aby1NbURLWUJBNGfSAcsBQVVfeXFMTk1URzVHWkpOTGs0ZGhuYWxjbGNld29HZVQyNFR4TzhBM2VTMmN6b1ZLZEhUb1FONlUycGtsMW14M2gteUJhVHVCemlRZXRaSXlhYjRVbE9tUUNzYzZDUHIyTHNSalhZUVhRUnJSOUQ4SUloWnJ1UUdabGJPeEF1YVhFaUp1UG1HUlU3Y1l5WE4tNXN0RGJrY05kc2lWVGR2c3JpYWYwVndFSDhLMk5iM1hCRnR1UUd6MUJubXFRd0VpUDlkc1R3WkVGTG8?oc=5",
+      "published_at": "2026-05-21T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-a32ef15fe7",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Hong Kong Taps JPMorgan, HSBC and UBS to Scale Tokenized Bond Market - FinanceFeeds",
+      "payload": {
+        "sentiment": 0.2,
+        "concepts": [
+          "Digital asset",
+          "Lexical analysis",
+          "Hong Kong dollar",
+          "UBS",
+          "Bond (finance)"
+        ],
+        "publisher": "FinanceFeeds"
+      },
+      "source": "Event Registry \u00b7 FinanceFeeds",
+      "source_url": "https://financefeeds.com/hong-kong-taps-jpmorgan-hsbc-and-ubs-to-scale-tokenized-bond-market/",
+      "published_at": "2026-06-05T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-d56fb06c87",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Hong Kong Web3 Festival: The Agent Economy and RWA Reshaping Global Finance Beyond the Event",
+      "payload": {
+        "sentiment": 0.5607843137254902,
+        "concepts": [
+          "Web3",
+          "The Honourable",
+          "Hong Kong",
+          "Blockchain",
+          "Justice of the peace"
+        ],
+        "publisher": "\u65b0\u6d6a\u9999\u6e2f"
+      },
+      "source": "Event Registry \u00b7 \u65b0\u6d6a\u9999\u6e2f",
+      "source_url": "https://portal.sina.com.hk/finance/finance-prnewswire/prnasia/2026/06/05/1802650/hong-kong-web3-festival-the-agent-economy-and-rwa-reshaping-global-finance-beyond-the-event/",
+      "published_at": "2026-06-05T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "news_rss-86595b7ffa",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "news",
+      "summary": "HashKey Group Joins HKMA\u2019s Tokenized Bond Expert Panel - \u6df1\u6f6eTechFlow",
+      "payload": {
+        "publisher": "\u6df1\u6f6eTechFlow"
+      },
+      "source": "Google News \u00b7 \u6df1\u6f6eTechFlow",
+      "source_url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5fNlZoSVJBYVhHQjFLejczUllNdHlLejlKak1NVlBkWHJzb1FLZFU5RmVaTEF2dVAwRmxPQ1ZrT3FqR1cyMXBwM0JhX05nZk45cG52cDZNSTI2cjl4?oc=5",
+      "published_at": "2026-06-05T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "news_rss-fd9bdc2832",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "news",
+      "summary": "Hong Kong taps group of experts to help rewrite rules for tokenised bonds - South China Morning Post",
+      "payload": {
+        "publisher": "South China Morning Post"
+      },
+      "source": "Google News \u00b7 South China Morning Post",
+      "source_url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxNVXdPWDFDenFkcW1ZTzNIZUFvbG5IZjlwQlhPSE13TVpOS1Z1TEhlYW9NSzJuM1VqS1Btby1Md2FMYkdZZFpHMjA0Y3kzR1VLcGVTdnBGeVB3V2xSel9zQk1nSkZmaF9QdnhnaXY1QkFJR0tiMzZkN3FRSklQaENwQkpQUlBkcEJvQVJ4WlR3dWVtS3Bza1lWWG9qMWpkbWd2bVlZYkxDUUtKWDBQYktpUmhDV2ZyOWdFbWx6cE1uLUYxcGFoc25PNEFUTXZjaWZRbk9uaFlMem7SAdgBQVVfeXFMTUFYYTZiZldEWUNaV05PQnNWU0FyTTRVTnhtRHRoV1VWN3NtOTZKaU1IRmJlZ1J0R0xkQXJNT1YxOFZ6cUF4STEtWXVLeG1CRW8wVmFsSFJMNFFPdy1VUUdHQklTQld2aHRXajA5V1FRNHEwaDlrZ0xldjhqTG9Lall4V2V6bjZkM2plOG1TYUk1TlZYb0hCNFA3cjZBZHQtOHdoX0paS1BlOUZqQzI2NEF0bWNCSGxYZDF0WE1McjZONUUweVdZNmdqd3BhZ000dzV6QUdzUlhy?oc=5",
+      "published_at": "2026-06-05T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-61da19b725",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "JPMorgan and HSBC Join Hong Kong Tokenized Bonds Expert Group",
+      "payload": {
+        "sentiment": 0.2627450980392156,
+        "concepts": [
+          "Lexical analysis",
+          "Hong Kong Monetary Authority",
+          "Bond (finance)",
+          "HSBC",
+          "JPMorgan Chase"
+        ],
+        "publisher": "The Coin Republic"
+      },
+      "source": "Event Registry \u00b7 The Coin Republic",
+      "source_url": "https://www.thecoinrepublic.com/2026/06/06/jpmorgan-and-hsbc-join-hong-kong-tokenized-bonds-expert-group/",
+      "published_at": "2026-06-06T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-140e0bdfd5",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Hong Kong Web3 Festival Recap: Web3, AI, and Traditional Finance Converge at Accelerating Pace",
+      "payload": {
+        "sentiment": 0.5450980392156863,
+        "concepts": [
+          "Web3",
+          "Blockchain",
+          "Digital asset",
+          "Cryptocurrency",
+          "Artificial intelligence"
+        ],
+        "publisher": "The Manila times"
+      },
+      "source": "Event Registry \u00b7 The Manila times",
+      "source_url": "https://www.manilatimes.net/2026/06/09/tmt-newswire/pr-newswire/hong-kong-web3-festival-recap-web3-ai-and-traditional-finance-converge-at-accelerating-pace/2361389",
+      "published_at": "2026-06-09T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-d8b57fad6d",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Hong Kong Web3 Festival Recap: Web3, AI, and Traditional Finance Converge at Accelerating Pace | Taiwan News | Jun. 9, 2026 16:29",
+      "payload": {
+        "sentiment": 0.5137254901960784,
+        "concepts": [
+          "Web3",
+          "Blockchain",
+          "Digital asset",
+          "Cryptocurrency",
+          "Artificial intelligence"
+        ],
+        "publisher": "Taiwan News"
+      },
+      "source": "Event Registry \u00b7 Taiwan News",
+      "source_url": "https://taiwannews.com.tw/en/news/6379505",
+      "published_at": "2026-06-09T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-16645fd5d4",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "HSBC underwrites as KB Kookmin Bank issues South Korea's first USD digital bonds",
+      "payload": {
+        "sentiment": 0.06666666666666665,
+        "concepts": [
+          "Kookmin Bank",
+          "Hong Kong Monetary Authority",
+          "Bond (finance)",
+          "HSBC",
+          "South Korea"
+        ],
+        "publisher": "Cryptopolitan"
+      },
+      "source": "Event Registry \u00b7 Cryptopolitan",
+      "source_url": "https://www.cryptopolitan.com/hsbc-kb-kookmin-bank-korea-digital-bond/",
+      "published_at": "2026-06-10T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-db9f262d0c",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Meet the Fortune Crypto Innovators | Fortune",
+      "payload": {
+        "sentiment": 0.2156862745098038,
+        "concepts": [
+          "Blockchain",
+          "Digital asset",
+          "DBS Bank",
+          "Fortune (magazine)",
+          "Chief executive officer"
+        ],
+        "publisher": "Fortune"
+      },
+      "source": "Event Registry \u00b7 Fortune",
+      "source_url": "https://fortune.com/2026/06/11/crypto-innovators-2026-asia-europe-usa/",
+      "published_at": "2026-06-11T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-81872c6d66",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Bitcoin (BTC) Tumbles as Trump Embraces Soaring Inflation Numbers",
+      "payload": {
+        "sentiment": 0.3647058823529412,
+        "concepts": [
+          "Cryptocurrency",
+          "Bitcoin",
+          "Inflation",
+          "Donald Trump",
+          "Federal Reserve"
+        ],
+        "publisher": "Blockonomi"
+      },
+      "source": "Event Registry \u00b7 Blockonomi",
+      "source_url": "https://blockonomi.com/bitcoin-btc-tumbles-as-trump-embraces-soaring-inflation-numbers/",
+      "published_at": "2026-06-11T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-a4cc5cbf52",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Bitcoin (BTC) Tumbles as May Inflation Surges to Three-Year Peak",
+      "payload": {
+        "sentiment": 0.1843137254901961,
+        "concepts": [
+          "Cryptocurrency",
+          "Consumer price index",
+          "Bitcoin",
+          "Inflation",
+          "Federal Reserve"
+        ],
+        "publisher": "Blockonomi"
+      },
+      "source": "Event Registry \u00b7 Blockonomi",
+      "source_url": "https://blockonomi.com/bitcoin-btc-tumbles-as-may-inflation-surges-to-three-year-peak/",
+      "published_at": "2026-06-11T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-4dcb42d918",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "US Inflation Hits 3-Year High, Pressuring Bitcoin and Gold",
+      "payload": {
+        "sentiment": -0.1372549019607843,
+        "concepts": [
+          "Consumer price index",
+          "Bitcoin",
+          "Inflation",
+          "Gold",
+          "Goods and services"
+        ],
+        "publisher": "Cointelegraph"
+      },
+      "source": "Event Registry \u00b7 Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/pressure-on-bitcoin-and-gold-increases-as-us-inflation-tops-4",
+      "published_at": "2026-06-11T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-4609b9e7e5",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Fortune Unveils Crypto Innovators List to Highlight Global Pioneers",
+      "payload": {
+        "sentiment": 0.4431372549019608,
+        "concepts": [
+          "Fortune (magazine)",
+          "Decentralization",
+          "Blockchain",
+          "Fixed income",
+          "Analytics"
+        ],
+        "publisher": "Techiexpert.com"
+      },
+      "source": "Event Registry \u00b7 Techiexpert.com",
+      "source_url": "https://techiexpert.com/fortune-unveils-crypto-innovators-list-to-highlight-global-pioneers/",
+      "published_at": "2026-06-12T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-e9bf17919b",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Hong Kong sets record with $1.5B digital bond issue",
+      "payload": {
+        "sentiment": 0.1607843137254903,
+        "concepts": [
+          "State-owned enterprise",
+          "Hong Kong Monetary Authority",
+          "Hong Kong dollar",
+          "Bond (finance)",
+          "Hong Kong"
+        ],
+        "publisher": "Cryptopolitan"
+      },
+      "source": "Event Registry \u00b7 Cryptopolitan",
+      "source_url": "https://www.cryptopolitan.com/hong-kong-record-1-5b-digital-bond/",
+      "published_at": "2026-06-12T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-b0244e5398",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Hong Kong Mortgage Corporation completes world's largest digital bond issuance",
+      "payload": {
+        "sentiment": 0.06666666666666665,
+        "concepts": [
+          "Lexical analysis",
+          "Hong Kong dollar",
+          "Hong Kong",
+          "Fixed income",
+          "Tranche"
+        ],
+        "publisher": "crypto.news"
+      },
+      "source": "Event Registry \u00b7 crypto.news",
+      "source_url": "https://crypto.news/hong-kong-mortgage-corporation-completes-worlds-largest-digital-bond-issuance/",
+      "published_at": "2026-06-12T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-eb75e63ee9",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "HashKey stock jumps 10% after HK$100M share buyback approval",
+      "payload": {
+        "sentiment": 0.1764705882352942,
+        "concepts": [
+          "Hong Kong dollar",
+          "Share repurchase",
+          "Annual general meeting",
+          "Web3",
+          "Digital asset"
+        ],
+        "publisher": "crypto.news"
+      },
+      "source": "Event Registry \u00b7 crypto.news",
+      "source_url": "https://crypto.news/hashkey-stock-jumps-10-after-hk100m-share-buyback-approval/",
+      "published_at": "2026-06-12T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-150dcb768b",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "HashKey Holdings approves share buyback of up to HK$100 million By Investing.com",
+      "payload": {
+        "sentiment": 0.3019607843137255,
+        "concepts": [
+          "Hong Kong dollar",
+          "Share repurchase",
+          "United States dollar",
+          "Hong Kong Stock Exchange",
+          "Hong Kong"
+        ],
+        "publisher": "Investing.com"
+      },
+      "source": "Event Registry \u00b7 Investing.com",
+      "source_url": "https://www.investing.com/news/company-news/hashkey-holdings-approves-share-buyback-of-up-to-hk100-million-93CH-4738796",
+      "published_at": "2026-06-12T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-d1612090dd",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Crypto ETF Flows Reveal Where Institutional Money Is Going, and It's Not Bitcoin",
+      "payload": {
+        "sentiment": 0.1607843137254903,
+        "concepts": [
+          "Solana (blockchain platform)",
+          "Ethereum",
+          "Ripple (payment protocol)",
+          "Exchange-traded fund",
+          "Initial public offering"
+        ],
+        "publisher": "BeInCrypto"
+      },
+      "source": "Event Registry \u00b7 BeInCrypto",
+      "source_url": "https://beincrypto.com/crypto-etf-flows-institutional-rotation-bitcoin/",
+      "published_at": "2026-06-16T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "news_rss-2a3cf0a2ae",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "news",
+      "summary": "HashKey Platform Token - Morpho x HashKey - 16 June 2026 - TradingView",
+      "payload": {
+        "publisher": "TradingView"
+      },
+      "source": "Google News \u00b7 TradingView",
+      "source_url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPTzRGdnlmQXJNdGNVcEJYbncwckJkYXZBazc1QncyakVoeWVYTjgxQmotd3hYLVVZczJkRlo3SXFtT3JnbFJBampDMDZzUWlzMFUwV015cDI0akFka0pWRlhCTFcySzdqcTdlTWNjNy1PVXdDeUtzcXpHZ3JTOHI5OG53ZGFqaWlaOU4wUlY1QlJUUmpCNHJCWi1xd2I0VUZULTB6LXNYMzM0UWQ0Yk80dFJWRDRVeUE?oc=5",
+      "published_at": "2026-06-16T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "news_rss-7a2617e431",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.75,
+      "type": "news",
+      "summary": "HashKey Chain Partners Morpho to Blend Compliance and DeFi for Institutional CeDeFi and RWA Lending - Cryptonews.net",
+      "payload": {
+        "publisher": "Cryptonews.net"
+      },
+      "source": "Google News \u00b7 Cryptonews.net",
+      "source_url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5MZ204Q2k2Qnp2dzBobU05N3YybW15QnBURmhadHVFS2ZKSERPNGFoci03a0xwMGhPcXdhN3hnSVh6RFlHb3pIWEZ2bUtyQjRlU0wteg?oc=5",
+      "published_at": "2026-06-16T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-1b68cd35a5",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Goldman Sachs Slashes Gold Forecast as Fed Fears Mount",
+      "payload": {
+        "sentiment": -0.1686274509803921,
+        "concepts": [
+          "Bitcoin",
+          "Goldman Sachs",
+          "Gold as an investment",
+          "Bloomberg L.P.",
+          "Federal Reserve"
+        ],
+        "publisher": "FinanceFeeds"
+      },
+      "source": "Event Registry \u00b7 FinanceFeeds",
+      "source_url": "https://financefeeds.com/goldman-sachs-slashes-gold-forecast/",
+      "published_at": "2026-06-19T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-dabb936448",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Goldman Sachs Trims Gold Forecast as Higher Rates Persist",
+      "payload": {
+        "sentiment": -0.01960784313725494,
+        "concepts": [
+          "Federal Reserve",
+          "Bitcoin",
+          "Interest rate",
+          "Goldman Sachs",
+          "Gold"
+        ],
+        "publisher": "Blockonomi"
+      },
+      "source": "Event Registry \u00b7 Blockonomi",
+      "source_url": "https://blockonomi.com/goldman-sachs-trims-gold-forecast-as-higher-rates-persist/",
+      "published_at": "2026-06-19T00:00:00Z",
+      "confidence": 0.6,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "event_registry-202f1b6308",
+      "entity_ref": "HashKey Group",
+      "customer_id": "hashkey-group",
+      "resolution_confidence": 0.8,
+      "type": "news",
+      "summary": "Goldman Sachs Cuts Gold target by $500 on Fed Rate Cut Delay",
+      "payload": {
+        "sentiment": -0.207843137254902,
+        "concepts": [
+          "Interest rate",
+          "Goldman Sachs",
+          "Gold",
+          "Federal Reserve",
+          "Bitcoin"
+        ],
+        "publisher": "Cointelegraph"
+      },
+      "source": "Event Registry \u00b7 Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/goldman-sachs-cuts-year-end-gold-target-by-500-doubting-rate-cuts",
+      "published_at": "2026-06-19T00:00:00Z",
+      "confidence": 0.7,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    }
+  ]
+}

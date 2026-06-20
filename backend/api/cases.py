@@ -22,7 +22,7 @@ from shared.schemas import (Assertion, DriftAlert, DriftType, Severity, Governan
 from backend.drift.client_state import ClientState, _MOCK_SNAPSHOTS
 from backend.drift.engine import replay
 from backend.drift.llm import get_llm
-from backend.drift.score import tier_for
+from backend.drift.score import tier_for, assess
 from backend.govern.decisions import get_decision
 
 
@@ -98,7 +98,8 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
         baseline_risk_score=baseline, assertions=assertions,
         evidence=events, snapshots=snapshots,
     )
-    r = replay(state, get_llm())                           # Miguel's engine
+    llm = get_llm()
+    r = replay(state, llm)                                 # Miguel's engine
 
     # ── 4-dimension tagging (connect-the-dots): tag each event + which dimensions drifted ──
     pred_by_id = {a.id: a.predicate.value for a in assertions}
@@ -114,6 +115,29 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
 
     alerts = r["alerts"]
     latest = max((e.published_at for e in events), default=datetime.now(timezone.utc))
+
+    # ── per-assertion drift decomposition (WHY each belief moved) — for the twin-diff ──
+    # Reuse `llm` so the final pass is mostly cache hits from replay's last tick (≈ free).
+    decomp = assess(state, latest.date(), llm)
+    assertion_drift = sorted(
+        ({
+            "assertion_id": ad.assertion.id,
+            "predicate": ad.assertion.predicate.value,
+            "dimension": dimension_for_predicate(ad.assertion.predicate.value).value,
+            "value": ad.assertion.value,
+            "status": ad.status,                       # valid | stale | contradicted | under_review
+            "surprise": round(ad.surprise, 3),         # how much it moved [0,1]
+            "risk_impact": round(ad.risk_impact, 3),   # signed contribution to the score
+            "contradiction": round(ad.contra, 3),
+            "staleness": round(ad.staleness, 3),
+            "envelope_breach": round(ad.envelope, 3),
+            "trajectory": round(ad.trajectory, 3),
+            "confidence": round(ad.confidence, 3),
+            "evidence_ids": ad.evidence_ids,
+            "why": ad.rationales[:2],
+        } for ad in decomp.per_assertion if ad.surprise > 0.05 or ad.status != "valid"),
+        key=lambda x: x["risk_impact"], reverse=True,
+    )
     # Headline = the most MATERIAL drift episode (highest resulting score, tie-break latest),
     # not just the chronologically last (which can be a minor early nudge).
     headline = (max(alerts, key=lambda al: ((al.new_risk_score or 0), al.created_at))
@@ -129,6 +153,8 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
         "final_score": r["final_score"], "final_tier": r["final_tier"],
         # connect-the-dots: which of the 4 dimensions the headline drift spans (≥3 = strong signal)
         "dimensions_drifted": _dims_for_alert(headline),
+        # per-belief breakdown (WHY each assertion moved) — drives the twin-diff explanation
+        "assertion_drift": assertion_drift,
     }
 
 

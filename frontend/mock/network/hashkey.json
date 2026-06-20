@@ -1,0 +1,82 @@
+{
+  "customer_id": "hashkey-group",
+  "nodes": [
+    {
+      "id": "hashkey-group",
+      "label": "HashKey Group",
+      "type": "customer",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    },
+    {
+      "id": "xiao-feng",
+      "label": "Xiao Feng",
+      "type": "person",
+      "flags": [
+        "sanctioned",
+        "pep"
+      ],
+      "needs_verification": true,
+      "note": "Potential PEP match (NAME-ONLY, verify identity): 'Xiao Feng' ~ CHEAM Xiao Feng Michelle [role.pep], name-score 0.83"
+    },
+    {
+      "id": "early-institutional-shareholders",
+      "label": "early institutional shareholders",
+      "type": "person",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    },
+    {
+      "id": "gaorong-ventures",
+      "label": "Gaorong Ventures",
+      "type": "investor",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    },
+    {
+      "id": "anap-holdings",
+      "label": "ANAP Holdings",
+      "type": "partner",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    }
+  ],
+  "edges": [
+    {
+      "source": "hashkey-group",
+      "target": "xiao-feng",
+      "relation": "founder",
+      "source_url": "https://group.hashkey.com/en/about"
+    },
+    {
+      "source": "hashkey-group",
+      "target": "early-institutional-shareholders",
+      "relation": "founder",
+      "source_url": "https://group.hashkey.com/en/about"
+    },
+    {
+      "source": "gaorong-ventures",
+      "target": "hashkey-group",
+      "relation": "investor",
+      "source_url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxOWXhzVDFXaDdUUVVUZVlfTHBjY05zeFRYUjdjTDV5RDRvUlZidzdlOTI5eUU1WEYxSlFtdHcyMjMtVkktVFg1LXJ3bkMwYXY4eXJRZGVGMnFjZE1ETWJoRVdObXA3OFR6a1VyS0puQWlzR2NBTVJNT3lycVptS3YyWmJKWQ?oc=5"
+    },
+    {
+      "source": "hashkey-group",
+      "target": "anap-holdings",
+      "relation": "partner",
+      "source_url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOeXdmSnFRNEFFSU40NGs5S0tnTkNfd3FHUkFTTnhvOXRMcXduQ2M0cmdHZU5zU21Zd2ZGUmNMZVFLQndYdHQtblpFazVxOEVJMXFYcl9GMVRFaDhiOGlWYzF2d1otOVhHLWNWMTduQmk0a3ZSaEpDaUUycF9NMGFFTlBHN1BYWGtKQ1pLeUwwOEhDMlRscXFnem4xUV9icnhXNW14d3RjbjRrSjZjblpZWEJhcGZlQnFh?oc=5"
+    }
+  ],
+  "network_risk": {
+    "connected_entities": 4,
+    "flagged_nodes": [
+      "Xiao Feng"
+    ],
+    "elevated": true,
+    "summary": "4 connected entities; 1 carry a sanctions/PEP name-match (verify identity)."
+  }
+}

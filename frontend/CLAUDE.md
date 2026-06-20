@@ -64,6 +64,23 @@ Until the backend is running you can keep the local mock, but **the demo must hi
 (fixtures mode = local mock; `NEXT_PUBLIC_DATA_MODE=live` = real govern). Audit shape = `AuditEntry`
 in `shared/schemas/audit.py`.
 
+## ✅ UNBLOCKED (2026-06-20) — backend now emits everything the GOLD view needs
+Your blockers are cleared (Mira). What the **live API** (`/cases/{id}`) returns per case:
+- `event.dimension` on **every** event · `dimensions_drifted` (case-level) — already emitted (verified).
+  ⚠️ Your `client.ts getCase` currently returns only `{customer, events, alert}` — it **strips**
+  `dimensions_drifted` (and `alerts`/`timeline`/`cost`/`assertion_drift`). One-line fix: pass them
+  through (extend `CustomerCase`). `event.dimension` already survives (it's on each event object).
+- **`assertion_drift`** — NEW: per-belief decomposition (predicate, dimension, status,
+  surprise, risk_impact, contradiction/staleness/envelope/trajectory, evidence_ids, `why[]`),
+  sorted by impact. This drives the twin-diff "**why each belief moved**".
+- **Network graph**: `GET /cases/{id}/network` (live) — connected entities + sanctions/PEP flags.
+  Fixtures: `getNetwork(customerId)` added to `lib/api/fixtures.ts`; mocks in `mock/network/*.json`.
+- **Fixtures refreshed**: **HashKey added** (3rd entity, in `ORDER`); coinbase/meridian event mocks
+  enriched with `dimension`. So fixtures mode now matches live for the 4-lane view.
+- **Source diversity** is in the data: `event.source` carries SEC / GLEIF / GDELT / Event Registry /
+  Funding / **cert-transparency** / Wayback — group/badge the news panel by it to tell the
+  "creative public sources" story.
+
 ## 🥇 GOLD task — the 4-dimension convergence view (current focus)
 The "wow" is showing drift that **no single signal crosses** — the combination across dimensions
 over time (see root `/CLAUDE.md` §1.5). Build a **4-lane convergence timeline**:
