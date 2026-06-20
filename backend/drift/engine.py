@@ -78,7 +78,7 @@ def build_alert(state, a: Assessment, prev_score: int, prev_tier: str, llm: LLMC
 
     moved = ", ".join(a.trajectory.moved_axes) or "n/a"
     rationale = (
-        f"Onboarded {state.onboarded_as_of:%Y} ({state.baseline_risk_score}/LOW) as: {_baseline_desc(state)}. "
+        f"Onboarded {state.onboarded_as_of:%Y} ({state.baseline_risk_score}/{tier_of(state.baseline_risk_score)}) as: {_baseline_desc(state)}. "
         f"Public record up to {a.as_of:%Y-%m} now shows: "
         + "; ".join(r for ad in contributors[:4] for r in ad.rationales[:1])
         + f". Profile-embedding trajectory migrated (axes: {moved}; distance={a.trajectory.distance:.2f}). "
@@ -109,7 +109,7 @@ def build_alert(state, a: Assessment, prev_score: int, prev_tier: str, llm: LLMC
         recommended_action=action,
         confidence=0.9,
         stage_reached=3 if a.llm_used else 1,
-        model_used="<heavy-tier-llm (mock)>",
+        model_used=getattr(llm, "heavy_model", None) or type(llm).__name__,
         tokens_used=heavy_tokens,
         governance_state=GovernanceState.PENDING,
         created_at=datetime.combine(a.as_of, time.min, tzinfo=timezone.utc),
@@ -133,7 +133,7 @@ def replay(state, llm: LLMClient | None = None, embedder: ConceptAxisEmbedder | 
                    | {state.onboarded_as_of})
     clock = SimClock(dates[0])
     timeline, alerts = [], []
-    prev_score, prev_tier = state.baseline_risk_score, "LOW"
+    prev_score, prev_tier = state.baseline_risk_score, tier_of(state.baseline_risk_score)
     prev_surprise: dict[str, float] = {}
     for d in dates:
         clock.advance_to(d)
