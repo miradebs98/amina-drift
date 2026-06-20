@@ -165,6 +165,14 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
     saturate = min(1.0, total_impact / config.RISK_SCORE_FULL_DRIFT)
     risk_score = int(round(state.baseline_risk_score + (100 - state.baseline_risk_score) * saturate))
     risk_score = max(0, min(100, risk_score))
+
+    # Material-event FLOOR: a single CRITICAL hit (regulatory enforcement / sanctions / PEP / adverse
+    # media) must move risk meaningfully even when the slow-drift sum is small — a major event (e.g. an
+    # SEC suit) is not a 1-point footnote. It's a minimum, so it never lowers the formula score.
+    if any(ad.assertion.predicate.value in config.CRITICAL_PREDICATES and ad.contra >= config.CRITICAL_CONTRA
+           for ad in per):
+        risk_score = min(100, max(risk_score, state.baseline_risk_score + config.CRITICAL_MIN_BUMP))
+
     surprise_max = max((ad.surprise for ad in per), default=0.0)
 
     return Assessment(

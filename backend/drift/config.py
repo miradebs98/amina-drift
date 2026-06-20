@@ -64,8 +64,10 @@ RISK_DELTA_FLAG_POINTS = 6          # min risk_score jump (points) to raise a fl
 BREADTH_MIN_DIMS = 3                 # ≥ this many distinct dimensions drifting → combination alert + score boost
 BREADTH_BONUS = 0.12                # ×Σimpact per dimension beyond 2 (3 dims = +0.12, 4 = +0.24)
 MATERIAL_IMPACT = 0.05              # a per-assertion risk_impact above this counts toward breadth
-CRITICAL_PREDICATES = ("sanctions_status", "pep_status", "adverse_media_status")
+CRITICAL_PREDICATES = ("sanctions_status", "pep_status", "adverse_media_status", "regulatory_status")
 CRITICAL_CONTRA = 0.7               # one high-severity hit on these fires an alert regardless of tier/breadth
+CRITICAL_MIN_BUMP = 10              # a single MATERIAL event (enforcement/sanctions/PEP) must move risk >= this
+                                    # (so a major event isn't a 1-point footnote under the slow-drift sum)
 
 # --- Slow-drift trajectory alarms (early warning, before any hard contradiction) ----------------
 TRAJECTORY_NOISE_FLOOR = 0.10
