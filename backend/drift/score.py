@@ -83,8 +83,14 @@ class Assessment:
     dimensions_drifted: list[str] = field(default_factory=list)
 
 
-def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | None = None) -> Assessment:
+def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | None = None,
+           verdict_cache: dict | None = None) -> Assessment:
     embedder = embedder or ConceptAxisEmbedder()
+    # A (assertion, event) verdict is deterministic — it depends only on the assertion and the event,
+    # never on `as_of`. So across a replay's many ticks each pair need only be classified ONCE.
+    # `verdict_cache` (keyed by (assertion_id, event_id)) carries those verdicts between ticks; left
+    # None it's a fresh per-call dict, so a one-shot `assess` behaves exactly as before.
+    verdict_cache = {} if verdict_cache is None else verdict_cache
     traj = compute_trajectory(state.snapshots, as_of, embedder)
     events = [e for e in state.evidence if e.published_at.date() <= as_of]
 
@@ -111,8 +117,12 @@ def assess(state, as_of: date, llm: LLMClient, embedder: ConceptAxisEmbedder | N
                 ev_ids.append(e.id)
                 rationales.append(f"{e.summary} — breaches expected envelope.")
                 continue
-            v = classify_event(A, e, llm)
-            llm_used = True
+            key = (A.id, e.id)
+            v = verdict_cache.get(key)
+            if v is None:
+                v = classify_event(A, e, llm)        # cheap-LLM verdict — metered once per unique pair
+                verdict_cache[key] = v
+            llm_used = True                           # an LLM verdict backs this assessment (cached or fresh)
             if v.verdict == "contradicts":
                 strengths.append(v.strength)
                 ev_ids.append(e.id)

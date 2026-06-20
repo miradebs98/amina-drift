@@ -1,0 +1,21 @@
+{
+  "_README": "Gold labels for the ADVERSARIAL set. `relevant` = beliefs a competent KYC analyst would re-examine given this event (SHOULD survive Stage-1). `material` = the subset that genuinely moves the risk profile. Unlisted beliefs are deliberate gold-negatives. Hard-negative events have relevant=[] (anything the gate keeps there is a false positive). Authored to be FAIR, not to flatter or punish the gate.",
+  "labels": {
+    "helvetia-p1": { "relevant": ["operating_geographies"], "material": ["operating_geographies"] },
+    "helvetia-p2": { "relevant": ["ubo"], "material": ["ubo"] },
+    "helvetia-v1": { "relevant": ["pep_status"], "material": ["pep_status"] },
+    "helvetia-p3": { "relevant": ["business_model", "product_mix"], "material": ["business_model"] },
+    "helvetia-v2": { "relevant": ["digital_asset_policy"], "material": ["digital_asset_policy"] },
+    "helvetia-v3": { "relevant": ["regulatory_status", "adverse_media_status"], "material": ["regulatory_status"] },
+    "helvetia-tp": { "relevant": ["business_model", "product_mix", "digital_asset_policy", "regulatory_status"], "material": ["business_model", "product_mix", "regulatory_status"] },
+    "helvetia-am": { "relevant": ["adverse_media_status"], "material": ["adverse_media_status"] },
+    "helvetia-n1": { "relevant": [], "material": [] },
+    "helvetia-n2": { "relevant": [], "material": [] },
+    "helvetia-n3": { "relevant": [], "material": [] },
+    "helvetia-n4": { "relevant": [], "material": [] },
+    "adriatic-tp": { "relevant": ["sanctions_status", "adverse_media_status"], "material": ["sanctions_status"] },
+    "adriatic-v1": { "relevant": ["pep_status", "ubo"], "material": ["pep_status", "ubo"] },
+    "adriatic-v2": { "relevant": ["product_mix", "regulatory_status"], "material": ["product_mix", "regulatory_status"] },
+    "adriatic-n1": { "relevant": [], "material": [] }
+  }
+}

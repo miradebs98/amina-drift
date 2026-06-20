@@ -1,0 +1,143 @@
+{
+  "_README": "ADVERSARIAL Stage-1 gate stress set (100% SYNTHETIC, authored 2026-06-20). Purpose: find out whether the keyword+lexical gate actually BREAKS — not whether it works on easy real news. Every event is crafted to probe one failure mode: (P) PARAPHRASED drift that uses none of the gate's keywords; (V) UNSEEN VOCABULARY for a high-risk predicate (PEP via 'cabinet minister', derivatives via 'perpetual contracts'); (N) HARD NEGATIVE that shares a keyword but is risk-irrelevant (tests precision/false-positives). All entities/events are invented. Labels in adversarial_gold.json reflect what a competent KYC analyst would re-examine — NOT rigged to make a point. Run: python -m eval.gate.run --dataset eval/gate/adversarial.json --gold eval/gate/adversarial_gold.json",
+  "companies": [
+    {
+      "id": "helvetia",
+      "legal_name": "Helvetia Data Systems AG",
+      "domain": "helvetia-data.example",
+      "onboarded_as": "Zug-based B2B SaaS analytics startup, founder-owned, Swiss-only, no crypto (SYNTHETIC)",
+      "beliefs": {
+        "business_model": "B2B SaaS analytics dashboards for Swiss SMEs",
+        "product_mix": "Subscription analytics software; no trading, custody or financial products",
+        "operating_geographies": { "value": "Switzerland-only operations", "allowed_set": ["CH"] },
+        "regulatory_status": "Not a financial institution; commercial registration only, no FINMA authorisation",
+        "ubo": "Two named founders; privately held and founder-controlled",
+        "source_of_wealth": "Bootstrapped subscription revenue and a single seed round",
+        "digital_asset_policy": "No digital-asset activity; nothing crypto on the balance sheet",
+        "listing_status": "Private company",
+        "pep_status": "No politically exposed person among directors or owners",
+        "sanctions_status": "No sanctions exposure",
+        "adverse_media_status": "No adverse media, investigation or litigation"
+      },
+      "events": [
+        {
+          "id": "helvetia-p1", "date": "2024-03-04", "type": "news",
+          "summary": "Helvetia re-domiciles its parent holding company from Zug to the Cayman Islands and relocates its principal place of business there.",
+          "source": "synthetic", "url": "https://example.invalid/helvetia-p1",
+          "_probe": "P: offshore geography move, but 'Cayman / re-domicile / relocate' are not gate keywords"
+        },
+        {
+          "id": "helvetia-p2", "date": "2024-05-19", "type": "news",
+          "summary": "A consortium led by an overseas family office has taken a controlling economic interest in the group, with the founders stepping back to minority positions.",
+          "source": "synthetic", "url": "https://example.invalid/helvetia-p2",
+          "_probe": "P: inbound ownership change phrased without 'new owner / stake in'"
+        },
+        {
+          "id": "helvetia-v1", "date": "2024-07-22", "type": "news",
+          "summary": "Helvetia appoints a former federal cabinet minister as non-executive chairman of its board.",
+          "source": "synthetic", "url": "https://example.invalid/helvetia-v1",
+          "_probe": "V: textbook PEP, but the word 'PEP' never appears"
+        },
+        {
+          "id": "helvetia-p3", "date": "2024-09-30", "type": "news",
+          "summary": "Helvetia is sunsetting its analytics suite to build infrastructure for moving value between financial institutions.",
+          "source": "synthetic", "url": "https://example.invalid/helvetia-p3",
+          "_probe": "P: business-model pivot with no crypto/trading/brokerage vocabulary"
+        },
+        {
+          "id": "helvetia-v2", "date": "2025-01-12", "type": "news",
+          "summary": "Helvetia has begun holding a portion of corporate reserves in tokenised money-market instruments.",
+          "source": "synthetic", "url": "https://example.invalid/helvetia-v2",
+          "_probe": "V: digital-asset exposure via 'tokenised money-market', not 'crypto/btc/stablecoin'"
+        },
+        {
+          "id": "helvetia-v3", "date": "2025-02-08", "type": "news",
+          "summary": "Helvetia received a cease-and-desist directive from the market authority over unregistered activity.",
+          "source": "synthetic", "url": "https://example.invalid/helvetia-v3",
+          "_probe": "V: regulatory enforcement; 'cease-and-desist / market authority' miss the reg keywords (adverse-media never-gate should still keep the event)"
+        },
+        {
+          "id": "helvetia-tp", "date": "2025-03-15", "type": "news",
+          "summary": "Helvetia launches a regulated crypto brokerage and custody service for institutional clients.",
+          "source": "synthetic", "url": "https://example.invalid/helvetia-tp",
+          "_probe": "TP sanity: obvious drift, must still pass on keywords"
+        },
+        {
+          "id": "helvetia-am", "date": "2025-04-02", "type": "news",
+          "summary": "Two senior Helvetia executives departed amid a confidential internal review into procurement irregularities.",
+          "source": "synthetic", "url": "https://example.invalid/helvetia-am",
+          "_probe": "Adverse media with no adverse keyword — relies entirely on the never-gate"
+        },
+        {
+          "id": "helvetia-n1", "date": "2025-04-20", "type": "news",
+          "summary": "Helvetia's CEO gave a TEDx talk on the history of money and banking.",
+          "source": "synthetic", "url": "https://example.invalid/helvetia-n1",
+          "_probe": "N: 'banking' triggers business_model/regulatory keywords but is risk-irrelevant punditry"
+        },
+        {
+          "id": "helvetia-n2", "date": "2025-05-06", "type": "news",
+          "summary": "Helvetia expands its employee wellness program and opens a new on-site gym.",
+          "source": "synthetic", "url": "https://example.invalid/helvetia-n2",
+          "_probe": "N: 'expands' triggers geography/business keywords but is risk-irrelevant"
+        },
+        {
+          "id": "helvetia-n3", "date": "2025-05-28", "type": "news",
+          "summary": "Helvetia acquired a 3% minority stake in an industry standards consortium.",
+          "source": "synthetic", "url": "https://example.invalid/helvetia-n3",
+          "_probe": "N: outbound minority 'stake in' — does NOT change Helvetia's own UBO (precision test)"
+        },
+        {
+          "id": "helvetia-n4", "date": "2025-06-10", "type": "news",
+          "summary": "A Helvetia blog post showcased how its analytics dashboards can chart any dataset, including crypto prices.",
+          "source": "synthetic", "url": "https://example.invalid/helvetia-n4",
+          "_probe": "N: 'crypto' keyword in content marketing that actually confirms the SaaS baseline"
+        }
+      ]
+    },
+    {
+      "id": "adriatic",
+      "legal_name": "Adriatic Capital Markets Ltd",
+      "domain": "adriatic-cm.example",
+      "onboarded_as": "ADGM-licensed institutional crypto brokerage, UAE-regulated (SYNTHETIC)",
+      "beliefs": {
+        "business_model": "Regulated institutional crypto brokerage and custody",
+        "product_mix": "Spot crypto brokerage, custody and OTC; no retail, no derivatives",
+        "operating_geographies": { "value": "ADGM (UAE) regulated operations", "allowed_set": ["AE"] },
+        "regulatory_status": "FSRA-authorised in ADGM; compliant",
+        "ubo": "Two institutional shareholders via a holding vehicle; no individual holds over 25%",
+        "source_of_wealth": "Institutional equity and brokerage revenue",
+        "digital_asset_policy": "Custodies client crypto in segregated cold storage",
+        "listing_status": "Private company",
+        "pep_status": "No politically exposed person among directors or owners",
+        "sanctions_status": "No sanctions exposure; screens all counterparties",
+        "adverse_media_status": "No adverse media, investigation or litigation"
+      },
+      "events": [
+        {
+          "id": "adriatic-tp", "date": "2025-02-01", "type": "news",
+          "summary": "Adriatic is reported to have processed transactions for an entity later added to the OFAC SDN list.",
+          "source": "synthetic", "url": "https://example.invalid/adriatic-tp",
+          "_probe": "TP sanity (critical): sanctions keywords + never-gate must keep this"
+        },
+        {
+          "id": "adriatic-v1", "date": "2025-03-18", "type": "news",
+          "summary": "A newly disclosed beneficial owner of the group is the son of a sitting foreign minister.",
+          "source": "synthetic", "url": "https://example.invalid/adriatic-v1",
+          "_probe": "V: PEP-adjacent NEW beneficial owner; neither 'PEP' nor 'new owner' keywords appear"
+        },
+        {
+          "id": "adriatic-v2", "date": "2025-04-25", "type": "news",
+          "summary": "Adriatic has quietly begun offering leveraged perpetual contracts to selected clients.",
+          "source": "synthetic", "url": "https://example.invalid/adriatic-v2",
+          "_probe": "V: derivatives drift on a 'no derivatives' belief; 'perpetual contracts / leveraged' miss product keywords"
+        },
+        {
+          "id": "adriatic-n1", "date": "2025-05-14", "type": "news",
+          "summary": "Adriatic expanded its compliance team and opened a new staff training centre.",
+          "source": "synthetic", "url": "https://example.invalid/adriatic-n1",
+          "_probe": "N: 'expanded' triggers geography keyword but is risk-irrelevant"
+        }
+      ]
+    }
+  ]
+}

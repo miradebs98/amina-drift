@@ -141,10 +141,15 @@ def _baseline_desc(state) -> str:
     return "regulated customer"
 
 
-def replay(state, llm: LLMClient | None = None, embedder: ConceptAxisEmbedder | None = None) -> dict:
+def replay(state, llm: LLMClient | None = None, embedder: ConceptAxisEmbedder | None = None,
+           verdict_cache: dict | None = None) -> dict:
     from backend.drift.clock import SimClock
     llm = llm or MockLLM()
     embedder = embedder or ConceptAxisEmbedder()
+    # One verdict cache for the whole timeline: each (assertion, event) pair is classified once, not
+    # re-classified on every subsequent tick. Pass your own dict to also share it with a later
+    # standalone assess() on the same llm (e.g. the API's per-assertion decomposition pass).
+    verdict_cache = {} if verdict_cache is None else verdict_cache
 
     dates = sorted({e.published_at.date() for e in state.evidence}
                    | {s.as_of for s in state.snapshots}
@@ -156,7 +161,7 @@ def replay(state, llm: LLMClient | None = None, embedder: ConceptAxisEmbedder | 
     prev_surprise: dict[str, float] = {}
     for d in dates:
         clock.advance_to(d)
-        a = assess(state, d, llm, embedder)
+        a = assess(state, d, llm, embedder, verdict_cache)
         # per-tick (incremental) surprise: how much the most-affected belief's drift JUMPED this tick
         # (captures new contradictions, envelope breaches, partial drift) + the profile trajectory velocity
         deltas = [max(0.0, ad.surprise - prev_surprise.get(ad.assertion.id, 0.0)) for ad in a.per_assertion]

@@ -99,7 +99,8 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
         evidence=events, snapshots=snapshots,
     )
     llm = get_llm()
-    r = replay(state, llm)                                 # Miguel's engine
+    verdict_cache: dict = {}                                # shared with the decomposition pass below
+    r = replay(state, llm, verdict_cache=verdict_cache)    # Miguel's engine
 
     # ── 4-dimension tagging (connect-the-dots): tag each event + which dimensions drifted ──
     pred_by_id = {a.id: a.predicate.value for a in assertions}
@@ -113,8 +114,8 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
     latest = max((e.published_at for e in events), default=datetime.now(timezone.utc))
 
     # ── per-assertion drift decomposition (WHY each belief moved) — for the twin-diff ──
-    # Reuse `llm` so the final pass is mostly cache hits from replay's last tick (≈ free).
-    decomp = assess(state, latest.date(), llm)
+    # Share replay's verdict_cache so this final pass is all cache hits (≈ free, no re-classification).
+    decomp = assess(state, latest.date(), llm, verdict_cache=verdict_cache)
     assertion_drift = sorted(
         ({
             "assertion_id": ad.assertion.id,

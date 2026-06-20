@@ -1,0 +1,31 @@
+{
+  "_README": "Claude's reference labels = the 'high-intelligence judge'. For each real event: `relevant` = the beliefs a competent KYC analyst would re-examine because of this event (i.e. SHOULD survive Stage-1 and reach the cheap LLM). `material` = the subset that genuinely moves the risk profile (SHOULD reach Stage-3 deep analysis). Beliefs not listed are deliberate gold-negatives. The harness scores the real `is_candidate` gate against `relevant` (recall = did the gate keep what matters), and the escalation against `material`.",
+  "labels": {
+    "circle-e1": {"relevant": ["operating_geographies", "regulatory_status", "business_model"], "material": ["operating_geographies", "regulatory_status"]},
+    "circle-e2": {"relevant": ["listing_status", "source_of_wealth", "ubo"], "material": ["listing_status", "ubo"]},
+    "circle-e3": {"relevant": ["regulatory_status"], "material": []},
+    "circle-e4": {"relevant": ["regulatory_status", "business_model", "product_mix"], "material": ["regulatory_status", "business_model"]},
+    "circle-e5": {"relevant": ["product_mix", "operating_geographies", "digital_asset_policy"], "material": ["product_mix", "operating_geographies"]},
+
+    "ripple-e1": {"relevant": ["product_mix", "business_model", "digital_asset_policy"], "material": ["product_mix", "digital_asset_policy"]},
+    "ripple-e2": {"relevant": ["product_mix", "business_model", "operating_geographies", "source_of_wealth"], "material": ["product_mix", "business_model"]},
+    "ripple-e3": {"relevant": ["product_mix", "regulatory_status"], "material": []},
+    "ripple-e4": {"relevant": ["adverse_media_status", "regulatory_status"], "material": ["adverse_media_status", "regulatory_status"]},
+    "ripple-e5": {"relevant": ["product_mix", "business_model", "source_of_wealth"], "material": ["product_mix", "business_model"]},
+    "ripple-e6": {"relevant": ["regulatory_status", "business_model"], "material": ["regulatory_status", "business_model"]},
+
+    "kraken-e1": {"relevant": ["adverse_media_status", "regulatory_status"], "material": ["regulatory_status", "adverse_media_status"]},
+    "kraken-e2": {"relevant": ["product_mix", "regulatory_status", "operating_geographies", "business_model"], "material": ["product_mix", "regulatory_status", "business_model"]},
+    "kraken-e3": {"relevant": ["product_mix", "business_model"], "material": ["product_mix", "business_model"]},
+    "kraken-e4": {"relevant": ["source_of_wealth", "ubo"], "material": ["source_of_wealth"]},
+    "kraken-e5": {"relevant": ["listing_status", "source_of_wealth"], "material": ["listing_status"]},
+    "kraken-e6": {"relevant": ["listing_status"], "material": []},
+
+    "revolut-e1": {"relevant": ["adverse_media_status", "regulatory_status", "sanctions_status"], "material": ["adverse_media_status", "regulatory_status"]},
+    "revolut-e2": {"relevant": ["product_mix", "digital_asset_policy", "regulatory_status"], "material": []},
+    "revolut-e3": {"relevant": ["regulatory_status", "adverse_media_status", "business_model"], "material": ["regulatory_status", "adverse_media_status"]},
+    "revolut-e4": {"relevant": ["source_of_wealth", "ubo"], "material": ["source_of_wealth"]},
+    "revolut-e5": {"relevant": ["regulatory_status", "business_model", "product_mix"], "material": ["regulatory_status", "business_model"]},
+    "revolut-e6": {"relevant": ["product_mix", "digital_asset_policy"], "material": []}
+  }
+}

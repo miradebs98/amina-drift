@@ -1,0 +1,112 @@
+{
+  "_README": "Gate-evaluation dataset. 4 real non-AMINA crypto/fintech firms. For each: the bank's ONBOARDING-baseline beliefs (what was true ~2-3y ago) + a frozen set of REAL public events (gathered 2026-06, with source URLs) that drift those beliefs. Events are typed the way our connectors actually emit them (mostly `news` with a text summary — the HARD case for a keyword gate). `gold.json` holds Claude's reference labels. NOTHING here calls an API; the harness runs the real `is_candidate` gate (pure rules) against the gold labels.",
+  "companies": [
+    {
+      "id": "circle",
+      "legal_name": "Circle Internet Financial",
+      "domain": "circle.com",
+      "onboarded_as": "US-focused regulated stablecoin issuer (USDC), private company",
+      "beliefs": {
+        "business_model": "US-based stablecoin issuer (USDC) and payments infrastructure",
+        "product_mix": "USDC stablecoin issuance and payments APIs; no banking, no lending",
+        "operating_geographies": {"value": "US-focused operations", "allowed_set": ["US"]},
+        "regulatory_status": "US state money-transmitter licences + NYDFS BitLicense; NOT a bank",
+        "ubo": "Founders Jeremy Allaire and Sean Neville; venture investors; privately held",
+        "source_of_wealth": "Venture funding and stablecoin reserve income",
+        "digital_asset_policy": "Issues USDC; reserves held in cash and short-dated US Treasuries",
+        "listing_status": "Private company",
+        "pep_status": "No PEP among directors or UBOs",
+        "sanctions_status": "No sanctions exposure",
+        "adverse_media_status": "No adverse media, investigation or litigation"
+      },
+      "events": [
+        {"id": "circle-e1", "date": "2024-07-01", "type": "news", "summary": "Circle becomes first global stablecoin issuer to obtain a MiCA-compliant Electronic Money Institution licence in France, expanding into the EU", "source": "FinTech Futures", "url": "https://www.fintechfutures.com/press-releases/circle-is-first-global-stablecoin-issuer-to-comply-with-mica-eu-s-landmark-crypto-law"},
+        {"id": "circle-e2", "date": "2025-06-05", "type": "news", "summary": "Circle goes public on the NYSE at $31 per share under ticker CRCL in a $5B IPO", "source": "insights4vc", "url": "https://insights4vc.substack.com/p/circles-5b-ipo-usdcs-next-chapter"},
+        {"id": "circle-e3", "date": "2025-07-01", "type": "news", "summary": "GENIUS Act signed into US law; defines payment stablecoins, mandates 1:1 reserves, monthly attestations and annual audits for large issuers", "source": "Circle", "url": "https://www.circle.com/executiveinsights/circle-2025-year-in-review"},
+        {"id": "circle-e4", "date": "2025-07-15", "type": "news", "summary": "Circle receives OCC conditional approval to establish First National Digital Currency Bank, N.A., a national trust bank to hold the USDC reserve", "source": "Circle", "url": "https://www.circle.com/reports/state-of-the-usdc-economy/policy-and-regulatory-outlook"},
+        {"id": "circle-e5", "date": "2025-09-01", "type": "news", "summary": "Circle now issues both dollar- and euro-denominated stablecoins compliant with the EU MiCA regime, the only major global issuer to do so", "source": "Circle", "url": "https://www.circle.com/executiveinsights/circle-2025-year-in-review"}
+      ]
+    },
+    {
+      "id": "ripple",
+      "legal_name": "Ripple Labs",
+      "domain": "ripple.com",
+      "onboarded_as": "Crypto cross-border payments company (XRP), private, under SEC litigation",
+      "beliefs": {
+        "business_model": "Cross-border crypto payments using XRP (On-Demand Liquidity)",
+        "product_mix": "Payments and settlement via XRP; no stablecoin, no prime brokerage, no banking",
+        "operating_geographies": {"value": "US and international payments corridors", "allowed_set": ["US"]},
+        "regulatory_status": "Under SEC securities litigation; MSB registrations; not a chartered bank",
+        "ubo": "Co-founders Chris Larsen and Brad Garlinghouse; venture investors; privately held",
+        "source_of_wealth": "XRP sales and venture funding",
+        "digital_asset_policy": "Holds XRP; no fiat-pegged stablecoin issued",
+        "listing_status": "Private company",
+        "pep_status": "No PEP among directors or UBOs",
+        "sanctions_status": "No sanctions exposure",
+        "adverse_media_status": "SEC complaint pending; no other adverse media"
+      },
+      "events": [
+        {"id": "ripple-e1", "date": "2024-12-17", "type": "news", "summary": "Ripple launches RLUSD, a US dollar-pegged stablecoin, entering the stablecoin market", "source": "CryptoSlate", "url": "https://cryptoslate.com/how-xrp-and-rlusd-is-making-ripple-the-jpmorgan-of-the-crypto-industry/"},
+        {"id": "ripple-e2", "date": "2025-04-08", "type": "news", "summary": "Ripple acquires prime broker Hidden Road for $1.25B, expanding into institutional prime brokerage and clearing", "source": "Zipmex", "url": "https://zipmex.com/blog/ripple-acquisition-hidden-road-gtreasury-guide/"},
+        {"id": "ripple-e3", "date": "2025-07-01", "type": "news", "summary": "Ripple appoints Bank of New York (BNY) as primary custodian for the RLUSD stablecoin reserves", "source": "StablecoinInsider", "url": "https://stablecoininsider.org/rlusd-bank-stablecoin-2026/"},
+        {"id": "ripple-e4", "date": "2025-08-07", "type": "news", "summary": "SEC lawsuit against Ripple ends; both sides drop appeals, Ripple pays a $125M penalty for unregistered XRP sales", "source": "CCN", "url": "https://www.ccn.com/education/crypto/ripple-crypto-empire-acquisitions/"},
+        {"id": "ripple-e5", "date": "2025-09-15", "type": "news", "summary": "Ripple acquires treasury-management firm GTreasury for ~$1B and stablecoin-payments firm Rail for $200M", "source": "CCN", "url": "https://www.ccn.com/education/crypto/ripple-crypto-empire-acquisitions/"},
+        {"id": "ripple-e6", "date": "2025-12-05", "type": "news", "summary": "Ripple receives OCC conditional approval for a national trust bank charter, allowing it to operate as a federally regulated fiduciary", "source": "Zipmex", "url": "https://zipmex.com/blog/ripple-acquisition-hidden-road-gtreasury-guide/"}
+      ]
+    },
+    {
+      "id": "kraken",
+      "legal_name": "Payward Inc (Kraken)",
+      "domain": "kraken.com",
+      "onboarded_as": "Crypto spot exchange and custody provider, private, under SEC scrutiny",
+      "beliefs": {
+        "business_model": "Crypto spot exchange and custody",
+        "product_mix": "Crypto spot trading, staking and custody; no futures, no equities",
+        "operating_geographies": {"value": "US and global crypto markets", "allowed_set": ["US"]},
+        "regulatory_status": "US state money-transmitter licences; under SEC scrutiny over staking; not a CFTC-registered FCM",
+        "ubo": "Co-founder Jesse Powell; venture investors; privately held",
+        "source_of_wealth": "Exchange trading fees and venture funding",
+        "digital_asset_policy": "Holds client and proprietary crypto",
+        "listing_status": "Private company",
+        "pep_status": "No PEP among directors or UBOs",
+        "sanctions_status": "No sanctions exposure",
+        "adverse_media_status": "SEC staking matter pending; no other adverse media"
+      },
+      "events": [
+        {"id": "kraken-e1", "date": "2025-03-03", "type": "news", "summary": "SEC drops its lawsuit against Kraken, ending the case over its staking and exchange operations", "source": "99Bitcoins", "url": "https://99bitcoins.com/news/altcoins/kraken-ipo-crypto-mid-cycle/"},
+        {"id": "kraken-e2", "date": "2025-03-20", "type": "news", "summary": "Kraken agrees to acquire US retail futures platform NinjaTrader for $1.5B, gaining a CFTC-registered FCM licence and entering US futures", "source": "Banking Dive", "url": "https://www.bankingdive.com/news/kraken-buy-futures-platform-ninjatrader-1-5-billion/743318/"},
+        {"id": "kraken-e3", "date": "2025-06-01", "type": "news", "summary": "Kraken rolls out commission-free trading of over 11,000 US-listed stocks and ETFs, moving into equities", "source": "Kraken", "url": "https://blog.kraken.com/news/kraken-to-acquire-ninjatrader"},
+        {"id": "kraken-e4", "date": "2025-08-01", "type": "funding", "summary": "Kraken raises $800M at a $20B valuation; 2025 revenue up 33% to more than $2.2B", "source": "99Bitcoins", "url": "https://99bitcoins.com/news/altcoins/kraken-ipo-crypto-mid-cycle/", "payload": {"amount_usd": 800000000, "valuation_usd": 20000000000}},
+        {"id": "kraken-e5", "date": "2025-11-19", "type": "news", "summary": "Kraken confidentially files for a US IPO, aiming to list as early as Q1 2026", "source": "CNBC", "url": "https://www.cnbc.com/2026/04/14/crypto-exchange-kraken-confirms-it-has-confidentially-filed-for-an-ipo.html"},
+        {"id": "kraken-e6", "date": "2026-03-01", "type": "news", "summary": "Kraken pauses its planned IPO due to market conditions", "source": "AccessIPOs", "url": "https://accessipos.com/kraken-ipo-stock/"}
+      ]
+    },
+    {
+      "id": "revolut",
+      "legal_name": "Revolut Ltd",
+      "domain": "revolut.com",
+      "onboarded_as": "Fintech e-money / neobank app, private, UK EMI (not a full bank)",
+      "beliefs": {
+        "business_model": "Fintech e-money / neobank app",
+        "product_mix": "Cards, FX, payments and some retail crypto trading; not a full deposit-taking bank",
+        "operating_geographies": {"value": "UK and EU", "allowed_set": ["GB", "EU", "LT"]},
+        "regulatory_status": "UK Electronic Money Institution + EU bank licence via Lithuania; NOT a full UK bank",
+        "ubo": "Founder Nik Storonsky (majority); SoftBank and venture investors; privately held",
+        "source_of_wealth": "Venture funding and app revenue",
+        "digital_asset_policy": "Offers retail crypto trading to customers",
+        "listing_status": "Private company",
+        "pep_status": "No PEP among directors or UBOs",
+        "sanctions_status": "No sanctions exposure",
+        "adverse_media_status": "No material adverse media"
+      },
+      "events": [
+        {"id": "revolut-e1", "date": "2025-04-15", "type": "news", "summary": "Revolut pays a EUR 3.5M fine to Lithuania's central bank, the largest AML fine ever in Lithuania, for anti-money-laundering compliance failures in its European banking operations", "source": "AML Intelligence", "url": "https://www.amlintelligence.com/2025/10/latest-revoluts-uk-banking-license-held-up-over-compliance-concerns/"},
+        {"id": "revolut-e2", "date": "2025-06-01", "type": "news", "summary": "Revolut is selected by the UK FCA for a regulatory sandbox for fiat-pegged stablecoins", "source": "The Block", "url": "https://www.theblock.co/post/393215/crypto-friendly-revolut-launches-uk-bank-after-regulator-lifts-license-restrictions"},
+        {"id": "revolut-e3", "date": "2025-10-10", "type": "news", "summary": "Revolut's full UK banking licence is held up over compliance concerns; the PRA presses the firm to bulk up its risk and financial-crime infrastructure to match its global scale", "source": "AML Intelligence", "url": "https://www.amlintelligence.com/2025/10/latest-revoluts-uk-banking-license-held-up-over-compliance-concerns/"},
+        {"id": "revolut-e4", "date": "2025-11-01", "type": "funding", "summary": "Revolut reaches a $75B valuation, up 66% year-on-year, with a projected $3.5B profit for 2026", "source": "bobsguide", "url": "https://www.bobsguide.com/revoluts-long-road-to-bank-status/", "payload": {"valuation_usd": 75000000000}},
+        {"id": "revolut-e5", "date": "2026-03-11", "type": "news", "summary": "The PRA lifts all restrictions; Revolut Bank UK Ltd becomes a fully licensed UK bank supervised by the PRA and FCA", "source": "CoinDesk", "url": "https://www.coindesk.com/policy/2026/03/11/crypto-friendly-fintech-revolut-gains-full-uk-banking-license"},
+        {"id": "revolut-e6", "date": "2026-03-12", "type": "news", "summary": "Revolut's crypto trading arm will operate through a separate entity not covered by the FSCS deposit-protection scheme", "source": "The Block", "url": "https://www.theblock.co/post/393215/crypto-friendly-revolut-launches-uk-bank-after-regulator-lifts-license-restrictions"}
+      ]
+    }
+  ]
+}
