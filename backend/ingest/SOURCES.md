@@ -51,9 +51,11 @@ OFFLINE_DEMO=false python -m backend.ingest.runner coinbase-global --live
 SEC_LEVEL2=true OFFLINE_DEMO=false SEC_USER_AGENT="amina-drift (you@email)" \
   python -m backend.ingest.runner coinbase-global --live
 ```
-Add `OPENAI_API_KEY` to `.env` → the relevance filter switches from lexical to embeddings and the
-passage matches sharpen automatically (`payload.relevance_mode` shows which ran). The relevance
-filter (`relevance.py`) IS the cost cascade's **Stage-1 cheap gate** — it's reusable for any source.
+Relevance filter = **FREE lexical by default** (`RELEVANCE_EMBEDDINGS=lexical`). It is NOT
+auto-switched to OpenAI even if a key exists (no surprise charges). Opt-in modes: `local` (free
+sentence-transformers — not wired yet) or `openai` (paid). `payload.relevance_mode` shows which
+ran. The relevance filter (`relevance.py`) IS the cost cascade's **Stage-1 cheap gate** — reusable
+for any source. Whole project runs at **zero API cost**: cascade LLM → Apertus, relevance → lexical.
 
 ## Next (Mira's creative space)
 1. Fill the **sanctions** stub (OpenSanctions match API — doubles as entity resolution).

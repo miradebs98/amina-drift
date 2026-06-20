@@ -1,17 +1,32 @@
-"""Stage-1 relevance filter — the cheap gate (embeddings, or lexical fallback).
+"""Stage-1 relevance filter — the cheap gate.
 
 Given a query (e.g. an assertion) and candidate passages, return the most relevant passages.
 This is exactly the cost cascade's Stage 1: a cheap pass that decides what's even worth deeper
 (LLM) analysis — so the frontier model only ever sees a handful of passages, not whole filings.
 
-  - If OPENAI_API_KEY is set → OpenAI embeddings + cosine (grain_lite.embedder).
-  - Else → lexical token-overlap scoring (no key, no network) so it always runs.
+DEFAULT = lexical token-overlap (FREE, no key, no network, no surprise charges). The mode is set
+explicitly via env `RELEVANCE_EMBEDDINGS`:
+  - unset / "lexical"  → lexical            (default, free)
+  - "local"            → free local sentence-transformers   ← see SHARED-EMBEDDER note below
+  - "openai"           → OpenAI embeddings  (PAID — explicit opt-in only)
 
-`mode` records which path ran (for the cost story on stage).
+We do NOT auto-enable OpenAI just because a key exists (that would be a silent-cost footgun).
+
+── SHARED-EMBEDDER NOTE (for Miguel) ──────────────────────────────────────────────────────────
+A single FREE local `sentence-transformers` model (e.g. all-MiniLM-L6-v2, ~90MB, CPU, offline)
+could serve BOTH:
+  • Mira's retrieval here (set RELEVANCE_EMBEDDINGS=local), and
+  • Miguel's slow-drift trajectory (swap `drift/embeddings.py::ConceptAxisEmbedder` for it).
+Miguel already notes his embedder is swappable. If we want embedding-quality for free, wire the
+local model once and both lanes use it. Keep Miguel's concept-axis version for the explainability
+pitch; use the local model where semantic similarity matters (retrieval). Not built yet — note only.
+
+`mode` records which path ran (shown in event payload for the cost story on stage).
 """
 from __future__ import annotations
 
 import math
+import os
 import re
 from dataclasses import dataclass
 
@@ -35,16 +50,24 @@ class Ranked:
 
 class RelevanceFilter:
     def __init__(self):
-        self.mode = "lexical"
+        self.mode = "lexical"           # FREE default
         self._embedder = None
-        try:
-            from backend.grain_lite.config import get_config
-            if get_config().llm.has_openai:
-                from backend.grain_lite.embedder import get_embedder
-                self._embedder = get_embedder()
-                self.mode = "embedding"
-        except Exception:
-            self.mode = "lexical"
+        choice = os.getenv("RELEVANCE_EMBEDDINGS", "lexical").lower()
+        if choice == "openai":          # PAID — explicit opt-in only
+            try:
+                from backend.grain_lite.config import get_config
+                if get_config().llm.has_openai:
+                    from backend.grain_lite.embedder import get_embedder
+                    self._embedder = get_embedder()
+                    self.mode = "embedding(openai)"
+                else:
+                    print("[relevance] RELEVANCE_EMBEDDINGS=openai but no OPENAI_API_KEY → lexical")
+            except Exception as e:
+                print(f"[relevance] openai embedder init failed ({e}) → lexical")
+        elif choice == "local":         # FREE local model — not wired yet (see note in module docstring)
+            print("[relevance] RELEVANCE_EMBEDDINGS=local not wired yet → lexical (free). "
+                  "Wire sentence-transformers to enable; see SHARED-EMBEDDER note.")
+        # else: lexical (default, free)
 
     # --- public ---------------------------------------------------------- #
     def rank(self, query: str, passages: list[str], top_k: int = 3) -> list[Ranked]:

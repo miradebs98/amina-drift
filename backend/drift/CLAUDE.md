@@ -16,6 +16,14 @@
 - **Demo numbers are fixed:** Meridian flips **LOW 28 → HIGH 82** (the wow); Coinbase stays
   **MEDIUM 60 → 66** (within-band upward pressure, deliberate contrast — do NOT make it flip).
 
+## 📝 Note from Mira's lane — optional FREE shared embedder
+We're running zero-cost: cascade LLM → **Apertus** (free, Swiss-sovereign), and Mira's Stage-1
+relevance filter → **lexical** (free, default). Your `ConceptAxisEmbedder` is already free/offline —
+keep it for the explainability pitch. **Optional:** one free local `sentence-transformers` model
+(all-MiniLM-L6-v2, CPU) could serve BOTH your trajectory (you noted it's swappable) AND Mira's
+retrieval (`RELEVANCE_EMBEDDINGS=local`). Not wired yet — only worth it if semantic quality beats
+keyword/concept-axis matching for the demo. No OpenAI anywhere (avoids paid embeddings).
+
 ## 🚩 YOUR OPEN CALL — decide this, it sets Mira's scope (Q2.1, the big one)
 **Can you detect Meridian's silent re-tiering from the EVENT SEQUENCE alone, or do you need
 periodic `Snapshot`s (+ embedding trajectory)?** Both fixtures are currently events-only and
