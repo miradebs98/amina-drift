@@ -69,6 +69,21 @@ def tier_of(score: int) -> str:
     return tier_for(score)
 
 
+def _alert_confidence(contributors: list, evidence_ids: list) -> float:
+    """Confidence in the alert, DERIVED (not hardcoded): how strongly the cited evidence contradicts
+    the belief(s), plus how well-corroborated it is. The strongest driver's graded contradiction
+    strength (`contra` — already scaled by the cheap-LLM verdict strength × source reliability) anchors
+    it; more cited evidence nudges it up. Weak/ambiguous lone signal → ~0.65; strong, well-cited drift
+    → ~0.9+. Floored at 0.6 when an alert fires with no scored contributor (e.g. a velocity/trajectory
+    jump)."""
+    if not contributors:
+        return 0.6
+    strength = max(ad.contra for ad in contributors)          # graded contradiction strength of the top driver
+    corroboration = min(1.0, len(evidence_ids) / 3)           # cited-evidence breadth
+    conf = 0.55 + 0.35 * strength + 0.10 * corroboration
+    return round(max(0.55, min(0.97, conf)), 2)
+
+
 def build_alert(state, a: Assessment, prev_score: int, prev_tier: str, llm: LLMClient,
                 tick_surprise: float | None = None) -> DriftAlert:
     contributors = sorted(
@@ -136,7 +151,7 @@ def build_alert(state, a: Assessment, prev_score: int, prev_tier: str, llm: LLMC
         what_would_flip=("Confirmation that the new activity/geographies/ownership are within licensed "
                          "scope and covered by the existing risk assessment."),
         recommended_action=action,
-        confidence=0.9,
+        confidence=_alert_confidence(contributors, a.evidence_ids),
         stage_reached=3 if a.llm_used else 1,
         model_used=getattr(llm, "heavy_model", None) or type(llm).__name__,
         tokens_used=heavy_tokens,
