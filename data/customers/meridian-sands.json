@@ -2,31 +2,35 @@
   "_comment": "BASE CASE 2 of 2 — Meridian Sands Technologies Ltd. The DRIFT HERO: a non-stationary ADGM startup that silently re-tiers LOW -> HIGH.",
   "_role_in_demo": "Demonstrates the STRENGTH OF THE DRIFT MODEL on the hardest case — a startup that pivots fast on sparse signals. This is where the 'wow' (AI Intelligence 25%) is earned.",
   "_disclaimer": "ENTIRELY FICTIONAL composite. Name, registration number, people and events are invented to illustrate a realistic ADGM-startup drift pattern. Any resemblance to a real company is coincidental.",
-  "_real_vs_simulated": "100% SIMULATED. Because the entity is fictional, ALL signals are authored (this is the model-strength case, NOT the public-source case — Coinbase carries the real-sourcing story). Mira authors matching EvidenceEvents; nothing here is fetched.",
+  "_real_vs_simulated": "100% SIMULATED. The entity is fictional, so all signals are authored — this is the model-strength scenario (Coinbase carries the real-public-source story). Nothing here is fetched.",
   "_structure_note": "entity_profile = static identity. assertions = the onboarding beliefs that drift breaks over ~30 months.",
-
   "customer_id": "meridian-sands",
   "legal_name": "Meridian Sands Technologies Ltd",
   "onboarded_as_of": "2023-01-15",
   "purpose_of_relationship": "Operating account & treasury for an early-stage ADGM-registered fintech (SIMULATED).",
   "_drift_arc": "Onboards 2023 as a clean UAE-only B2B SaaS analytics startup (LOW, score 28). Over 2023-2026 it pivots to crypto/Web3 trading infra, opens offshore entities, takes a new >25% foreign investor, breaches its volume envelope, and a co-founder is named in a regional investigation — silently re-tiering to HIGH (~82). No single event alone is decisive; the TRAJECTORY is.",
-
   "risk_model": {
     "_note": "The rolled-up OUTPUT. Demo headline: 28 -> 82, with no single alarm tripping at onboarding.",
     "scale": "0-100",
-    "bands": { "LOW": "0-33", "MEDIUM": "34-66", "HIGH": "67-100" },
+    "bands": {
+      "LOW": "0-33",
+      "MEDIUM": "34-66",
+      "HIGH": "67-100"
+    },
     "onboarding_score": 28,
     "onboarding_band": "LOW"
   },
-
   "kyc_review": {
     "_note": "LOW startup -> long 36-month cadence. THIS IS THE TRAP: the next scheduled review is 2026 — the drift would go unseen for 3 years without continuous monitoring. Detected drift must pull the review off-cycle.",
-    "cadence_months_by_band": { "LOW": 36, "MEDIUM": 24, "HIGH": 12 },
+    "cadence_months_by_band": {
+      "LOW": 36,
+      "MEDIUM": 24,
+      "HIGH": 12
+    },
     "last_review": "2023-01-15",
     "next_periodic_review": "2026-01-15",
     "_derivation": "LOW -> 36mo -> next review 2026-01-15. The whole pitch: a static 3-year clock misses 30 months of silent drift; our system collapses it to 'now'."
   },
-
   "entity_profile": {
     "_note": "Static KYC identity block (all SIMULATED).",
     "legal_name": "Meridian Sands Technologies Ltd",
@@ -43,7 +47,6 @@
     "entity_tax_residency": "AE",
     "entity_tin": "n/a (SIMULATED)"
   },
-
   "assertions": [
     {
       "id": "MS1",
@@ -63,7 +66,12 @@
       "customer_id": "meridian-sands",
       "predicate": "operating_geographies",
       "value": "UAE-only operations",
-      "expected_envelope": { "allowed_set": ["AE"], "unit": "operating_country" },
+      "expected_envelope": {
+        "allowed_set": [
+          "AE"
+        ],
+        "unit": "operating_country"
+      },
       "as_of": "2023-01-15",
       "last_verified": "2023-01-15",
       "source": "onboarding declaration (SIMULATED)",
@@ -142,7 +150,11 @@
       "customer_id": "meridian-sands",
       "predicate": "expected_monthly_volume",
       "value": "Small early-stage volumes",
-      "expected_envelope": { "low": 50000, "high": 500000, "unit": "AED/month" },
+      "expected_envelope": {
+        "low": 50000,
+        "high": 500000,
+        "unit": "AED/month"
+      },
       "as_of": "2023-01-15",
       "last_verified": "2023-01-15",
       "source": "onboarding declaration (SIMULATED)",

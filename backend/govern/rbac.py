@@ -9,7 +9,7 @@ from __future__ import annotations
 ROLES = ["analyst", "mlro", "compliance", "admin"]
 _RANK = {r: i for i, r in enumerate(ROLES)}
 
-# UI action -> persisted governance_state (matches Giacomo's buttons: Approve / Override / Escalate)
+# UI action -> persisted governance_state (matches the UI buttons: Approve / Override / Escalate)
 ACTION_TO_STATE = {
     "approve": "approved",
     "override": "dismissed",

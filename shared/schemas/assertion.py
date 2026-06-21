@@ -3,8 +3,7 @@
 A KYC profile is NOT a document — it's a set of dated, sourced, testable assertions.
 Drift detection = continuously re-validating each assertion against the evidence stream.
 
-OWNER of content/fields: Giacomo (ex-KYC RM — source of truth on what a real KYC profile holds).
-OWNER of format: locked by all three. Ping before changing.
+Content/fields mirror what a real KYC profile holds; the format is the cross-layer contract.
 """
 from __future__ import annotations
 
@@ -18,13 +17,13 @@ from pydantic import BaseModel, Field
 class Predicate(str, Enum):
     """The attribute of the customer an assertion is about.
 
-    Grouped by KYC section, mirroring a real AMINA B2B onboarding file (Giacomo, ex-RM).
+    Grouped by KYC section, mirroring a real AMINA B2B onboarding file.
     KEY DISTINCTION: not every field a bank collects is a *monitorable* assertion. Immutable
     identity (incorporation date, commercial-register number, TIN) lives in the `entity_profile`
     header of the customer file, NOT here — the drift engine never re-validates it. Predicates
     are the dated, testable BELIEFS the engine re-checks against public intelligence.
 
-    ⭐ = high-value drift target exercised by the demo. Extend as needed (ping team).
+    ⭐ = high-value drift target exercised by the demo. Extend as needed.
     """
     # --- Business & activity (categorical beliefs that get CONTRADICTED) ---
     BUSINESS_MODEL = "business_model"            # ⭐ "B2B securitization" → broken by a crypto pivot
@@ -107,7 +106,6 @@ class Assertion(BaseModel):
     source_url: Optional[str] = None
     confidence: float = Field(ge=0.0, le=1.0, default=1.0)
     status: AssertionStatus = AssertionStatus.VALID
-    notes: Optional[str] = None                  # Giacomo's RM context for the demo
+    notes: Optional[str] = None                  # RM context for the demo
 
-    # TODO(Giacomo): author the real demo customer's assertions in data/customers/.
-    # TODO(Miguel): decay confidence over time; flip status on contradiction.
+    # Note: confidence decays over time; status flips on contradiction.

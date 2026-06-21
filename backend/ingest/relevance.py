@@ -13,14 +13,14 @@ explicitly via env `RELEVANCE_EMBEDDINGS`:
 
 We do NOT auto-enable OpenAI just because a key exists (that would be a silent-cost footgun).
 
-── SHARED-EMBEDDER NOTE (for Miguel) ──────────────────────────────────────────────────────────
+── SHARED-EMBEDDER NOTE ────────────────────────────────────────────────────────────────────────
 A single FREE local `sentence-transformers` model (e.g. all-MiniLM-L6-v2, ~90MB, CPU, offline)
 could serve BOTH:
-  • Mira's retrieval here (set RELEVANCE_EMBEDDINGS=local), and
-  • Miguel's slow-drift trajectory (swap `drift/embeddings.py::ConceptAxisEmbedder` for it).
-Miguel already notes his embedder is swappable. If we want embedding-quality for free, wire the
-local model once and both lanes use it. Keep Miguel's concept-axis version for the explainability
-pitch; use the local model where semantic similarity matters (retrieval). Not built yet — note only.
+  • retrieval here (set RELEVANCE_EMBEDDINGS=local), and
+  • the slow-drift trajectory (swap `drift/embeddings.py::ConceptAxisEmbedder` for it).
+That embedder is swappable. If we want embedding-quality for free, wire the local model once and
+both paths use it. Keep the concept-axis version for the explainability story; use the local model
+where semantic similarity matters (retrieval). Not built yet — note only.
 
 `mode` records which path ran (shown in event payload for the cost story on stage).
 """

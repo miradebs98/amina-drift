@@ -1,9 +1,8 @@
 {
-  "_comment": "STARTER EXAMPLE — Miguel's lane. The MISMATCH for Meridian Sands (the DRIFT HERO), derived from beliefs (meridian-sands.json) vs signals (meridian-events.example.json).",
-  "_status": "DRAFT — Miguel refines the drift engine on top of this. This is THE wow case.",
+  "_comment": "Reference drift mismatch for Meridian Sands, derived from beliefs vs. public signals.",
+  "_status": "Reference example the drift engine is refined on top of. This is the headline case.",
   "_framing": "NEUTRAL: 'material change -> re-KYC needed', NOT an accusation. A human analyst decides.",
   "_headline": "Silent re-tiering: risk_score 28 (LOW) -> 82 (HIGH) over ~30 months. No single event was decisive at onboarding; the TRAJECTORY is. The scheduled review (2026-01-15) would have missed all of it.",
-
   "alert": {
     "id": "alert-meridian-001",
     "customer_id": "meridian-sands",
@@ -15,25 +14,38 @@
     "new_risk_score": 82,
     "old_risk_tier": "LOW",
     "new_risk_tier": "HIGH",
-
     "contradicted_assertion_id": "MS1",
-    "also_contradicts": ["MS2", "MS3", "MS4", "MS5", "MS7", "MS9", "MS10", "MS12"],
-    "evidence_ids": ["MS-EV1", "MS-EV2", "MS-EV3", "MS-EV4", "MS-EV5", "MS-EV6", "MS-EV7", "MS-EV8"],
-
+    "also_contradicts": [
+      "MS2",
+      "MS3",
+      "MS4",
+      "MS5",
+      "MS7",
+      "MS9",
+      "MS10",
+      "MS12"
+    ],
+    "evidence_ids": [
+      "MS-EV1",
+      "MS-EV2",
+      "MS-EV3",
+      "MS-EV4",
+      "MS-EV5",
+      "MS-EV6",
+      "MS-EV7",
+      "MS-EV8"
+    ],
     "rationale": "Onboarded as a UAE-only B2B SaaS analytics startup (MS1, MS2) with founder ownership (MS3), no crypto (MS4, MS5) and small flows (MS8). Public + internal signals now show: a pivot to Web3 trading infrastructure (MS-EV1), an offshore BVI entity (MS-EV2), a new 30% PEP-adjacent investor (MS-EV3), a crypto brokerage offered without FSRA authorisation (MS-EV5), flows ~12x the onboarding envelope (MS-EV6), and a co-founder named in a fraud investigation (MS-EV7). Individually borderline; together a coherent migration into a materially higher-risk profile.",
     "what_would_flip": "Confirmation the crypto brokerage is within licensed scope (FSRA), the new UBO clears PEP & source-of-wealth checks, and the elevated flows fall within a revised, approved envelope.",
     "recommended_action": "Pull the periodic review OFF-CYCLE (scheduled 2026-01-15 -> now); open Enhanced Due Diligence; re-tier to HIGH; re-baseline transaction-monitoring thresholds.",
     "confidence": 0.9,
-
     "stage_reached": 3,
     "model_used": "<heavy-tier-llm>",
     "tokens_used": 3120,
-
     "governance_state": "pending",
     "reviewer": null,
     "decided_at": null,
     "created_at": "2026-06-20T10:00:00Z",
-
     "_note": "Meridian is the MODEL-STRENGTH case: the signal is in the trajectory, not any single event. This is what proves the slow-structural-drift engine."
   }
 }

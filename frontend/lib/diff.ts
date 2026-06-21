@@ -2,8 +2,8 @@ import type { CustomerCase } from "./types";
 
 // The "live twin" (Layer-1 / PUBLIC) view of each contradicted belief, grounded in
 // the cited evidence. Presence in this map = the onboarding belief is contradicted.
-// Authored by Giacomo (UI) to render the engine's contradictions; each `now` summarizes
-// the linked EvidenceEvents. Meridian is simulated; Coinbase evidence is real/citable.
+// Renders the engine's contradictions; each `now` summarizes the linked EvidenceEvents.
+// Meridian is simulated; Coinbase evidence is real/citable.
 type NowEntry = { now: string; evidenceIds: string[] };
 
 const NOW_MAP: Record<string, Record<string, NowEntry>> = {

@@ -2,7 +2,7 @@
 
 Add a source = subclass `Connector`, implement `fetch(customer) -> list[EvidenceEvent]`.
 The runner handles caching, the offline switch, and merging. Connectors stay DUMB: they emit
-facts (with a `source_url` citation); the drift engine (Miguel) decides what they mean.
+facts (with a `source_url` citation); the drift engine decides what they mean.
 """
 from __future__ import annotations
 

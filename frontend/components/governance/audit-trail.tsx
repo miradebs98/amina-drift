@@ -21,12 +21,13 @@ function short(h?: string | null) {
   return h ? `${h.slice(0, 10)}…` : "—";
 }
 
-export function AuditTrail({ customerId, alertId }: { customerId: string; alertId?: string }) {
+export function AuditTrail({ customerId, alertId }: { customerId?: string; alertId?: string }) {
   const [verify, setVerify] = useState<VerifyResult | null>(null);
   const [verifying, setVerifying] = useState(false);
 
+  // no customerId → the whole-book trail (getAudit() returns every entry)
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery<AuditRow[]>({
-    queryKey: ["audit", customerId],
+    queryKey: ["audit", customerId ?? "all"],
     queryFn: () => getAudit(customerId),
     retry: false,
     refetchOnWindowFocus: false,
@@ -90,7 +91,7 @@ export function AuditTrail({ customerId, alertId }: { customerId: string; alertI
         </div>
       ) : !data || data.length === 0 ? (
         <div className="flex items-center gap-2 rounded-md border border-dashed border-surface-line p-4 text-sm text-ink-muted">
-          <ScrollText className="size-4" /> No decisions recorded yet — disposition this alert to write the first entry.
+          <ScrollText className="size-4" /> No decisions recorded yet — disposition an alert to write the first entry.
         </div>
       ) : (
         <div className="overflow-hidden rounded-md border border-surface-line">

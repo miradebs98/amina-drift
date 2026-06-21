@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import {
   Check,
+  X,
+  Lock,
   ShieldAlert,
   ArrowUpRight,
   Globe,
@@ -15,7 +17,6 @@ import {
   ChevronDown,
   CheckCircle2,
   TriangleAlert,
-  UserCog,
 } from "lucide-react";
 import type { Customer, DriftAlert, DecisionAction, DecisionResult, Role } from "@/lib/types";
 import { bandForScore, colorsForScore, fmtDate } from "@/lib/format";
@@ -43,6 +44,52 @@ function Fact({ icon: Icon, label, value }: { icon: React.ElementType; label: st
         </div>
       </div>
     </div>
+  );
+}
+
+function DispoButton({
+  onClick,
+  icon: Icon,
+  title,
+  desc,
+  tone,
+  locked,
+  lockedHint,
+}: {
+  onClick: () => void;
+  icon: React.ElementType;
+  title: string;
+  desc: string;
+  tone: "primary" | "amber" | "neutral";
+  locked?: boolean;
+  lockedHint?: string;
+}) {
+  const toneCls =
+    tone === "primary"
+      ? "border-teal hover:bg-teal-wash"
+      : tone === "amber"
+        ? "border-risk-med-ring hover:bg-risk-med-bg"
+        : "border-surface-line hover:bg-surface-subtle";
+  return (
+    <button
+      onClick={onClick}
+      disabled={locked}
+      title={locked ? lockedHint : undefined}
+      className={`flex items-start gap-2.5 rounded-md border bg-white p-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-55 ${toneCls}`}
+    >
+      <Icon className="mt-0.5 size-4 shrink-0 text-ink-body" />
+      <span className="min-w-0">
+        <span className="flex items-center gap-1.5 text-sm font-semibold text-ink">
+          {title}
+          {locked && (
+            <span className="inline-flex items-center gap-0.5 rounded bg-surface-card px-1 py-0.5 text-[9px] font-bold uppercase tracking-wide text-ink-muted">
+              <Lock className="size-2.5" /> MLRO
+            </span>
+          )}
+        </span>
+        <span className="block text-[11px] leading-snug text-ink-muted">{desc}</span>
+      </span>
+    </button>
   );
 }
 
@@ -75,6 +122,9 @@ export function ClientSection({
   const c = colorsForScore(score);
   const materialChanges = (alert.contradicted_assertion_id ? 1 : 0) + alert.also_contradicts.length;
   const pending = alert.governance_state === "pending" && !dispo;
+  // four-eyes: confirming a HIGH re-tier needs MLRO — show it BEFORE the click, not as an error after
+  const needsMlro = (alert.severity ?? "").toLowerCase() === "high" && role !== "mlro";
+  const decidedState = dispo?.governance_state ?? alert.governance_state;
 
   function openDialog(a: DecisionAction) {
     setAction(a);
@@ -154,8 +204,89 @@ export function ClientSection({
         )}
       </AnimatePresence>
 
-      {/* DISPOSITION BAR — temporarily removed (to be repositioned later).
-          The handlers + dialog below stay wired so it can be dropped back in. */}
+      {/* DISPOSITION BAR — the human-in-the-loop decision (graded; every click writes the audit log) */}
+      <div className="border-t border-surface-line bg-surface-subtle px-5 py-4">
+        {pending ? (
+          <div className="flex flex-col gap-3">
+            {/* WHAT the engine wants + that a HUMAN owns the call */}
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="flex items-start gap-2">
+                <ShieldAlert className="mt-0.5 size-4 shrink-0 text-risk-high" />
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold text-ink">Awaiting your decision</div>
+                  <div className="text-xs text-ink-muted">
+                    The engine surfaced this drift — a human must disposition it.
+                    {alert.recommended_action ? (
+                      <>
+                        {" "}
+                        Recommended: <span className="text-ink-body">{alert.recommended_action}</span>
+                      </>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+              {/* four-eyes role — visible, so the gate is obvious */}
+              <div className="flex shrink-0 items-center gap-2">
+                <span className="text-[10px] uppercase tracking-wide text-ink-muted">Reviewing as</span>
+                <div className="inline-flex overflow-hidden rounded-md border border-surface-line">
+                  {(["analyst", "mlro"] as Role[]).map((r) => (
+                    <button
+                      key={r}
+                      onClick={() => onRoleChange(r)}
+                      className={`px-2.5 py-1 text-xs font-medium transition-colors ${
+                        role === r ? "bg-brand text-white" : "bg-white text-ink-muted hover:bg-surface-subtle"
+                      }`}
+                    >
+                      {r === "mlro" ? "MLRO" : "Analyst"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* the three actions — each with its plain meaning */}
+            <div className="grid gap-2 sm:grid-cols-3">
+              <DispoButton
+                onClick={() => openDialog("override")}
+                icon={X}
+                tone="neutral"
+                title="Dismiss"
+                desc="False positive — keep the current rating"
+              />
+              <DispoButton
+                onClick={() => openDialog("escalate")}
+                icon={ArrowUpRight}
+                tone="amber"
+                title="Escalate → Re-KYC"
+                desc="Send to MLRO for enhanced due diligence"
+              />
+              <DispoButton
+                onClick={() => openDialog("approve")}
+                icon={Check}
+                tone="primary"
+                title="Approve re-rating"
+                desc="Accept the new risk level & the recommended action"
+                locked={needsMlro}
+                lockedHint="Confirming a HIGH re-tier needs MLRO sign-off (four-eyes) — switch role above"
+              />
+            </div>
+
+            <p className="text-[11px] text-ink-muted">
+              Every decision is written to the immutable, hash-chained audit log — who, when, and on which model.
+            </p>
+          </div>
+        ) : (
+          /* DECIDED — show the disposition plainly */
+          <div className="flex flex-wrap items-center gap-2 text-sm">
+            <CheckCircle2 className="size-4 shrink-0 text-risk-low" />
+            <span className="font-semibold text-ink">{STATE_LABEL[decidedState] ?? "Decided"}</span>
+            <span className="text-ink-muted">
+              by {dispo?.reviewer ?? alert.reviewer ?? "G. Cozzio"}
+              {dispo?.role ? ` (${dispo.role.toUpperCase()})` : ""} · recorded in the audit log below
+            </span>
+          </div>
+        )}
+      </div>
 
       {/* DISPOSITION DIALOG — note capture + four-eyes role */}
       <Dialog open={action !== null} onOpenChange={(o) => !o && setAction(null)}>
@@ -169,22 +300,9 @@ export function ClientSection({
               a timestamp, and your note.
             </p>
 
-            {/* role (four-eyes) */}
-            <div>
-              <div className="mb-1.5 text-xs font-medium uppercase tracking-wide text-ink-muted">Acting as</div>
-              <div className="inline-flex overflow-hidden rounded-md border border-surface-line">
-                {(["analyst", "mlro"] as Role[]).map((r) => (
-                  <button
-                    key={r}
-                    onClick={() => onRoleChange(r)}
-                    className={`px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
-                      role === r ? "bg-brand text-white" : "bg-white text-ink-muted hover:bg-surface-subtle"
-                    }`}
-                  >
-                    {r === "mlro" ? "MLRO" : "Analyst"}
-                  </button>
-                ))}
-              </div>
+            {/* role is chosen on the disposition bar; shown here for the record */}
+            <div className="text-sm text-ink-muted">
+              Acting as <span className="font-semibold capitalize text-ink">{role === "mlro" ? "MLRO" : "Analyst"}</span>
             </div>
 
             {/* note */}
@@ -202,9 +320,6 @@ export function ClientSection({
             {error && (
               <div className="inline-flex items-start gap-1.5 rounded-md bg-risk-high-bg px-3 py-2 text-xs font-medium text-risk-high">
                 <TriangleAlert className="mt-0.5 size-3.5 shrink-0" /> {error}
-                {role !== "mlro" && /mlro/i.test(error) && (
-                  <span className="font-normal"> — switch to MLRO above and retry.</span>
-                )}
               </div>
             )}
           </div>

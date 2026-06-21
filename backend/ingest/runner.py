@@ -3,7 +3,7 @@
   OFFLINE_DEMO=true (default): replay fixtures only → deterministic, no network, no keys.
   OFFLINE_DEMO=false: run the live connectors (each caches to data/fixtures/ for offline reuse).
 
-The merged, de-duplicated, time-sorted stream is what the drift engine (Miguel) consumes.
+The merged, de-duplicated, time-sorted stream is what the drift engine consumes.
 
   python -m backend.ingest.runner coinbase-global          # offline (fixtures)
   OFFLINE_DEMO=false python -m backend.ingest.runner coinbase-global --live

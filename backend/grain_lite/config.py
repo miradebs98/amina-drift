@@ -1,5 +1,5 @@
 """
-GRAIN Configuration
+grain_lite Configuration
 
 Reads from backend environment variables (loaded by dotenv in run_local.py).
 """
@@ -26,7 +26,7 @@ class LLMConfig:
 @dataclass
 class VectorStoreConfig:
     """GCS-backed vector store configuration (with local file fallback)."""
-    gcs_bucket: str = field(default_factory=lambda: os.getenv("GRAIN_GCS_BUCKET", "sablier-grain"))
+    gcs_bucket: str = field(default_factory=lambda: os.getenv("GRAIN_GCS_BUCKET", "vectors"))
     gcs_prefix: str = field(default_factory=lambda: os.getenv("GRAIN_GCS_PREFIX", "vectors"))
     local_file: str = field(default_factory=lambda: os.getenv("GRAIN_LOCAL_VECTOR_FILE", ""))
 
@@ -56,7 +56,7 @@ class ScoringConfig:
 
 @dataclass
 class GrainConfig:
-    """Main GRAIN configuration."""
+    """Main grain_lite configuration."""
     llm: LLMConfig = field(default_factory=LLMConfig)
     vector_store: VectorStoreConfig = field(default_factory=VectorStoreConfig)
     cache: CacheConfig = field(default_factory=CacheConfig)
@@ -71,7 +71,7 @@ class GrainConfig:
         """Path to temporary EDGAR filings cache."""
         return self.data_dir / "raw_filings"
 
-    # base_dir alias for backward compatibility with existing GRAIN modules
+    # base_dir alias for backward compatibility with existing grain_lite modules
     @property
     def base_dir(self) -> Path:
         return self.data_dir

@@ -6,7 +6,7 @@
   GET /cases/{key}?refresh=true   → rebuild (re-run ingestion + engine)
 
 Honours OFFLINE_DEMO: default replays fixtures + MockLLM (fast, no network/keys) so the demo and
-Giacomo's `live` mode work out of the box. Set OFFLINE_DEMO=false (+ Apertus key) for real sources.
+the frontend's `live` mode work out of the box. Set OFFLINE_DEMO=false (+ Apertus key) for real sources.
 
   uvicorn backend.api.main:app --reload --port 8000
 Frontend: set NEXT_PUBLIC_DATA_MODE=live and point the client at http://localhost:8000

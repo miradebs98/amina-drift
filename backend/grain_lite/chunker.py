@@ -1,5 +1,5 @@
 """
-GRAIN Document Chunker
+grain_lite Document Chunker
 
 Split documents into semantic chunks for embedding and retrieval.
 
@@ -1042,7 +1042,7 @@ def chunk_document(
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("  GRAIN Document Chunker Test")
+    print("  grain_lite Document Chunker Test")
     print("=" * 60)
     
     # Test 1: Earnings Call Chunking

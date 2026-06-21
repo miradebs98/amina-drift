@@ -1,11 +1,11 @@
-"""Case assembly — the keystone that wires all three lanes into one `CustomerCase`.
+"""Case assembly — the keystone that wires the three layers into one `CustomerCase`.
 
 CustomerCase = { customer, events, alert } (the shape the frontend consumes), built by:
-  customer  ← data/customers/*.json           (Giacomo / Layer 2)
-  events    ← backend.ingest.runner.collect()  (Mira / Layer 1 — live or fixtures)
-  alert     ← backend.drift.engine.replay()     (Miguel / the engine)
+  customer  ← data/customers/*.json           (Layer 2)
+  events    ← backend.ingest.runner.collect()  (Layer 1 — live or fixtures)
+  alert     ← backend.drift.engine.replay()     (the engine)
 
-Resolves the cross-lane ID mismatch: the engine fixture-loader keyed Coinbase as "coinbase",
+Resolves the cross-layer ID mismatch: the engine fixture-loader keyed Coinbase as "coinbase",
 the runner uses the real customer_id "coinbase-global". We load by EITHER and always drive the
 runner + engine off the real customer_id.
 """
@@ -87,7 +87,7 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
         return None
     cid = cust["customer_id"]
 
-    events = collect(cid, live=live)                       # Mira's Layer-1 stream (live or fixtures)
+    events = collect(cid, live=live)                       # Layer-1 stream (live or fixtures)
     assertions = [Assertion(**a) for a in cust["assertions"]]
     baseline = int(cust.get("risk_model", {}).get("onboarding_score", 30))
     snapshots = _MOCK_SNAPSHOTS.get(cid, lambda _c: [])(cid)  # Meridian has mock snapshots; others []
@@ -100,7 +100,7 @@ def build_case(key: str, live: Optional[bool] = None) -> Optional[dict]:
     )
     llm = get_llm()
     verdict_cache: dict = {}                                # shared with the decomposition pass below
-    r = replay(state, llm, verdict_cache=verdict_cache)    # Miguel's engine
+    r = replay(state, llm, verdict_cache=verdict_cache)    # the drift engine
 
     # ── 4-dimension tagging (connect-the-dots): tag each event + which dimensions drifted ──
     pred_by_id = {a.id: a.predicate.value for a in assertions}

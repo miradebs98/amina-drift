@@ -1,6 +1,6 @@
 """HITL decision workflow — RBAC check → persist decision → write the immutable audit entry.
 
-This replaces Giacomo's faked `dispose()` toast with a real, auditable disposition.
+This replaces the previous client-side `dispose()` toast with a real, auditable disposition.
 """
 from __future__ import annotations
 

@@ -8,7 +8,7 @@ The engine never imports OpenAI/Anthropic directly. It calls an `LLMClient` with
 network and no keys. `ApiLLM` is the stub you wire to gpt-4o-mini / claude-haiku (cheap) and
 gpt-4o / claude-sonnet (heavy) when you have a key — same interface, drop-in.
 
-A CostMeter counts calls + estimates tokens so the DriftAlert carries cost metadata (Mira's
+A CostMeter counts calls + estimates tokens so the DriftAlert carries cost metadata (the cost
 cascade refines this, but the engine produces plausible numbers on its own).
 """
 from __future__ import annotations

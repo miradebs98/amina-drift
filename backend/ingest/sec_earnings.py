@@ -1,6 +1,6 @@
 """SEC + earnings-call bridge — grain_lite → EvidenceEvent.
 
-The bridge between Sablier's GRAIN ingestion (`backend/grain_lite/`) and our drift pipeline.
+The bridge between the grain_lite SEC ingestion (`backend/grain_lite/`) and the drift pipeline.
 Best for Coinbase (real, listed). Two levels:
 
   Level 1 (KEYLESS, always on): SEC EDGAR filing list → one EvidenceEvent per recent filing

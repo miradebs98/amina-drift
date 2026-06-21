@@ -1,5 +1,5 @@
 """
-GRAIN EDGAR Integration
+grain_lite EDGAR Integration
 
 Wrapper around existing EDGAR extractor for fetching SEC filings.
 """
@@ -15,7 +15,7 @@ from backend.grain_lite.utils import retry, RateLimitError, logger
 
 # Configure EDGAR data directory
 from backend.grain_lite.config import get_config
-EDGAR_DIR = get_config().edgar_dir  # Uses GRAIN/data/raw_filings
+EDGAR_DIR = get_config().edgar_dir  # Uses grain_lite/data/raw_filings
 
 # Cache for SEC company tickers JSON (2MB file, same for all tickers)
 _tickers_cache = None
@@ -25,7 +25,7 @@ _tickers_cache_time = 0
 def get_sec_headers() -> Dict[str, str]:
     """Get SEC API headers from environment."""
     # Environment already loaded by grain.config
-    user_agent = os.getenv("SEC_USER_AGENT", "GRAIN User (grain@example.com)")
+    user_agent = os.getenv("SEC_USER_AGENT", "amina-drift (compliance@example.com)")
     return {
         "User-Agent": user_agent,
         "Accept-Encoding": "gzip, deflate"
@@ -333,7 +333,7 @@ def fetch_company_filings(
 
 if __name__ == "__main__":
     # Test EDGAR integration
-    print("Testing GRAIN EDGAR integration...")
+    print("Testing grain_lite EDGAR integration...")
     
     try:
         # Test company info

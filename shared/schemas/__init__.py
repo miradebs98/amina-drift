@@ -1,12 +1,11 @@
 """Shared data contracts for amina-drift.
 
-⚠️ CHANGING ANYTHING HERE CAN BREAK ALL THREE LANES.
-Ping the other two founders before editing. These shapes are frozen Friday night.
+⚠️ CHANGING ANYTHING HERE CAN BREAK EVERY LAYER. These shapes are the cross-layer contract.
 
-- Assertion / ExpectedEnvelope  → what the bank believes (Giacomo authors, Miguel/Mira consume)
-- EvidenceEvent / Snapshot      → what a connector emits (Mira produces, Miguel consumes)
-- DriftAlert                    → a detected drift (Miguel produces, Giacomo's UI renders)
-- AuditEntry                    → append-only decision log (Mira owns, everyone writes through it)
+- Assertion / ExpectedEnvelope  → what the bank believes
+- EvidenceEvent / Snapshot      → what a connector emits
+- DriftAlert                    → a detected drift (the engine produces, the UI renders)
+- AuditEntry                    → append-only decision log (everyone writes through it)
 """
 
 from .assertion import Assertion, ExpectedEnvelope, AssertionStatus, Predicate

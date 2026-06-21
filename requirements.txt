@@ -10,3 +10,5 @@ numpy
 requests
 tqdm
 python-dotenv
+# dev/test
+pytest

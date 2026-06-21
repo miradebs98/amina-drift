@@ -163,19 +163,6 @@ export function ProfileView({ data }: { data: CustomerCase }) {
           onDispose={handleDispose}
         />
 
-        {hasRestricted(customer) && (
-          <DataProtectionBar
-            customer={customer}
-            role={role}
-            onRoleChange={setRole}
-            revealed={revealed}
-            revealing={revealing}
-            error={revealError}
-            onReveal={handleReveal}
-            onHide={handleHide}
-          />
-        )}
-
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
           <div className="min-w-0 space-y-5">
             {/* RISK HERO */}
@@ -424,6 +411,20 @@ export function ProfileView({ data }: { data: CustomerCase }) {
               </SectionTitle>
               <AuditTrail customerId={customer.customer_id} alertId={alert.id} />
             </Card>
+
+            {/* DATA PROTECTION — public/internal separation + masked Layer-2 fields (RBAC reveal) */}
+            {hasRestricted(customer) && (
+              <DataProtectionBar
+                customer={customer}
+                role={role}
+                onRoleChange={setRole}
+                revealed={revealed}
+                revealing={revealing}
+                error={revealError}
+                onReveal={handleReveal}
+                onHide={handleHide}
+              />
+            )}
           </div>
 
           {/* RIGHT RAIL — NEWS / SOCIAL */}

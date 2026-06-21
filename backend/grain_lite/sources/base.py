@@ -1,5 +1,5 @@
 """
-GRAIN Source Adapter Base
+grain_lite Source Adapter Base
 
 Abstract base class for document sources. Each source (10-K, earnings transcript, etc.)
 implements this interface to provide documents for exposure scoring.

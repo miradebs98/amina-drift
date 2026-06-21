@@ -1,43 +1,40 @@
-# grain_lite — vendored SEC + earnings ingestion & grounded LLM scoring
+# grain_lite — SEC filing & earnings ingestion with grounded passage scoring
 
-Reused from **Sablier's GRAIN** (our own production code — `sablier-backend/services/grain`).
-A lean slice: the SEC/earnings ingestion + embeddings + the grounded LLM scorer, **OpenAI as-is**.
-Stripped of GRAIN's GCS vector store, Postgres, portfolio/theme product layer. The Postgres LLM
-cache was swapped for a **file-based cache** (`cache.py`) so the demo runs offline & reproducibly.
+A self-contained module that turns SEC filings and earnings calls into **cited, assertion-relevant
+evidence**. It powers the optional Level-2 enhancement of the `sec_earnings` connector: fetch a
+customer's 10-K/10-Q/8-K/DEF-14A, chunk the long filings into passages, embed them, and keep only the
+passages relevant to each on-file `Assertion` — each with a verbatim quote + source URL for grounding.
 
-## What's here (and who uses it)
-| File | What it does | Lane |
-|---|---|---|
-| `sources/edgar.py` | SEC EDGAR: ticker→CIK→filing list→download→clean HTML/XBRL→text (10-K/10-Q/8-K/DEF-14A) | **Mira** (ingest) |
-| `sources/transcript.py` | **Earnings-call transcripts** via Alpha Vantage (+ Motley Fool fallback), with sentiment | **Mira** (ingest) |
-| `sources/earnings_calendar.py` | when calls happen | Mira |
-| `sources/base.py` | `DocumentSource` / `Document` / `SourceType` — connector interface pattern | Mira |
-| `chunker.py` | section-aware chunking of long filings → passages | Mira |
-| `embedder.py` | OpenAI embeddings + `cosine_similarity` → the **Stage-1 relevance filter** | Mira |
-| `llm_client.py` | `complete()` (JSON, retry, cache) · `score_source_holistically()` · **`_validate_key_quote()` grounding gate** · `score_passages_batch()` (cost) | **Miguel** (scoring) + Mira (cascade) |
-| `cache.py` | file-based LLM cache (replaces GRAIN's Postgres) | Mira |
-| `config.py` | env-driven config (OpenAI model + embedding + cache) | both |
+## What's here
+| File | What it does |
+|---|---|
+| `sources/edgar.py` | SEC EDGAR: ticker→CIK→filing list→download→clean HTML/XBRL→text (10-K/10-Q/8-K/DEF-14A) |
+| `sources/transcript.py` | Earnings-call transcripts via Alpha Vantage (+ Motley Fool fallback), with sentiment |
+| `sources/earnings_calendar.py` | when calls happen |
+| `sources/base.py` | `DocumentSource` / `Document` / `SourceType` — the document-source interface |
+| `chunker.py` | section-aware chunking of long filings → passages |
+| `embedder.py` | embeddings + `cosine_similarity` → the relevance filter over passages |
+| `llm_client.py` | `complete()` (JSON, retry, cache) · `score_source_holistically()` · `_validate_key_quote()` grounding gate · `score_passages_batch()` |
+| `cache.py` | file-based LLM/embedding cache, so runs are offline & reproducible |
+| `config.py` | env-driven config (model + embedding + cache) |
 
-## Provider = OpenAI (as-is, for now)
-`config.py` defaults: LLM `gpt-4.1-mini`, embeddings `text-embedding-3-small`. Set in `.env`:
+## Provider
+This optional SEC deep-read path uses an OpenAI-compatible endpoint, **independent of the core Apertus
+cascade**. Defaults in `config.py`: LLM `gpt-4.1-mini`, embeddings `text-embedding-3-small`. Keys:
 ```
 OPENAI_API_KEY=...
-ALPHAVANTAGE_API_KEY=...        # free tier; for earnings-call transcripts
-SEC_USER_AGENT="amina-drift <you@email>"   # SEC requires a UA string
+ALPHAVANTAGE_API_KEY=...        # free tier; enables earnings-call transcripts
+SEC_USER_AGENT="amina-drift <you@email>"   # SEC requires a contact UA string
 ```
-(We can swap the verdict tier to Claude later; not now.)
+It is **off by default** (`SEC_LEVEL2=false`); the core pipeline runs on Apertus without it.
 
-## How it plugs into amina-drift
-- **Mira (Layer 1 / ingest):** use `edgar.py` + `transcript.py` to fetch a customer's filings &
-  earnings calls → `chunker` → `embedder` → cosine-filter passages relevant to each `Assertion`
-  (Stage-1). Wrap the output as `EvidenceEvent`s (schema in `shared/schemas/evidence.py`).
-  → Best for **Coinbase** (real, listed). Meridian is fictional → stays fixture-based.
-- **Miguel (drift / scoring):** reuse `score_source_holistically()` as the Stage-2 starting point
-  — **rewrite its prompt** from "theme exposure" to "assertion contradiction." Keep
-  `_validate_key_quote()` as the anti-hallucination gate. See `backend/drift/CLAUDE.md`.
+## How it plugs into the pipeline
+- **Ingest:** `edgar.py` + `transcript.py` fetch a customer's filings & earnings calls → `chunker`
+  → `embedder` → cosine-filter the passages relevant to each `Assertion`, wrapped as `EvidenceEvent`s
+  (`shared/schemas/evidence.py`). Best for listed entities (e.g. Coinbase).
+- **Scoring:** `score_source_holistically()` is the grounded scorer; `_validate_key_quote()` is the
+  anti-hallucination gate — it rejects any quote not found verbatim in the source.
 
-## ⚠️ Note
-- `llm_client.load_prompt()` (score/aggregate/theme_expand) needs prompt files that we did NOT
-  vendor — those paths will fail. We only use `score_source_holistically()` (inline prompt) and
-  `complete()`. Ignore the rest.
-- This is our own IP; safe to keep in this repo. Provenance noted here for the AMINA reviewers.
+## Note
+Only `score_source_holistically()` (inline prompt) and `complete()` are exercised by the demo; the
+other `load_prompt()`-based helpers expect prompt files that are not included and are not used here.

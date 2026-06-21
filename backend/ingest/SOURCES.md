@@ -1,11 +1,11 @@
 # Layer-1 sources — connector roster & status
 
 Every source is a `Connector` that emits the same `EvidenceEvent` shape (schema in
-`shared/schemas/evidence.py`). The drift engine (Miguel) consumes the merged stream — it doesn't
+`shared/schemas/evidence.py`). The drift engine consumes the merged stream — it doesn't
 care which source an event came from. **Add a source = subclass `Connector`, add one line to
 `runner.LIVE_CONNECTORS`.**
 
-## Status (2026-06-20)
+## Status
 | Connector | Source | Key needed | Status | Emits | Cases |
 |---|---|---|---|---|---|
 | `sec_earnings.py` (L1) | **SEC EDGAR** filing list | none (UA) | ✅ **live, tested** (12 real Coinbase filings) | NEWS, OWNERSHIP_CHANGE | Coinbase |
@@ -24,7 +24,7 @@ care which source an event came from. **Add a source = subclass `Connector`, add
 **Network graph** (`backend/network/graph.py`, `GET /cases/{id}/network`): assembles connected
 entities (UBOs/investors/partners) + sanctions/PEP flags from the above signals — the Network Risk
 dimension. **Demo entities**: Coinbase (real listed), Meridian (fictional drift-hero), HashKey
-(real startup). Full state: [../../STATUS.md](../../STATUS.md).
+(real startup).
 
 **Meridian Sands is fictional** → it has no live data; its 8 events come from the authored
 fixture and that's correct. **Coinbase is real** → it gets real, cited evidence from the live
@@ -43,10 +43,11 @@ OFFLINE_DEMO=false python -m backend.ingest.runner coinbase-global --live
 
 ## Design notes
 - **Connectors stay dumb**: they emit facts + a `source_url`. They do NOT decide relevance or
-  drift — that's the engine. (Keeps Mira's lane clean from Miguel's.)
-- **Resolution**: events are stamped `customer_id` here because we query the source BY the
-  customer's identifiers (ticker/LEI/domain/name) with a `resolution_confidence` (name-only
-  matches get a lower score). The dedicated `resolve/` step refines borderline cases.
+  drift — that's the engine. (Connectors emit facts; the engine decides what they mean.)
+- **Resolution**: events are stamped `customer_id` at emission because each connector queries the
+  source BY the customer's identifiers (ticker/LEI/domain/name) and attaches a `resolution_confidence`.
+  Borderline (name-only) matches carry a lower confidence and are surfaced for human verification
+  rather than auto-attributed.
 - **Offline-safe**: every live fetch caches to `data/fixtures/`; on any error the connector falls
   back to cache → 0 events, never a crash. The stage demo runs with `OFFLINE_DEMO=true`.
 - **Cost**: these connectors are ~free HTTP (no LLM). The optional Level-2 SEC enhancement
@@ -69,10 +70,10 @@ The screen matches on **name**, so a 1.00 score is a *potential* match, NOT a co
 (e.g. "Brian Armstrong" hit a debarment list — almost certainly a DIFFERENT person). Events are
 emitted with `match_basis="name-only"`, `needs_human_verification=true`, and **capped confidence** —
 so the engine/UI treats them as "review required," never auto-escalate. This is exactly why HITL is
-graded. **To improve precision:** add DOB / nationality to the person assertions (note for Giacomo)
-so the screen can disambiguate; pass them as match properties here.
+graded. **To improve precision:** add DOB / nationality to the person assertions so the screen can
+disambiguate; pass them as match properties here.
 
-## Next (Mira's creative space)
+## Next
 1. Add a **registry** for non-US entities (ZEFIX/ADGM) so future non-listed customers work live.
 2. Wire the **cost meter** around any LLM use (Level-2 embeddings) for the Cost-Efficiency axis.
 3. De-dupe near-identical Event Registry articles (same story across outlets) by normalised title.

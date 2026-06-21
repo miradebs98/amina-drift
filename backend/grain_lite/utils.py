@@ -1,5 +1,5 @@
 """
-GRAIN Utilities
+grain_lite Utilities
 
 Common utilities for error handling, logging, and retry logic.
 """
@@ -23,7 +23,7 @@ logger = logging.getLogger("grain")
 
 
 class GrainError(Exception):
-    """Base exception for GRAIN errors."""
+    """Base exception for grain_lite errors."""
     pass
 
 
@@ -270,7 +270,7 @@ class Timer:
 
 if __name__ == "__main__":
     # Test utilities
-    print("Testing GRAIN Utilities...")
+    print("Testing grain_lite Utilities...")
     
     # Test retry decorator
     @retry(max_attempts=3, delay=0.1)

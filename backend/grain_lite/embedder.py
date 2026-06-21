@@ -1,5 +1,5 @@
 """
-GRAIN Embedder
+grain_lite Embedder
 
 Generate embeddings for document chunks using OpenAI or local models.
 """
@@ -13,7 +13,7 @@ from backend.grain_lite.chunker import Chunk
 
 class Embedder:
     """
-    Text embedding generator for GRAIN.
+    Text embedding generator for grain_lite.
     
     Uses OpenAI embeddings by default, with support for local models.
     """
@@ -182,7 +182,7 @@ def cosine_similarity(vec1: List[float], vec2: List[float]) -> float:
 
 
 if __name__ == "__main__":
-    print("Testing GRAIN Embedder...")
+    print("Testing grain_lite Embedder...")
     
     try:
         embedder = Embedder()

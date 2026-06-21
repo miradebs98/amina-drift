@@ -1,5 +1,5 @@
 """
-GRAIN Earnings Calendar
+grain_lite Earnings Calendar
 
 Maps company tickers to their earnings call dates.
 Used to construct accurate Motley Fool transcript URLs.
@@ -223,7 +223,7 @@ def get_transcript_urls(ticker: str, num_quarters: int = 4) -> List[Tuple[str, s
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("  GRAIN Earnings Calendar")
+    print("  grain_lite Earnings Calendar")
     print("=" * 70)
     
     for ticker in ["AAPL", "MSFT", "NVDA"]:

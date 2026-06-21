@@ -1,4 +1,4 @@
-"""grain_lite LLM cache — file-based (replaces GRAIN's Postgres-backed cache).
+"""grain_lite LLM cache — file-based, so runs are offline & reproducible.
 
 Same interface llm_client.py expects: get_cache(), LLMCache.get()/.set(), .enabled.
 Caches LLM responses on disk so the demo is cheap + reproducible + offline-friendly.

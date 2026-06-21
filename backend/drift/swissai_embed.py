@@ -4,7 +4,7 @@ Apertus is a *generative* model — it can't embed. For the Stage-1 retrieval ("
 on which belief?") use a real **embedding** model. This one is **Swiss-hosted on CSCS**, so the
 sovereign story stays intact (no OpenAI). It reuses the SAME endpoint + key as the LLM.
 
-Drop-in for grain_lite's `Embedder` — same `embed_texts` interface — so Mira's relevance filter can
+Drop-in for grain_lite's `Embedder` — same `embed_texts` interface — so the relevance filter can
 switch with one env var (`RELEVANCE_EMBEDDINGS=swissai`).
 
 Env (reuses the LLM's by default):

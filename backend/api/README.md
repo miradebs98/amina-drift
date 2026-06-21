@@ -1,11 +1,11 @@
 # backend/api — the keystone
 
-FastAPI that assembles **`CustomerCase`** = `{ customer, events, alert }` by wiring all three lanes:
+FastAPI that assembles **`CustomerCase`** = `{ customer, events, alert }` by wiring the three layers:
 
 ```
-customer ← data/customers/*.json          (Giacomo)
-events   ← backend.ingest.runner.collect() (Mira — live or fixtures)
-alert    ← backend.drift.engine.replay()    (Miguel)
+customer ← data/customers/*.json
+events   ← backend.ingest.runner.collect() (live or fixtures)
+alert    ← backend.drift.engine.replay()
 ```
 
 ## Endpoints
@@ -24,7 +24,7 @@ uvicorn backend.api.main:app --reload --port 8000
 # OFFLINE_DEMO=false + Apertus key → real sources + Apertus cascade.
 ```
 
-## Frontend wiring (Giacomo)
+## Frontend wiring
 The dashboard's data facade already supports it: set `NEXT_PUBLIC_DATA_MODE=live` and point the
 live client at `http://localhost:8000`. The `CustomerCase` shape matches `frontend/lib/types`.
 The API returns extra fields (`alerts`, `timeline`, `cost`) — safe to ignore or use for richer views.
@@ -36,9 +36,7 @@ The API returns extra fields (`alerts`, `timeline`, `cost`) — safe to ignore o
   alert (keeps the non-null UI contract; truthfully says "screened, nothing contradicted").
 - **Cost cache:** built cases are memoised in-process; `?refresh=true` rebuilds.
 
-## ⚠️ Open items surfaced by wiring this (for the team)
-1. **Coinbase scores HIGH 75** via the engine — but the locked demo design is **MEDIUM 60→66**
-   (the deliberate contrast with Meridian's LOW→HIGH). Engine ↔ design need reconciling (Miguel).
-2. **`escalation_rate` is context-sensitive** — ~0.036 from `run_demo` (no `.env`) vs 1.0 when
-   `.env` is loaded (via this API). Cost-meter accounting needs to be stable (Miguel), since Cost
-   Efficiency is graded.
+## ⚠️ Known behaviours
+1. **`escalation_rate` is context-sensitive** — ~0.036 from `run_demo` (no `.env`) vs 1.0 when
+   `.env` is loaded (via this API). Cost-meter accounting should be stabilised so the
+   cost-efficiency numbers are reproducible.

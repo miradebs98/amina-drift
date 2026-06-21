@@ -1,5 +1,5 @@
 """
-GRAIN LLM Client
+grain_lite LLM Client
 
 Wrapper around OpenAI/Anthropic APIs for exposure analysis.
 Includes intelligent caching to reduce API costs and improve speed.
@@ -41,7 +41,7 @@ class LLMResponse:
 
 class LLMClient:
     """
-    LLM Client for GRAIN exposure analysis.
+    LLM Client for grain_lite exposure analysis.
     
     Supports OpenAI and Anthropic APIs with automatic fallback.
     Features intelligent caching to reduce API costs.
@@ -824,7 +824,7 @@ def get_llm_client(provider: Optional[str] = None) -> LLMClient:
 
 if __name__ == "__main__":
     # Test the client
-    print("Testing GRAIN LLM Client...")
+    print("Testing grain_lite LLM Client...")
     
     try:
         client = LLMClient()

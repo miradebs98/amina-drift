@@ -1,5 +1,5 @@
 """
-GRAIN Earnings Transcript Source Adapter
+grain_lite Earnings Transcript Source Adapter
 
 Fetches earnings call transcripts.
 Primary source: Alpha Vantage API (structured, with sentiment)
@@ -655,7 +655,7 @@ def get_transcript_source(cache_dir: Optional[str] = None) -> EarningsTranscript
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("  GRAIN Earnings Transcript Source Test")
+    print("  grain_lite Earnings Transcript Source Test")
     print("=" * 60)
     
     source = EarningsTranscriptSource()

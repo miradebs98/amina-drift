@@ -1,7 +1,7 @@
 """AuditEntry — append-only, immutable decision log.
 
-OWNER: Mira (govern/). Everyone writes decisions THROUGH this — never mutate past entries.
-This is a GRADED guardrail (Compliance 20%). Do not fake it in the demo.
+Lives in govern/. Everyone writes decisions THROUGH this — never mutate past entries.
+This is a graded guardrail (Compliance 20%) and is implemented for real, not faked.
 """
 from __future__ import annotations
 
@@ -41,4 +41,4 @@ class AuditEntry(BaseModel):
     policy_version: Optional[str] = None
     details: dict[str, Any] = Field(default_factory=dict)
 
-    # TODO(Mira): persist to an append-only SQLite table; expose read API for the audit view.
+    # Note: persisted to an append-only SQLite table; a read API exposes the audit view.

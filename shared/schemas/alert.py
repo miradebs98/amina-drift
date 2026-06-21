@@ -1,8 +1,7 @@
 """DriftAlert — a detected drift, with its explanation and governance state.
 
-OWNER: Miguel (drift engine produces these). CONSUMER: Giacomo (UI renders them),
-Mira (cascade attaches cost metadata, govern attaches the human decision).
-Ping Giacomo + Mira before changing the shape — it's the UI contract.
+Produced by the drift engine; the UI renders these, the cascade attaches cost metadata, and
+govern attaches the human decision. This shape is the UI contract.
 """
 from __future__ import annotations
 
@@ -56,17 +55,17 @@ class DriftAlert(BaseModel):
     recommended_action: str                # echo the brief's "recommended action" column
     confidence: float = Field(ge=0.0, le=1.0)
 
-    # --- cost metadata (Mira's cascade fills these) ---
+    # --- cost metadata (the cascade fills these) ---
     stage_reached: int = 1                 # 1 cheap / 2 LLM / 3 deep
     model_used: Optional[str] = None
     tokens_used: int = 0
 
-    # --- governance (Mira's govern/ fills these via HITL) ---
+    # --- governance (govern/ fills these via HITL) ---
     governance_state: GovernanceState = GovernanceState.PENDING
     reviewer: Optional[str] = None
     decided_at: Optional[datetime] = None
 
     created_at: datetime
 
-    # TODO(Miguel): produce these from the diff/trajectory engine; never emit a flag whose
+    # Note: these are produced by the diff/trajectory engine; never emit a flag whose
     #   evidence doesn't actually support the rationale (anti-hallucination gate).

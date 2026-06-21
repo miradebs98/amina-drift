@@ -3,7 +3,8 @@ import { listCases } from "@/lib/api";
 import { fmtDate } from "@/lib/format";
 import { AppShell } from "@/components/shell/app-shell";
 import { CompanyLogo } from "@/components/shared/company-logo";
-import { ShieldCheck, ChevronRight } from "lucide-react";
+import { AuditTrail } from "@/components/governance/audit-trail";
+import { ChevronRight } from "lucide-react";
 
 const STATE: Record<string, { label: string; cls: string }> = {
   pending: { label: "Pending review", cls: "bg-risk-med-bg text-risk-med" },
@@ -17,19 +18,23 @@ export default async function AuditPage() {
   const rows = [...cases].sort((a, b) => +new Date(b.alert.created_at) - +new Date(a.alert.created_at));
 
   return (
-    <AppShell title="Audit log" subtitle="Decision trail across the book">
+    <AppShell title="Audit log" subtitle="Immutable decision trail">
       <main className="mx-auto w-full max-w-[1100px] px-6 py-8">
         <h1 className="font-display text-2xl font-semibold text-ink">Audit log</h1>
-        <p className="mt-1 text-sm text-ink-muted">
-          The decision trail across the portfolio. Every disposition is written to an immutable, hash-chained record —
-          who decided, when, on which model and policy version.
+        <p className="mt-1 max-w-2xl text-sm text-ink-muted">
+          Every disposition is written to an immutable, append-only, hash-chained record — who decided, when, on which
+          model and policy version. Verify the chain live below; any tampering breaks it.
         </p>
 
-        <div className="mt-4 inline-flex items-center gap-2 rounded-pill bg-risk-low-bg px-3 py-1.5 text-xs font-medium text-risk-low">
-          <ShieldCheck className="size-4" /> Tamper-evident · chain intact
+        {/* the REAL hash-chained log across the whole book + live integrity check */}
+        <div className="mt-6 rounded-card border border-surface-line bg-white p-6 shadow-card">
+          <AuditTrail />
         </div>
 
-        <div className="mt-6 overflow-hidden rounded-card border border-surface-line bg-white shadow-card">
+        {/* per-client disposition overview */}
+        <h2 className="mt-9 font-display text-lg font-semibold text-ink">Current disposition by client</h2>
+        <p className="mt-1 text-sm text-ink-muted">Where each client&apos;s open alert stands — click through to the full case.</p>
+        <div className="mt-3 overflow-hidden rounded-card border border-surface-line bg-white shadow-card">
           {rows.map((c, i) => {
             const a = c.alert;
             const st = STATE[a.governance_state] ?? STATE.pending;

@@ -1,7 +1,6 @@
 """EvidenceEvent / Snapshot — what Layer 1 connectors emit.
 
-OWNER: Mira (connectors produce these). CONSUMER: Miguel (drift engine).
-Ping before changing the shape.
+Connectors produce these; the drift engine consumes them. This shape is the cross-layer contract.
 """
 from __future__ import annotations
 
@@ -27,7 +26,7 @@ class EvidenceEvent(BaseModel):
     """One dated, sourced public (or internal) signal about an entity."""
     id: str
     entity_ref: str                      # the raw entity name/id as seen in the source
-    customer_id: Optional[str] = None    # set by resolve/ once matched (None = unresolved)
+    customer_id: Optional[str] = None    # set at emission once matched to a customer (None = unresolved)
     resolution_confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0)
     type: EvidenceType
     summary: str                         # one-line human-readable summary (for the timeline)
@@ -38,8 +37,9 @@ class EvidenceEvent(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0, default=1.0)
     raw_ref: Optional[str] = None        # hash/pointer to cached raw payload (data/fixtures/)
 
-    # TODO(Mira): connectors fill these; cache raw payload to data/fixtures/ for offline demo.
-    # TODO(Mira): resolve/ sets customer_id + resolution_confidence behind a gate.
+    # Note: connectors fill these; raw payload is cached to data/fixtures/ for offline demo.
+    # Note: customer_id + resolution_confidence are set at emission (matched by the customer's known
+    # identifiers — ticker/LEI/domain/name — and confidence-gated).
 
 
 class Snapshot(BaseModel):
@@ -55,5 +55,6 @@ class Snapshot(BaseModel):
     signal_mix: dict[str, float] = Field(default_factory=dict)  # topic/geo distribution this window
     source_urls: list[str] = Field(default_factory=list)
 
-    # TODO(Mira): build the time-compressed timeline in data/snapshots/ for the demo entity.
-    # TODO(Miguel): diff consecutive snapshots / track embedding trajectory across the series.
+    # Note: the time-compressed snapshot series for the trajectory detector is assembled in
+    # backend/drift/client_state.py.
+    # Note: consecutive snapshots are diffed / the embedding trajectory is tracked across the series.

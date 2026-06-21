@@ -154,7 +154,7 @@ def _cosine(a: list[float], b: list[float]) -> float:
 
 # Natural-language drift descriptions per predicate — the semantic "bridge" that lets the embedder
 # connect real-world phrasings to the predicate WITHOUT the literal keyword ("cabinet minister"→PEP,
-# "Cayman"→offshore, "perpetual contracts"→derivatives). This is GRAIN's build_rich_query idea done
+# "Cayman"→offshore, "perpetual contracts"→derivatives). This is rich-query expansion done
 # properly: a query needs a description + examples, not a terse keyword list. Calibrated in
 # eval/gate/calibrate.py — these directly drive Stage-1 recall on paraphrased / unseen-vocab events.
 SEMANTIC_HINTS = {
@@ -178,7 +178,7 @@ SEMANTIC_HINTS = {
 
 
 def _rich_belief(assertion: Assertion) -> str:
-    """Expand the belief into an embedding QUERY (GRAIN's build_rich_query trick). The bare on-file
+    """Expand the belief into an embedding QUERY (rich-query expansion). The bare on-file
     value is too short and often a negation ('no crypto') that adds noise, so we lead with a
     natural-language description of what drift looks like for this predicate. The 'query:' prefix is
     what arctic-embed-v2 is trained to expect on the query side (sharply improves weak matches)."""

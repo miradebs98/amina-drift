@@ -1,8 +1,8 @@
 """ClientState — the per-customer 'living representation' the engine reads.
 
 PROPOSED read model (the glue between lanes): the union of the shared contracts for one customer.
-In production Mira's storage materializes this from SQLite; here we assemble it from the customer
-+ events fixtures so the engine runs offline. Snapshots are mocked until Mira's Wayback lands.
+In production, storage materializes this from SQLite; here we assemble it from the customer
++ events fixtures so the engine runs offline. Snapshots are mocked until the Wayback snapshot feed lands.
 
 → KICKOFF: agree this shape and move it to shared/schemas.
 """
@@ -33,7 +33,7 @@ class ClientState:
     assertions: list[Assertion]
     evidence: list[EvidenceEvent]
     snapshots: list[Snapshot]
-    dossier: str = ""                  # rolling compacted summary (Mira owns compaction in prod)
+    dossier: str = ""                  # rolling compacted summary (compaction handled in prod)
 
 
 def load_client_state_from_fixtures(customer_id: str = "meridian-sands") -> ClientState:

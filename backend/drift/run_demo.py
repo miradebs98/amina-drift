@@ -1,6 +1,6 @@
 """Replay a customer's timeline and print the risk-score arc + the three situations. Runs offline.
 
-    python backend/drift/run_demo.py [customer_id]      (from the repo root; default = meridian-sands)
+    python backend/drift/run_demo.py [customer_id]      (from the repo root; default = coinbase)
 """
 import sys
 import pathlib
@@ -18,7 +18,7 @@ _DOT = {"LOW": "🟢", "MEDIUM": "🟡", "HIGH": "🔴"}
 
 
 def main() -> None:
-    customer = sys.argv[1] if len(sys.argv) > 1 else "meridian-sands"
+    customer = sys.argv[1] if len(sys.argv) > 1 else "coinbase"
     state = load_client_state_from_fixtures(customer)
     print(f"\n=== Drift replay · {state.legal_name} "
           f"(onboarded {state.onboarded_as_of}, baseline {state.baseline_risk_score}/{tier_for(state.baseline_risk_score)}) ===\n")
