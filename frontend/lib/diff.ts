@@ -26,6 +26,14 @@ export type DiffRow = {
   changed: boolean;
 };
 
+// The engine records one reasoning per contradicting event; for a belief hit by several events
+// these restate the same finding, so we surface the single most complete one rather than
+// concatenating near-duplicates into a repetitive wall of text.
+function bestRationale(why?: string[]): string | undefined {
+  if (!why?.length) return undefined;
+  return [...why].sort((a, b) => b.length - a.length)[0]?.trim();
+}
+
 export function getTwinDiff(c: CustomerCase): { rows: DiffRow[]; changed: number; total: number } {
   // Authored "now" summaries (curated polish) take priority; otherwise fall back to the engine's
   // own per-belief drift (assertion_drift) so EVERY customer's twin-diff is correct from real output.
@@ -39,7 +47,7 @@ export function getTwinDiff(c: CustomerCase): { rows: DiffRow[]; changed: number
       const engineChanged = Boolean(ad && (ad.status === "contradicted" || ad.risk_impact > 0.05));
       const now =
         hit?.now ??
-        (engineChanged ? ad?.why?.join("; ") || "Contradicted by public evidence" : "No material change — re-verified");
+        (engineChanged ? bestRationale(ad?.why) ?? "Contradicted by public evidence" : "No material change — re-verified");
       return {
         assertionId: a.id,
         predicate: a.predicate,
