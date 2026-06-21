@@ -28,7 +28,7 @@ Two complementary detectors run over the same belief set:
 - **Slow-structural drift (the hard part).** No single event contradicts anything — the customer's
   public *profile* migrates over months (SaaS → crypto, onshore → offshore). The engine embeds dated
   profile snapshots onto interpretable risk concept-axes and alarms when the cumulative trajectory
-  crosses a band — *before* any hard contradiction. (See [docs/MECHANISM_AND_EXTENSION.md](docs/MECHANISM_AND_EXTENSION.md) §0.)
+  crosses a band — *before* any hard contradiction. (See [MECHANISM_AND_EXTENSION.md](MECHANISM_AND_EXTENSION.md) §0.)
 
 ---
 
@@ -56,7 +56,7 @@ Two complementary detectors run over the same belief set:
 - **Governance:** every alert is `PENDING` until a human acts; decisions write to an immutable,
   hash-chained audit log.
 
-Full mechanism + extension guide: **[docs/MECHANISM_AND_EXTENSION.md](docs/MECHANISM_AND_EXTENSION.md)**.
+Full mechanism + extension guide: **[MECHANISM_AND_EXTENSION.md](MECHANISM_AND_EXTENSION.md)**.
 
 ---
 
@@ -215,7 +215,7 @@ data/customers/  Layer-2 KYC profiles (authored)
 data/fixtures/   cached public evidence (offline demo)
 frontend/        Next.js analyst dashboard (app · components · lib · mock)
 eval/            gate-recall, verdict-precision, and scenario tests
-docs/            MECHANISM_AND_EXTENSION.md — architecture + extension guide
+MECHANISM_AND_EXTENSION.md   architecture deep-dive + extension guide (root)
 ```
 
 ## 12. Tests
