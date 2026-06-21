@@ -14,6 +14,7 @@ const ACTION_LABEL: Record<string, string> = {
   alert_created: "Alert created",
   stage_escalated: "Stage escalated",
   profile_updated: "Profile updated",
+  internal_data_revealed: "Restricted KYC data revealed",
 };
 
 function short(h?: string | null) {

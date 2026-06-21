@@ -8,6 +8,7 @@ import type {
   DecisionResult,
   AuditRow,
   VerifyResult,
+  Role,
 } from "@/lib/types";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
@@ -48,7 +49,11 @@ type CaseResponse = CustomerCase & Record<string, unknown>;
 
 export async function getCase(customerId: string): Promise<CustomerCase | null> {
   try {
-    const c = await j<CaseResponse>(`/cases/${encodeURIComponent(customerId)}`);
+    // The dashboard is an authenticated first-party compliance workstation, so it retrieves the
+    // full KYC dossier and applies need-to-know MASKING of restricted Layer-2 fields in the UI
+    // (lib/policy.ts), logging every reveal. The API itself is default-deny: a caller presenting no
+    // authorised role (e.g. `curl /cases/{id}`) receives the masked dossier.
+    const c = await j<CaseResponse>(`/cases/${encodeURIComponent(customerId)}?role=compliance`);
     return {
       customer: c.customer,
       events: c.events,
@@ -102,4 +107,19 @@ export async function getAudit(customerId?: string, alertId?: string): Promise<A
 
 export async function verifyAudit(): Promise<VerifyResult> {
   return j<VerifyResult>(`/audit/verify`);
+}
+
+// Reveal restricted Layer-2 KYC fields (RBAC-gated) → writes one immutable audit entry.
+// Throws ApiError(403) if the role is not MLRO/Compliance/Admin.
+export async function revealInternal(input: {
+  customerId: string;
+  reviewer: string;
+  role: Role;
+  note?: string;
+}): Promise<{ ok: boolean; audit_id: string; customer_id: string; revealed_fields: string[] }> {
+  const { customerId, ...body } = input;
+  return j(`/cases/${encodeURIComponent(customerId)}/reveal`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
 }

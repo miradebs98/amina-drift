@@ -20,7 +20,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from backend.api.cases import build_case, list_cases
-from backend.govern import audit, decisions, rbac
+from backend.govern import audit, data_policy, decisions, rbac
 
 app = FastAPI(title="amina-drift API", version="0.1.0")
 
@@ -47,8 +47,13 @@ def cases():
 
 
 @app.get("/cases/{customer_key}")
-def case(customer_key: str, refresh: bool = Query(False)):
-    """Full CustomerCase. `customer_key` = customer_id or filename stem."""
+def case(customer_key: str, refresh: bool = Query(False), role: str = Query("analyst")):
+    """Full CustomerCase. `customer_key` = customer_id or filename stem.
+
+    Data policy: Layer-2 KYC fields (UBO, source of funds/wealth, PEP, tax IDs) are MASKED unless
+    `role` is authorised (MLRO/Compliance/Admin) — secure-by-default. The cached case is always the
+    full object; masking is applied to a copy at response time, so scoring/decisions are unaffected.
+    """
     if refresh:
         _CASE_CACHE.pop(customer_key, None)
     if customer_key not in _CASE_CACHE:
@@ -56,7 +61,7 @@ def case(customer_key: str, refresh: bool = Query(False)):
         if built is None:
             raise HTTPException(status_code=404, detail=f"unknown customer '{customer_key}'")
         _CASE_CACHE[customer_key] = built
-    return _CASE_CACHE[customer_key]
+    return data_policy.apply(_CASE_CACHE[customer_key], role)
 
 
 # ── Governance: HITL decisions + the immutable audit trail ───────────────────
@@ -67,6 +72,12 @@ class Decision(BaseModel):
     note: str = ""
     customer_id: Optional[str] = None # fallback if the alert isn't cached
     severity: Optional[str] = None
+
+
+class RevealRequest(BaseModel):
+    reviewer: str = "analyst"
+    role: str = "analyst"             # must be MLRO/Compliance/Admin to reveal (data_policy)
+    note: str = ""
 
 
 def _find_alert(alert_id: str):
@@ -132,6 +143,29 @@ def get_audit(customer_id: Optional[str] = None, alert_id: Optional[str] = None)
 def verify_audit():
     """Tamper-evidence: recompute the hash chain and report integrity."""
     return audit.verify_chain()
+
+
+@app.post("/cases/{customer_key}/reveal")
+def reveal_internal(customer_key: str, body: RevealRequest):
+    """Reveal restricted Layer-2 KYC fields (RBAC-gated) → writes one immutable audit entry.
+
+    Need-to-know access to masked PII-grade KYC data is itself a logged event: who revealed what,
+    for which customer, when. Only MLRO/Compliance/Admin may reveal; anyone else gets 403.
+    """
+    from backend.api.cases import _load_customer
+    cust = _load_customer(customer_key)
+    if cust is None:
+        raise HTTPException(404, f"unknown customer '{customer_key}'")
+    if not data_policy.can_reveal(body.role):
+        raise HTTPException(403, "revealing restricted Layer-2 KYC data requires an MLRO or Compliance role")
+    fields = data_policy.restricted_field_labels(cust)
+    audit_id = audit.record(
+        action="internal_data_revealed", actor=body.reviewer, role=body.role,
+        customer_id=cust["customer_id"], alert_id=None, policy_version=data_policy.POLICY_VERSION,
+        details={"note": body.note, "revealed_fields": fields,
+                 "customer": cust.get("legal_name")},
+    )
+    return {"ok": True, "audit_id": audit_id, "customer_id": cust["customer_id"], "revealed_fields": fields}
 
 
 @app.get("/cases/{customer_key}/network")

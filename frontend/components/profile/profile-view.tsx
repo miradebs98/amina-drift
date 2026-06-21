@@ -16,8 +16,10 @@ import { DriftLog } from "@/components/governance/drift-log";
 import { AuditTrail } from "@/components/governance/audit-trail";
 import { AskChat } from "@/components/chat/ask-chat";
 import { Card } from "@/components/ui/card";
-import { postDecision } from "@/lib/api";
+import { postDecision, revealInternal } from "@/lib/api";
 import { fmtDate, eventTypeLabel } from "@/lib/format";
+import { maskCustomer, hasRestricted } from "@/lib/policy";
+import { DataProtectionBar } from "@/components/governance/data-protection-bar";
 import { buildTrajectory, type Frame } from "@/lib/trajectory";
 import { AnimatePresence, motion } from "framer-motion";
 import { ExternalLink, Newspaper, History, GitCompareArrows, ScrollText, ChevronDown } from "lucide-react";
@@ -51,6 +53,37 @@ export function ProfileView({ data }: { data: CustomerCase }) {
   // governance / HITL
   const [role, setRole] = useState<Role>("analyst");
   const [dispo, setDispo] = useState<DecisionResult | null>(null);
+
+  // data protection: restricted Layer-2 KYC fields are masked until an authorised role reveals
+  // them — the reveal is written to the immutable audit log (RBAC-gated server-side).
+  const [revealed, setRevealed] = useState(false);
+  const [revealing, setRevealing] = useState(false);
+  const [revealError, setRevealError] = useState<string | null>(null);
+  const viewData = useMemo(
+    () => (revealed ? data : { ...data, customer: maskCustomer(customer) }),
+    [data, customer, revealed],
+  );
+  async function handleReveal() {
+    setRevealing(true);
+    setRevealError(null);
+    try {
+      const r = await revealInternal({ customerId: customer.customer_id, reviewer: "G. Cozzio", role });
+      setRevealed(true);
+      toast.success("Restricted KYC data revealed — written to audit log", {
+        description: `by G. Cozzio (${role}) · entry ${r.audit_id}`,
+      });
+      qc.invalidateQueries({ queryKey: ["audit", customer.customer_id] });
+    } catch (e) {
+      setRevealError(e instanceof Error ? e.message : "Reveal failed");
+    } finally {
+      setRevealing(false);
+    }
+  }
+  function handleHide() {
+    setRevealed(false);
+    setRevealError(null);
+  }
+
   async function handleDispose(action: DecisionAction, note: string) {
     const r = await postDecision({
       alert_id: alert.id,
@@ -130,8 +163,21 @@ export function ProfileView({ data }: { data: CustomerCase }) {
           onDispose={handleDispose}
         />
 
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1fr_340px]">
-          <div className="space-y-5">
+        {hasRestricted(customer) && (
+          <DataProtectionBar
+            customer={customer}
+            role={role}
+            onRoleChange={setRole}
+            revealed={revealed}
+            revealing={revealing}
+            error={revealError}
+            onReveal={handleReveal}
+            onHide={handleHide}
+          />
+        )}
+
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
+          <div className="min-w-0 space-y-5">
             {/* RISK HERO */}
             <Card className="rounded-card border-surface-line p-6 shadow-card">
               <ReplayControls
@@ -139,7 +185,10 @@ export function ProfileView({ data }: { data: CustomerCase }) {
                 idx={replayIdx ?? 0}
                 total={playFrames.length}
                 frame={currentFrame}
-                onToggle={() => setReplayIdx((i) => (i === null ? 0 : null))}
+                onToggle={() => {
+                  setSelected(null); // start/stop a replay fresh — no stale selection lingering
+                  setReplayIdx((i) => (i === null ? 0 : null));
+                }}
                 periodOptions={periodOptions}
                 periodKey={periodKey}
                 onPeriodChange={changePeriod}
@@ -246,30 +295,40 @@ export function ProfileView({ data }: { data: CustomerCase }) {
                 replayT={replayT}
               />
 
-              {selected && (
-                <div className="mt-4 flex items-start gap-3 rounded-md border border-teal/30 bg-teal-wash p-3">
-                  <span className="mt-0.5 rounded bg-white px-1.5 py-0.5 text-[11px] font-semibold text-teal-hover">
-                    {eventTypeLabel(selected.type)}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-sm font-medium text-ink">{selected.summary}</div>
-                    <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-muted">
-                      <span className="tabular">{fmtDate(selected.published_at)}</span>
-                      <span>{selected.source}</span>
-                      {selected.source_url ? (
-                        <a
-                          href={selected.source_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-1 text-teal-hover hover:underline"
-                        >
-                          source <ExternalLink className="size-3" />
-                        </a>
-                      ) : null}
+              <div className="mt-4">
+                <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
+                  Selected signal{" "}
+                  <span className="font-normal normal-case tracking-normal text-ink-muted/70">· click any point on the chart</span>
+                </div>
+                {selected ? (
+                  <div className="flex items-start gap-3 rounded-md border border-teal/30 bg-teal-wash p-3">
+                    <span className="mt-0.5 rounded bg-white px-1.5 py-0.5 text-[11px] font-semibold text-teal-hover">
+                      {eventTypeLabel(selected.type)}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-medium text-ink">{selected.summary}</div>
+                      <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-muted">
+                        <span className="tabular">{fmtDate(selected.published_at)}</span>
+                        <span>{selected.source}</span>
+                        {selected.source_url ? (
+                          <a
+                            href={selected.source_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-teal-hover hover:underline"
+                          >
+                            source <ExternalLink className="size-3" />
+                          </a>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                ) : (
+                  <div className="rounded-md border border-dashed border-surface-line bg-surface-subtle px-3 py-2.5 text-xs text-ink-muted">
+                    Click any point on the chart to inspect the public signal behind it.
+                  </div>
+                )}
+              </div>
             </Card>
 
             {/* TWIN DIFF — perception vs reality (collapsible) */}
@@ -303,7 +362,7 @@ export function ProfileView({ data }: { data: CustomerCase }) {
                     className="overflow-hidden"
                   >
                     <div className="pt-4">
-                      <AssertionDiff data={data} onSelectEvent={setSelected} />
+                      <AssertionDiff data={viewData} onSelectEvent={setSelected} />
                     </div>
                   </motion.div>
                 )}
@@ -374,8 +433,9 @@ export function ProfileView({ data }: { data: CustomerCase }) {
         </div>
       </div>
 
-      {/* floating grounded assistant — always visible */}
-      <AskChat data={data} />
+      {/* floating grounded assistant — always visible. Uses masked data so the chat respects
+          need-to-know: it cannot surface restricted KYC fields until they are revealed. */}
+      <AskChat data={viewData} />
     </AppShell>
   );
 }

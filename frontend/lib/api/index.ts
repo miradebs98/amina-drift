@@ -16,4 +16,5 @@ export const listCases = isLive ? client.listCases : fixtures.listCases;
 export const postDecision = client.postDecision;
 export const getAudit = client.getAudit;
 export const verifyAudit = client.verifyAudit;
+export const revealInternal = client.revealInternal;
 export { ApiError } from "./client";
