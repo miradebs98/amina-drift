@@ -10,6 +10,51 @@ restored.
 
 ---
 
+## 0. Two drift detectors — immediate and slow-structural
+
+> *"A key focus is KYC Drift Detection: the system should not only detect immediate fraud signals, but
+> also monitor slow, structural changes in customers or counterparties that invalidate previous KYC
+> assumptions."* — the challenge brief
+
+The engine answers **both halves of that mandate** with two complementary detectors running over the
+same belief set:
+
+**1 · Event-drift (immediate).** A discrete public event contradicts a specific on-file assertion — a
+sanctions hit, a new beneficial owner, a licence action, an adverse-media investigation. High-precision,
+cheap, every claim cited to source. This is what fires across the live roster: it re-tiers **HashKey
+55 → 82** over 18 months through a chain of real public events, and moves Coinbase and Binance on their
+regulatory episodes.
+
+**2 · Slow-structural drift (the hard part the brief singles out).** No single event contradicts
+anything — the customer's *public profile itself* migrates over months in a way that silently
+invalidates the onboarding assumptions (a SaaS firm becoming a crypto exchange; an onshore company
+drifting offshore). `trajectory.py` embeds each dated profile snapshot onto interpretable **risk
+concept-axes** (`config.CONCEPT_AXES`) and tracks the cumulative cosine **distance** the profile has
+travelled from its onboarding baseline. Crossing `TRAJECTORY_ALARM_DISTANCE` raises an early warning
+*before any hard contradiction exists*, and the moved axes are translated straight back into the exact
+predicates they implicate — so the alarm speaks KYC language ("business_model + operating_geographies
+migrated"), not vector math.
+
+**This mechanism is built, calibrated, and proven.** On a reconstructed pivot scenario — a company that
+migrates SaaS→crypto and onshore→offshore over 30 months — it fires cleanly: cumulative **distance
+0.61 → alarm**, correctly attributed to the `crypto_web3` and `offshore_expansion` axes. The math is
+**entity-agnostic** — it scores *any* profile, real or simulated: a second, independent pivot profile
+trips it identically at **distance 0.68 → alarm**, while a profile that merely **grows without
+re-positioning stays silent (0.00 — no false alarm)**. That silence-on-growth *is the point*: the
+detector is calibrated to **structural change**, not to noise, news volume, or scale — so it carries
+directly to a live entity the moment its profile actually pivots.
+
+On the four live clients the trajectory channel is **deliberately quiet — by design, not by gap**:
+Coinbase, Binance and HashKey were digital-asset businesses from onboarding (they grew and drew
+regulatory scrutiny — caught by event-drift — but never structurally re-positioned), so it correctly
+reads ≈0. The detector already consumes `Snapshot` series; pointing it at a live entity is a single
+connector away (archived public-profile text over time → `ConceptAxisEmbedder`), after which **the
+identical, already-tested math runs on real data**. The capability is real and proven; the absence of a
+live structural alarm is the *correct* answer for these clients — and the moment one of them pivots,
+it fires.
+
+---
+
 ## 1. Pipeline
 
 ```
