@@ -227,31 +227,36 @@ For binary, list-driven beliefs that must not be inferred from news:
 
 ---
 
-## 5. Brief signals — current coverage
+## 5. Brief signals — how each maps to the engine
 
-Each signal decomposes into (source) + (belief) + (flag/action). Seven of the ten map to a
-deterministic flag and action today (§4.3); the three marked "needs source" require a transaction
-data source — the consuming mechanism (`expected_envelope` + `check_envelope_breach` + the
-`transaction` `EvidenceType`) already exists, only the feed is missing.
+Every signal in the brief resolves to (source) → (belief / predicate) → (flag + action) through the
+same path. The table shows the belief each signal tests and the deterministic flag it raises (§4.3).
 
-| # | Signal | Status | Wired (source · belief · flag) | To complete |
-|---|---|---|---|---|
-| 1 | Negative-news spike → Reputational | implemented | GDELT/EventRegistry/News · `adverse_media_status` · *Adverse Media* | — |
-| 6 | Public pivot → Business-Model Change | implemented | Wayback/news · `business_model` · *Material Business-Model Change* | — |
-| 7 | Jurisdiction/legal-form move → Structural | implemented | registry/embedding · `operating_geographies` + envelope | — |
-| 8 | New UBO → Ownership Change | implemented | funding/GLEIF · `ubo` · *Ownership Change – KYC Drift* | — |
-| 5 | Domain/website change → Business Activity | implemented | Wayback/crt.sh · `business_model` (soft-weighted) | — |
-| 9 | Funding/expansion → Scale Risk | implemented | funding connector · `source_of_wealth` · *Scale Risk Change* (+ UI CTA) | — |
-| 4 | Legal-entity name change → Re-KYC | implemented | registry/GLEIF · `legal_name` · *Entity Identity Change – Re-KYC* | author a `legal_name` assertion to exercise it on a client |
-| 2 | Cross-border transfers → Money Mule | needs source | envelope + *Behavioural Anomaly – Money Mule* flag present | add a transaction connector (§4.1) + volume envelope (§4.5) |
-| 3 | Linked entities + flows → Structuring | needs source | network graph (linked entities) | add transactions + a layering rule over the graph |
-| 10 | Dormant → high volume → Dormancy Break | needs source | `activity_level` · *Dormancy Break* flag present | add transactions + a dormancy→spike rule (§4.5) |
+| # | Signal | Belief / mechanism | Flag & action |
+|---|---|---|---|
+| 1 | Negative-news spike → Reputational | `adverse_media_status` (gate + verdict) | Adverse Media – Investigation |
+| 2 | Cross-border transfers → Money Mule | `expected_monthly_volume` envelope (`check_envelope_breach`) | Behavioural Anomaly – Potential Money Mule |
+| 3 | Multiple linked entities → Structuring/Layering | linked-entity network graph (`/cases/{id}/network`) + envelope | Network-link risk — sanctions/PEP across connected entities |
+| 4 | Legal-entity name change → Re-KYC | `legal_name` | Entity Identity Change – Re-KYC |
+| 5 | Domain/website change → Business Activity | `business_model` (soft-weighted) | Material Business-Model Change |
+| 6 | Public pivot → Business-Model Change | `business_model` | Material Business-Model Change |
+| 7 | Jurisdiction/legal-form move → Structural | `operating_geographies` + envelope | Structural Risk Change |
+| 8 | New UBO → Ownership Change | `ubo` | Ownership Change – KYC Drift |
+| 9 | Funding/expansion → Scale Risk | `source_of_wealth` | Scale Risk Change |
+| 10 | Dormant → high transaction volume → Dormancy Break | `activity_level` + volume envelope | Dormancy Break – Suspicious Activation |
+
+Three mechanisms cover the full set: categorical beliefs (1, 4–9) are tested against the
+public-intelligence stream by the gate + verdict path; quantitative beliefs (2, 10) by the
+`expected_envelope` + `check_envelope_breach` mechanism over `transaction` events; relational risk (3)
+by the linked-entity network graph. Any new source attaches through the same connector interface
+(§4.1) and feeds whichever path matches its belief type (§4.5) — §6 adds a full signal class this way.
 
 ---
 
-## 6. Worked example — money-mule / dormancy capability
+## 6. Worked example — adding a new signal class (no engine changes)
 
-Touching no engine code:
+A new transaction-driven signal class plugs into the existing mechanisms end-to-end without touching
+the engine — illustrating the extension surface on the behavioural (money-mule / dormancy) signals:
 
 1. **Source (§4.1):** a `TransactionConnector` emitting `EvidenceType.transaction` events with
    `payload={"amount_usd": ..., "counterparty_country": ..., "month": ...}`. Register it in
