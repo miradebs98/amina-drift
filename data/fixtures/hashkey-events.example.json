@@ -1,6 +1,6 @@
 {
   "_comment": "FROZEN SNAPSHOT of LIVE signals for HashKey Group (real, public). Lets the offline demo replay a real startup deterministically.",
-  "_role": "The LIVE-SOURCES-ON-A-REAL-STARTUP case. All REAL & cited (funding/news/wayback/gleif/sanctions). PEP hit on 'Xiao Feng' is NAME-ONLY \u2192 needs human verification (likely a different person).",
+  "_role": "The LIVE-SOURCES-ON-A-REAL-STARTUP case. All REAL & cited (funding/news/wayback/gleif/sanctions). PEP hit on 'Xiao Feng' is NAME-ONLY → needs human verification (likely a different person).",
   "_note": "Captured 2026-06-20 via `OFFLINE_DEMO=false runner hashkey-group --live`. Re-run --live to refresh.",
   "events": [
     {
@@ -9,14 +9,14 @@
       "customer_id": "hashkey-group",
       "resolution_confidence": 0.75,
       "type": "funding",
-      "summary": "HashKey reaches \u2018unicorn\u2019 valuation after raising US$100 million - South China Morning Post",
+      "summary": "HashKey reaches ‘unicorn’ valuation after raising US$100 million - South China Morning Post",
       "payload": {
         "amount": "$100 m",
         "round": null,
         "lead_investor": null,
-        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+        "implication": "Funding/scale event → reassess transaction-monitoring thresholds."
       },
-      "source": "Funding intel \u00b7 Google News",
+      "source": "Funding intel · Google News",
       "source_url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxQMGQ4R3ZOdDYtdHRud3dsQTM2T1h1YkJOODlKOXg5QmhGYllTcGtzSlhrZzJmczF0ZjB2RlNoZkxmS1VULXhSb2ptR3JuS1gyclFtdWdLbUFsYUxCSE01YmhtM0hMQU5BVGFtWkR6RjFXQWFyc3BJeVE0R1ZHalExdlFTMlFjeHg1WjkzQTQ4LVV4eE1aTlh0RFRVMVJGeGdEUUZHLUxFVzlGXzBpTER1cFVPa1JPVUx0RTV1V2Etel8wYWlWTDdyN2Mxbkg1cjhGRTZBQUZibldQd9IB2gFBVV95cUxObXRwY2xfZ0Zyc3cxZG1VOFI1ekVhM0lXOHJJWVlqaE84R1AzbjNRd0Rfd2JBbVl1ZmlXN19oSXNhQ0NqZ01UbzdzYXlVaUtVU1BQcGxKajVJakJaTV9yZnlSVmhqUnpRdVkyLU1LRW52NHM0MzhRSVg5LXAtZG8yMWU2SG5jM1FUak83LUNSekxFZ19PTlJudnpQMFpYUEU4a01rcmFRcHBqd3hzNjAwbVNEeEo1Um9lTFpPR1JwNjhRZ2tCQU9qTnJ0S1Y1dHF3WGx0U3BjSlh0UQ?oc=5",
       "published_at": "2024-01-16T00:00:00Z",
       "confidence": 0.65,
@@ -28,7 +28,7 @@
       "customer_id": "hashkey-group",
       "resolution_confidence": 0.9,
       "type": "website_change",
-      "summary": "HashKey Group homepage content changed (snapshot 20240301)",
+      "summary": "HashKey Group homepage changed (Wayback capture 20240301) — content differs from the prior snapshot; cited for analyst business-model review",
       "payload": {
         "digest": "VXF6XA5QX7GX6XNCISGV6Q2MITTBEY7T",
         "snapshot_ts": "20240301041634",
@@ -46,7 +46,7 @@
       "customer_id": "hashkey-group",
       "resolution_confidence": 0.9,
       "type": "website_change",
-      "summary": "HashKey Group homepage content changed (snapshot 20240530)",
+      "summary": "HashKey Group homepage changed (Wayback capture 20240530) — content differs from the prior snapshot; cited for analyst business-model review",
       "payload": {
         "digest": "3JNSDSXDJVIGDLYRS7MA22JTUSPKB3GW",
         "snapshot_ts": "20240530142655",
@@ -64,7 +64,7 @@
       "customer_id": "hashkey-group",
       "resolution_confidence": 0.9,
       "type": "website_change",
-      "summary": "HashKey Group homepage content changed (snapshot 20240908)",
+      "summary": "HashKey Group homepage changed (Wayback capture 20240908) — content differs from the prior snapshot; cited for analyst business-model review",
       "payload": {
         "digest": "KNHSFCBWUZHGJBIPQZOQIJJAO5LDBCYY",
         "snapshot_ts": "20240908235632",
@@ -82,7 +82,7 @@
       "customer_id": "hashkey-group",
       "resolution_confidence": 0.9,
       "type": "website_change",
-      "summary": "HashKey Group homepage content changed (snapshot 20241212)",
+      "summary": "HashKey Group homepage changed (Wayback capture 20241212) — content differs from the prior snapshot; cited for analyst business-model review",
       "payload": {
         "digest": "4P7CYM6M2TJULFDZE22ZCACLKJNZPRUK",
         "snapshot_ts": "20241212165028",
@@ -105,9 +105,9 @@
         "amount": "$30M",
         "round": null,
         "lead_investor": null,
-        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+        "implication": "Funding/scale event → reassess transaction-monitoring thresholds."
       },
-      "source": "Funding intel \u00b7 Google News",
+      "source": "Funding intel · Google News",
       "source_url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNMEFKUkU5UHJ1LW5XYXRfbnNZeXBpWGs4Z3JBeUZxWmlFTnZFMFBiejFGckU4SEk1UGdpeDhaakVpVHA0M1o1QnhkLWNENkxia0FaQkFZcnFqYW1tY1dMYnZhVTRJWEJBaU43LVNjSDZaSFZsWnpZNmljUHFIQlBZVGhiMHRVUQ?oc=5",
       "published_at": "2025-02-14T00:00:00Z",
       "confidence": 0.65,
@@ -124,9 +124,9 @@
         "amount": "$30m",
         "round": null,
         "lead_investor": null,
-        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+        "implication": "Funding/scale event → reassess transaction-monitoring thresholds."
       },
-      "source": "Funding intel \u00b7 Google News",
+      "source": "Funding intel · Google News",
       "source_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPVUVTbWFpMnhieHQ1eXFmVlBLVkVOX2ozaVV1bXMyWklRMTRCYndfcWhYRGhvbzViU1JtanJ3SWVJeHZzYmM2NWRYVjcwQ1B0UGdqRUNRQlo3Zk9iOUQxTTFpT1dZV3JiV25peTV6VkRjM2ZIYnZRVzhENExBRl9JZEd2alRNZG5j?oc=5",
       "published_at": "2025-02-15T00:00:00Z",
       "confidence": 0.65,
@@ -138,7 +138,7 @@
       "customer_id": "hashkey-group",
       "resolution_confidence": 0.9,
       "type": "website_change",
-      "summary": "HashKey Group homepage content changed (snapshot 20250318)",
+      "summary": "HashKey Group homepage changed (Wayback capture 20250318) — content differs from the prior snapshot; cited for analyst business-model review",
       "payload": {
         "digest": "2T4ZOKWEJJU2K36YZW6K6TUEKVP7LC5F",
         "snapshot_ts": "20250318142514",
@@ -161,9 +161,9 @@
         "amount": "$100m",
         "round": "Series A",
         "lead_investor": null,
-        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+        "implication": "Funding/scale event → reassess transaction-monitoring thresholds."
       },
-      "source": "Funding intel \u00b7 Google News",
+      "source": "Funding intel · Google News",
       "source_url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxOcEsxWnY2ZmZEUjJnUlc1RndELTh3X2tXZ0tBcEMxdDVDSDZQc0JFeWFoV3pJcnYwaUNReUk5dHFieDZuRlk1WF9wdXlWWF9aSzhldW1JSVY4X3lreW9ETEhxUThKWmlCWWQ3d2JnT0ozS283dlBmNHdrZnkwWXpqRmNPVWZFUW81ZV8wenRCOU5VYTJGUzBMWWpVMzYxc1d0bXhHbnBlOTdFS21RRklIajMxRlFWNEpwREJxLWF5eXJydzhrcEhYbk5jZlVvSjFaeHJLbA?oc=5",
       "published_at": "2025-03-27T00:00:00Z",
       "confidence": 0.65,
@@ -175,7 +175,7 @@
       "customer_id": "hashkey-group",
       "resolution_confidence": 0.9,
       "type": "website_change",
-      "summary": "HashKey Group homepage content changed (snapshot 20250627)",
+      "summary": "HashKey Group homepage changed (Wayback capture 20250627) — content differs from the prior snapshot; cited for analyst business-model review",
       "payload": {
         "digest": "N4KONQKF43LLHZUMVNPTI5MJJSATNIW4",
         "snapshot_ts": "20250627032739",
@@ -193,7 +193,7 @@
       "customer_id": "hashkey-group",
       "resolution_confidence": 0.9,
       "type": "website_change",
-      "summary": "HashKey Group homepage content changed (snapshot 20251007)",
+      "summary": "HashKey Group homepage changed (Wayback capture 20251007) — content differs from the prior snapshot; cited for analyst business-model review",
       "payload": {
         "digest": "5OPLORWEQ5YKDI5HD6LW5SBDYNTG7DJM",
         "snapshot_ts": "20251007063557",
@@ -215,7 +215,7 @@
       "payload": {
         "publisher": "Bloomberg.com"
       },
-      "source": "Google News \u00b7 Bloomberg.com",
+      "source": "Google News · Bloomberg.com",
       "source_url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQTUxSaUtXTkZFaFJGLTZmZnJ2UW14RTRvTk1uWTV3bW9FT1dnV3BFdlYzV1NkaGFZaHNwSTBjaE1uSm5SQUFkbE9uR0pnNUJkd3dzSjR0dW5XZk5tbHRKSnFGWXpzYVh3RUlOVlNHQmNDNkh4UTc2TWJMZlV0YTN2OUNsYjF5TDNFVE50cDFoWXFqbHRkbnQtVGE1Y0huQjJpT09yMTAxbGFiYmk5bHk4OWhPUmhvQQ?oc=5",
       "published_at": "2025-10-09T00:00:00Z",
       "confidence": 0.6,
@@ -232,9 +232,9 @@
         "amount": "$207 m",
         "round": null,
         "lead_investor": null,
-        "implication": "Funding/scale event \u2192 reassess transaction-monitoring thresholds."
+        "implication": "Funding/scale event → reassess transaction-monitoring thresholds."
       },
-      "source": "Funding intel \u00b7 Google News",
+      "source": "Funding intel · Google News",
       "source_url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNd01wSml4TWlpM0toVEgtRU4wdVhpSUoyTm9RTkRjd3BHdFY1Wnl1Y2N0RDMycDdWNjNBTlhUM3pwWU5QTFlhRnFON0Zyb1oxR29CREFrdkZxQnE3Sk8yT3RjZ3poRndMbkstWFdjWE5NZHduNS1YS0hkMFhWWnNQVnJtalN2WGtmaGhjNlp2MmNnb1NqWEhyTk9mejJZeEtSaUgyZHZsSm1wejFpYU1sUFZZNXVRUQ?oc=5",
       "published_at": "2025-12-16T00:00:00Z",
       "confidence": 0.65,
@@ -250,7 +250,7 @@
       "payload": {
         "publisher": "Fortune"
       },
-      "source": "Google News \u00b7 Fortune",
+      "source": "Google News · Fortune",
       "source_url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNcUg0UHNCUVlDUDlDZ1F1VEVMaTlWRlIxVjE5eVU5Y3NlVEU0b2VQdW9wMXRRUkhXQ2FyV095d3VROF9TTzNXalNRZjBkM25wY0U0c05fOVZWcVZUTFZZbUpYUVJlb09LcXpWRVdqcmdLdVRCYVA0ODJ4a0tuNEhxdGNVWDI?oc=5",
       "published_at": "2025-12-16T00:00:00Z",
       "confidence": 0.6,
@@ -266,7 +266,7 @@
       "payload": {
         "publisher": "CNBC"
       },
-      "source": "Google News \u00b7 CNBC",
+      "source": "Google News · CNBC",
       "source_url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPTjV3OERnVkFVVjJEd1UzNi1rOTRWbERCOE5mV0MwRFUwUEpibmtMY0Q2SW4yVUlLclBmTm1CUnVwODRfYjU1UkN3djZ2Y3NRLXJudWh6VmE4UWtmcnBPTEg3RERvZ3dvS0xJWmhHc0JENTZEUUhHMEg4XzVpWHJzWFBjbWd4M295MW91RWFLVFdZMFZZOGhMRU9jY0VuVlNjT0EtalBjSmpzdzd1OXdWQlRSQ051WjFCb0JXMdIBwgFBVV95cUxOZnpHbGNKdS1QOUxFbl9TeWQ1djI5SlRoN2xfUDBsTi1ZT2gteFA1azdJVGE3N216RU04WU5SZExGSU82dEFIYUc2Y3ZiMzR1aUt1dzdPcWpjLTBXekdLcU1GeXJwQkFyZWp6VzR6NENubndZYWxsNEdrSkNfYThDTFc4UVp1eHdGNnBPdUFOVFFqUlRuV2JWbGlHREZGbzN4dTFZTUhGclI5VkVaOVQ3eGQ5em5UT2JLQ2k5ZVdyWjd2dw?oc=5",
       "published_at": "2025-12-16T00:00:00Z",
       "confidence": 0.6,
@@ -282,7 +282,7 @@
       "payload": {
         "publisher": "Reuters"
       },
-      "source": "Google News \u00b7 Reuters",
+      "source": "Google News · Reuters",
       "source_url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNd01wSml4TWlpM0toVEgtRU4wdVhpSUoyTm9RTkRjd3BHdFY1Wnl1Y2N0RDMycDdWNjNBTlhUM3pwWU5QTFlhRnFON0Zyb1oxR29CREFrdkZxQnE3Sk8yT3RjZ3poRndMbkstWFdjWE5NZHduNS1YS0hkMFhWWnNQVnJtalN2WGtmaGhjNlp2MmNnb1NqWEhyTk9mejJZeEtSaUgyZHZsSm1wejFpYU1sUFZZNXVRUQ?oc=5",
       "published_at": "2025-12-16T00:00:00Z",
       "confidence": 0.6,
@@ -294,7 +294,7 @@
       "customer_id": "hashkey-group",
       "resolution_confidence": 0.9,
       "type": "website_change",
-      "summary": "HashKey Group homepage content changed (snapshot 20251222)",
+      "summary": "HashKey Group homepage changed (Wayback capture 20251222) — content differs from the prior snapshot; cited for analyst business-model review",
       "payload": {
         "digest": "WQ3DSBZIMNBUFQHLMC7HS2ZAJPWSQRU3",
         "snapshot_ts": "20251222002752",
@@ -316,7 +316,7 @@
       "payload": {
         "publisher": "PR Newswire"
       },
-      "source": "Google News \u00b7 PR Newswire",
+      "source": "Google News · PR Newswire",
       "source_url": "https://news.google.com/rss/articles/CBMi-gFBVV95cUxQOFNZdkZFYnRQNU9sTVp5d1dRT1RZcUxaalg2MVdwT1RzNHozYndBSU1aRGVJVUhoVHlRcXlxb0tuUkxwUFhJTkVPR3NiT21mMWh6X2ZhVUxKa1hwNHc1eDcwUkNTSFNJZXRBZVVncEpFYmZLbEF1ZVBmZlVfWW9maE5YMG44U092X3dEc0pZS1FJY0tkSnBqZzZ2cmtyLTJPc1hKbnpYc19FSFpSOFdrUFpCM0xJQW9iLUR1VGY1QXpvS25LY2ZfSXNXZ1p5d2xleXpKVGZ1T2VCYWE4bjVxaU14WkVWVDNkeXBTbWlzbTg0eV9leUVzc2ZB?oc=5",
       "published_at": "2025-12-24T00:00:00Z",
       "confidence": 0.6,
@@ -384,7 +384,7 @@
       "customer_id": "hashkey-group",
       "resolution_confidence": 0.7,
       "type": "registry_change",
-      "summary": "GLEIF LEI record: HashKey Digital Asset Group Limited \u2014 jurisdiction HK, status ACTIVE",
+      "summary": "GLEIF LEI record: HashKey Digital Asset Group Limited — jurisdiction HK, status ACTIVE",
       "payload": {
         "lei": "984500D5M8HD6E9B6E38",
         "jurisdiction": "HK",
@@ -406,7 +406,7 @@
       "payload": {
         "publisher": "Investing.com"
       },
-      "source": "Google News \u00b7 Investing.com",
+      "source": "Google News · Investing.com",
       "source_url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOeXdmSnFRNEFFSU40NGs5S0tnTkNfd3FHUkFTTnhvOXRMcXduQ2M0cmdHZU5zU21Zd2ZGUmNMZVFLQndYdHQtblpFazVxOEVJMXFYcl9GMVRFaDhiOGlWYzF2d1otOVhHLWNWMTduQmk0a3ZSaEpDaUUycF9NMGFFTlBHN1BYWGtKQ1pLeUwwOEhDMlRscXFnem4xUV9icnhXNW14d3RjbjRrSjZjblpZWEJhcGZlQnFh?oc=5",
       "published_at": "2026-04-22T00:00:00Z",
       "confidence": 0.6,
@@ -422,7 +422,7 @@
       "payload": {
         "publisher": "CoinDesk"
       },
-      "source": "Google News \u00b7 CoinDesk",
+      "source": "Google News · CoinDesk",
       "source_url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNLTJQeVNwM0Z3b0R5YmNTX2VFd21yeEJOWUtWaS11T0kzUkZOMzlUUHQ5TnYtLWNnajBMWE16V3NCb3djNnVFM3RBdHFUbzhYZ1RoTm0zOWthcVhWNXV1VlJIRFJuMUc3ekFWNHktZmo1WVBsQVotVnhxSnJoNkVod0RySTJicmFpei1vRVFQN05qVTV5VVlfblNyT0RwXzFJbzhEVlk3b1lHcUZaVElXZEZ4MkcwM2xOZFN1Y2pVSTdvb1k?oc=5",
       "published_at": "2026-05-14T00:00:00Z",
       "confidence": 0.6,
@@ -438,7 +438,7 @@
       "payload": {
         "publisher": "Pulse 2.0"
       },
-      "source": "Google News \u00b7 Pulse 2.0",
+      "source": "Google News · Pulse 2.0",
       "source_url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNb25xMjZyQjQydVotVlU2dEoyaFYyNzlSUE9hQ2lHMFpYYTZkMWR4VHB2RlpOQmRjT1haeXItdFhTMkVudk5XNkk2U2JOTDhzMURONHpINzQ1Q3ZZNEtOVVNjZ19HWXVfdGpnNFF2Z1dxdUotcHlqTTFITEJoTGNEVElsU1YxNUlMMTZ6eEx0Y0JjWExDVHRzYU04WDlWY1BvX2ZacVBrenVMdU9mZHRTMmI2cDAzZmxFOW1aby1NbURLWUJBNGfSAcsBQVVfeXFMTk1URzVHWkpOTGs0ZGhuYWxjbGNld29HZVQyNFR4TzhBM2VTMmN6b1ZLZEhUb1FONlUycGtsMW14M2gteUJhVHVCemlRZXRaSXlhYjRVbE9tUUNzYzZDUHIyTHNSalhZUVhRUnJSOUQ4SUloWnJ1UUdabGJPeEF1YVhFaUp1UG1HUlU3Y1l5WE4tNXN0RGJrY05kc2lWVGR2c3JpYWYwVndFSDhLMk5iM1hCRnR1UUd6MUJubXFRd0VpUDlkc1R3WkVGTG8?oc=5",
       "published_at": "2026-05-21T00:00:00Z",
       "confidence": 0.6,
@@ -450,11 +450,11 @@
       "customer_id": "hashkey-group",
       "resolution_confidence": 0.75,
       "type": "news",
-      "summary": "HashKey Group Joins HKMA\u2019s Tokenized Bond Expert Panel - \u6df1\u6f6eTechFlow",
+      "summary": "HashKey Group Joins HKMA’s Tokenized Bond Expert Panel - 深潮TechFlow",
       "payload": {
-        "publisher": "\u6df1\u6f6eTechFlow"
+        "publisher": "深潮TechFlow"
       },
-      "source": "Google News \u00b7 \u6df1\u6f6eTechFlow",
+      "source": "Google News · 深潮TechFlow",
       "source_url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5fNlZoSVJBYVhHQjFLejczUllNdHlLejlKak1NVlBkWHJzb1FLZFU5RmVaTEF2dVAwRmxPQ1ZrT3FqR1cyMXBwM0JhX05nZk45cG52cDZNSTI2cjl4?oc=5",
       "published_at": "2026-06-05T00:00:00Z",
       "confidence": 0.6,
@@ -478,7 +478,7 @@
         ],
         "publisher": "crypto.news"
       },
-      "source": "Event Registry \u00b7 crypto.news",
+      "source": "Event Registry · crypto.news",
       "source_url": "https://crypto.news/hashkey-stock-jumps-10-after-hk100m-share-buyback-approval/",
       "published_at": "2026-06-12T00:00:00Z",
       "confidence": 0.6,
@@ -502,7 +502,7 @@
         ],
         "publisher": "Investing.com"
       },
-      "source": "Event Registry \u00b7 Investing.com",
+      "source": "Event Registry · Investing.com",
       "source_url": "https://www.investing.com/news/company-news/hashkey-holdings-approves-share-buyback-of-up-to-hk100-million-93CH-4738796",
       "published_at": "2026-06-12T00:00:00Z",
       "confidence": 0.6,
@@ -518,7 +518,7 @@
       "payload": {
         "publisher": "TradingView"
       },
-      "source": "Google News \u00b7 TradingView",
+      "source": "Google News · TradingView",
       "source_url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPTzRGdnlmQXJNdGNVcEJYbncwckJkYXZBazc1QncyakVoeWVYTjgxQmotd3hYLVVZczJkRlo3SXFtT3JnbFJBampDMDZzUWlzMFUwV015cDI0akFka0pWRlhCTFcySzdqcTdlTWNjNy1PVXdDeUtzcXpHZ3JTOHI5OG53ZGFqaWlaOU4wUlY1QlJUUmpCNHJCWi1xd2I0VUZULTB6LXNYMzM0UWQ0Yk80dFJWRDRVeUE?oc=5",
       "published_at": "2026-06-16T00:00:00Z",
       "confidence": 0.6,
@@ -534,7 +534,7 @@
       "payload": {
         "publisher": "Cryptonews.net"
       },
-      "source": "Google News \u00b7 Cryptonews.net",
+      "source": "Google News · Cryptonews.net",
       "source_url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5MZ204Q2k2Qnp2dzBobU05N3YybW15QnBURmhadHVFS2ZKSERPNGFoci03a0xwMGhPcXdhN3hnSVh6RFlHb3pIWEZ2bUtyQjRlU0wteg?oc=5",
       "published_at": "2026-06-16T00:00:00Z",
       "confidence": 0.6,
