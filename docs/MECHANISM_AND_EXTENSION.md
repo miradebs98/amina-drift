@@ -172,6 +172,28 @@ stage's contract.
 - **Tests:** `eval/gate/` (relevance recall), `eval/stage2/` (verdict precision), and an offline
   regression suite (`backend/drift/test_calibration.py`).
 
+### Real-time operation — scheduled monitoring (`backend/monitor.py`)
+The demo replays a frozen timeline; production runs the **identical per-client pipeline on the wall
+clock**. An external scheduler (cron, a cloud scheduler, or a Kubernetes CronJob) ticks
+`python -m backend.monitor` on a fixed beat; each **sweep** re-checks only the clients that are **due**
+under `config.MONITORING` — a global default (24h) plus a per-risk-band override (**HIGH 6h · MEDIUM
+24h · LOW weekly**). AMINA retunes the cadence at runtime (env overrides, or a `/monitoring` endpoint)
+**with no redeploy**, and a client is never polled more often than its risk warrants — which is also
+the primary cost lever (cadence × clients × the cheap-first cascade).
+
+Each due client runs `collect()` (Layer-1 connectors) → `replay()`; a flag is raised only when the
+score **rises versus the previous poll**, and the alert enters the same governance path (HITL +
+hash-chained audit). The sweep is **idempotent** — connectors cache, the stream is de-duplicated by
+event id, and Stage-2 verdicts are memoised per `(assertion, event)` — so re-polling spends tokens
+only on genuinely **new** evidence. Per-client cursors (`last_checked`, `last_score`) persist in
+`data/monitor_state.json`.
+
+```
+python -m backend.monitor              # one sweep over due clients (cron-friendly)
+python -m backend.monitor --all        # ignore cadence, sweep everyone now
+python -m backend.monitor --loop --tick 3600   # self-contained scheduler (no external cron)
+```
+
 ---
 
 ## 4. Extension procedures

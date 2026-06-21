@@ -85,6 +85,18 @@ CRITICAL_DESIGNATION = ("sanctions_status",)   # authoritative-only beliefs that
 CRIT_DESIGNATION_MIN = 0.7          # min invalidation for the critical channel to fire (a real hit)
 TIER_BANDS = [("LOW", 0), ("MEDIUM", 34), ("HIGH", 67)]   # 0–100 bands — a LABEL/cadence only, NOT a trigger
 
+# --- Monitoring cadence (production) — how often each client's public profile is re-checked. ----
+# AMINA-tunable: a global default plus a per-risk-band override (higher risk → re-checked more often).
+# An external scheduler (cron / cloud scheduler / k8s CronJob) ticks `python -m backend.monitor`;
+# the sweep itself decides which clients are DUE from these intervals, so cadence is pure config —
+# AMINA can change it at runtime (env override or the /monitoring API) with no redeploy.
+MONITORING = {
+    "enabled": True,
+    "default_interval_hours": 24,                            # baseline: re-check once per day
+    "by_band_hours": {"HIGH": 6, "MEDIUM": 24, "LOW": 168},  # risk-based: HIGH every 6h … LOW weekly
+    "alert_on_score_increase": 2,                            # notify when score rises ≥ this since last poll
+}
+
 # --- Flagging: a flag needs both enough surprise AND enough risk movement -----------------------
 SURPRISE_FLAG_THRESHOLD = 0.30      # below this = case (a): score drifts gently, visualize only
 RISK_DELTA_FLAG_POINTS = 6          # min risk_score jump (points) to raise a flag

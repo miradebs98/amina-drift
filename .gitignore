@@ -34,3 +34,6 @@ build/
 
 # transient live connector caches
 data/fixtures/*.cache.json
+
+# monitor runtime cursor (per-deployment state)
+data/monitor_state.json
