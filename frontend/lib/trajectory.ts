@@ -1,4 +1,4 @@
-import type { Customer, EvidenceEvent, DriftAlert } from "./types";
+import type { Customer, EvidenceEvent, DriftAlert, TimelinePoint } from "./types";
 import { toEpoch } from "./format";
 
 // how hard each signal type pushes the score (drives spike size)
@@ -39,7 +39,42 @@ export type Frame = { t: number; score: number; event?: EvidenceEvent; label: st
  *  - points: dense series for the line chart (with shoulders + event nodes)
  *  - frames: key-frames for the time-compressed replay (onboarding → each event → today)
  */
-export function buildTrajectory(customer: Customer, events: EvidenceEvent[], alert: DriftAlert) {
+export function buildTrajectory(
+  customer: Customer,
+  events: EvidenceEvent[],
+  alert: DriftAlert,
+  timeline?: TimelinePoint[],
+) {
+  // PREFERRED: the engine's OWN arc (onboarding → final, including any fall-back from resolving events,
+  // e.g. Coinbase 60→82→67). Each tick is real; events attach to their tick by day.
+  if (timeline && timeline.length >= 2) {
+    const day = (s: string) => Math.floor(toEpoch(s) / 864e5);
+    const evByDay = new Map<number, EvidenceEvent[]>();
+    for (const e of events) {
+      const d = day(e.published_at);
+      (evByDay.get(d) ?? evByDay.set(d, []).get(d)!).push(e);
+    }
+    const startT = toEpoch(timeline[0].as_of);
+    const endT = toEpoch(timeline[timeline.length - 1].as_of);
+    const tOld = timeline[0].risk_score;
+    const tNow = timeline[timeline.length - 1].risk_score;
+    const points: TrajPoint[] = [];
+    const frames: Frame[] = [];
+    timeline.forEach((tp, i) => {
+      const t = toEpoch(tp.as_of);
+      const ev0 = (evByDay.get(day(tp.as_of)) ?? [])[0];
+      const isEnd = i === 0 || i === timeline.length - 1;
+      points.push({ t, estimate: tp.risk_score, eventId: ev0?.id, kind: isEnd ? "endpoint" : "event" });
+      frames.push({
+        t,
+        score: tp.risk_score,
+        event: ev0,
+        label: i === 0 ? "Onboarding" : ev0 ? ev0.summary : i === timeline.length - 1 ? "Today" : "Re-assessed",
+      });
+    });
+    return { points, frames, old: tOld, now: tNow, startT, endT };
+  }
+
   const old = alert.old_risk_score ?? customer.risk_model.onboarding_score;
   const now = alert.new_risk_score ?? old;
   const startT = toEpoch(customer.onboarded_as_of);

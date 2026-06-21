@@ -1,7 +1,4 @@
 {
-  "_comment": "STARTER EXAMPLE \u2014 Mira's lane. Public SIGNALS for Coinbase. Mira builds connectors on top of this.",
-  "_role": "The PUBLIC-SOURCE BREADTH case: every event is a REAL, citable public signal (SEC, NASDAQ, regulators, news).",
-  "_note": "Source TYPES are real; exact filing/press IDs marked VERIFY. Cache fetched payloads into data/fixtures/ for the offline demo.",
   "events": [
     {
       "id": "CB-EV1",
@@ -19,7 +16,27 @@
       "source_url": "https://www.nasdaq.com/market-activity/stocks/coin",
       "published_at": "2021-04-14T00:00:00Z",
       "confidence": 1.0,
+      "raw_ref": null,
       "dimension": "identity_ownership"
+    },
+    {
+      "id": "CB-EV4",
+      "entity_ref": "Coinbase Global, Inc.",
+      "customer_id": "coinbase-global",
+      "resolution_confidence": 1.0,
+      "type": "news",
+      "summary": "SEC sues Coinbase for operating as an unregistered securities exchange \u2014 material litigation",
+      "payload": {
+        "authority": "US SEC",
+        "action": "civil enforcement",
+        "status": "filed"
+      },
+      "source": "US SEC (press release 2023-102)",
+      "source_url": "https://www.sec.gov/newsroom/press-releases/2023-102",
+      "published_at": "2023-06-06T00:00:00Z",
+      "confidence": 0.95,
+      "raw_ref": "VERIFY exact press-release number",
+      "dimension": "network_risk"
     },
     {
       "id": "CB-EV2",
@@ -55,45 +72,27 @@
       "source_url": "https://www.base.org/",
       "published_at": "2023-08-09T00:00:00Z",
       "confidence": 0.9,
+      "raw_ref": null,
       "dimension": "network_risk"
     },
     {
-      "id": "CB-EV4",
+      "id": "CB-EV7",
       "entity_ref": "Coinbase Global, Inc.",
       "customer_id": "coinbase-global",
       "resolution_confidence": 1.0,
       "type": "news",
-      "summary": "SEC sues Coinbase for operating as an unregistered securities exchange \u2014 material litigation",
+      "summary": "SEC dismisses its case against Coinbase \u2014 litigation overhang resolved",
       "payload": {
         "authority": "US SEC",
-        "action": "civil enforcement",
-        "status": "filed"
+        "action": "dismissal",
+        "status": "resolved"
       },
-      "source": "US SEC (press release 2023-102)",
-      "source_url": "https://www.sec.gov/newsroom/press-releases/2023-102",
-      "published_at": "2023-06-06T00:00:00Z",
-      "confidence": 0.95,
-      "raw_ref": "VERIFY exact press-release number",
+      "source": "US SEC / court docket / press",
+      "source_url": "https://www.sec.gov/litigation",
+      "published_at": "2025-02-27T00:00:00Z",
+      "confidence": 0.9,
+      "raw_ref": "VERIFY exact dismissal date \u2014 this is the 'what_would_flip' resolution",
       "dimension": "network_risk"
-    },
-    {
-      "id": "CB-EV5",
-      "entity_ref": "Coinbase",
-      "customer_id": "coinbase-global",
-      "resolution_confidence": 0.96,
-      "type": "registry_change",
-      "summary": "Coinbase secures MiCA licence (EU CASP) via Luxembourg hub \u2014 pan-EU passporting",
-      "payload": {
-        "regime": "MiCA",
-        "hub": "LU",
-        "status": "authorised CASP"
-      },
-      "source": "EU / national regulator",
-      "source_url": "https://www.esma.europa.eu/",
-      "published_at": "2025-06-20T00:00:00Z",
-      "confidence": 0.8,
-      "raw_ref": "VERIFY exact date + authorising NCA",
-      "dimension": "identity_ownership"
     },
     {
       "id": "CB-EV6",
@@ -115,23 +114,23 @@
       "dimension": "network_risk"
     },
     {
-      "id": "CB-EV7",
-      "entity_ref": "Coinbase Global, Inc.",
+      "id": "CB-EV5",
+      "entity_ref": "Coinbase",
       "customer_id": "coinbase-global",
-      "resolution_confidence": 1.0,
-      "type": "news",
-      "summary": "SEC dismisses its case against Coinbase \u2014 litigation overhang resolved",
+      "resolution_confidence": 0.96,
+      "type": "registry_change",
+      "summary": "Coinbase secures MiCA licence (EU CASP) via Luxembourg hub \u2014 pan-EU passporting",
       "payload": {
-        "authority": "US SEC",
-        "action": "dismissal",
-        "status": "resolved"
+        "regime": "MiCA",
+        "hub": "LU",
+        "status": "authorised CASP"
       },
-      "source": "US SEC / court docket / press",
-      "source_url": "https://www.sec.gov/litigation",
-      "published_at": "2025-02-27T00:00:00Z",
-      "confidence": 0.9,
-      "raw_ref": "VERIFY exact dismissal date \u2014 this is the 'what_would_flip' resolution",
-      "dimension": "network_risk"
+      "source": "EU / national regulator",
+      "source_url": "https://www.esma.europa.eu/",
+      "published_at": "2025-06-20T00:00:00Z",
+      "confidence": 0.8,
+      "raw_ref": "VERIFY exact date + authorising NCA",
+      "dimension": "identity_ownership"
     }
   ]
 }

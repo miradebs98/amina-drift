@@ -1,0 +1,35 @@
+{
+  "customer_id": "geberit",
+  "nodes": [
+    {
+      "id": "geberit-ag",
+      "label": "Geberit AG",
+      "type": "customer",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    },
+    {
+      "id": "widely-held-public-company-six-gebn-no-controlling-share",
+      "label": "Widely held public company (SIX: GEBN); no controlling share",
+      "type": "person",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    }
+  ],
+  "edges": [
+    {
+      "source": "geberit-ag",
+      "target": "widely-held-public-company-six-gebn-no-controlling-share",
+      "relation": "founder",
+      "source_url": null
+    }
+  ],
+  "network_risk": {
+    "connected_entities": 1,
+    "flagged_nodes": [],
+    "elevated": false,
+    "summary": "1 connected entities; no screening hits."
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "dimensions_drifted": [],
+  "breadth": 0,
+  "assertion_drift": [],
+  "timeline": [
+    {
+      "as_of": "2022-01-01",
+      "risk_score": 22,
+      "tier": "LOW",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2023-03-08",
+      "risk_score": 22,
+      "tier": "LOW",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2023-09-12",
+      "risk_score": 22,
+      "tier": "LOW",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2024-03-06",
+      "risk_score": 22,
+      "tier": "LOW",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2024-06-04",
+      "risk_score": 22,
+      "tier": "LOW",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2024-11-19",
+      "risk_score": 22,
+      "tier": "LOW",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-03-11",
+      "risk_score": 22,
+      "tier": "LOW",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    }
+  ],
+  "final_score": 22,
+  "final_tier": "LOW"
+}

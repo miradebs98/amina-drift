@@ -18,20 +18,12 @@
         "pep"
       ],
       "needs_verification": true,
-      "note": "Potential PEP match (NAME-ONLY, verify identity): 'Xiao Feng' ~ CHEAM Xiao Feng Michelle [role.pep], name-score 0.83"
+      "note": "Potential PEP match (NAME-ONLY, verify identity): 'Xiao Feng' ~ Feng Xiaogang [role.pep], name-score 0.92"
     },
     {
       "id": "early-institutional-shareholders",
       "label": "early institutional shareholders",
       "type": "person",
-      "flags": [],
-      "needs_verification": false,
-      "note": ""
-    },
-    {
-      "id": "gaorong-ventures",
-      "label": "Gaorong Ventures",
-      "type": "investor",
       "flags": [],
       "needs_verification": false,
       "note": ""
@@ -59,12 +51,6 @@
       "source_url": "https://group.hashkey.com/en/about"
     },
     {
-      "source": "gaorong-ventures",
-      "target": "hashkey-group",
-      "relation": "investor",
-      "source_url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxOWXhzVDFXaDdUUVVUZVlfTHBjY05zeFRYUjdjTDV5RDRvUlZidzdlOTI5eUU1WEYxSlFtdHcyMjMtVkktVFg1LXJ3bkMwYXY4eXJRZGVGMnFjZE1ETWJoRVdObXA3OFR6a1VyS0puQWlzR2NBTVJNT3lycVptS3YyWmJKWQ?oc=5"
-    },
-    {
       "source": "hashkey-group",
       "target": "anap-holdings",
       "relation": "partner",
@@ -72,11 +58,11 @@
     }
   ],
   "network_risk": {
-    "connected_entities": 4,
+    "connected_entities": 3,
     "flagged_nodes": [
       "Xiao Feng"
     ],
     "elevated": true,
-    "summary": "4 connected entities; 1 carry a sanctions/PEP name-match (verify identity)."
+    "summary": "3 connected entities; 1 carry a sanctions/PEP name-match (verify identity)."
   }
 }

@@ -30,18 +30,6 @@ function sentimentForEvent(e: EvidenceEvent): Sentiment {
 
 // curated context the engine would also watch (shareholders + sector)
 const EXTRA: Record<string, { shareholders: NewsItem[]; context: NewsItem[] }> = {
-  "meridian-sands": {
-    shareholders: [
-      { source: "Regional Wire", headline: "Crescent Sovereign Partners principal linked to politically exposed network", date: "2024-07-02", sentiment: "adverse", simulated: true },
-      { source: "Gulf Fintech", headline: "Co-founder Omar Said named in regional fraud investigation", date: "2025-11-12", sentiment: "adverse", simulated: true },
-      { source: "ADGM Summit", headline: "CEO Layla Haddad keynotes on tokenized markets", date: "2025-03-04", sentiment: "neutral", simulated: true },
-    ],
-    context: [
-      { source: "ADGM / FSRA", headline: "ADGM tightens VASP licensing for crypto brokerages", date: "2025-02-01", sentiment: "neutral", simulated: true },
-      { source: "FATF", headline: "UAE under enhanced monitoring for virtual-asset flows", date: "2024-10-15", sentiment: "adverse", simulated: true },
-      { source: "MENA Venture", headline: "Regional Web3 infra funding rebounds in 2025", date: "2025-06-20", sentiment: "positive", simulated: true },
-    ],
-  },
   "coinbase-global": {
     shareholders: [
       { source: "SEC Form 4", headline: "Brian Armstrong sells shares under 10b5-1 plan", date: "2025-01-15", sentiment: "neutral", url: "https://www.sec.gov/", simulated: false },

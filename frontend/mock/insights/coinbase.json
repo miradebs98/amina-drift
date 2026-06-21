@@ -1,53 +1,88 @@
 {
   "dimensions_drifted": [
-    "contextual_change",
-    "network_risk"
+    "contextual_change"
   ],
-  "breadth": 2,
+  "breadth": 1,
   "assertion_drift": [
-    {
-      "assertion_id": "CB7",
-      "predicate": "adverse_media_status",
-      "dimension": "network_risk",
-      "value": "Material litigation exposure \u2014 SEC v. Coinbase (filed 2023)",
-      "status": "contradicted",
-      "surprise": 1.0,
-      "risk_impact": 0.9,
-      "contradiction": 0.995,
-      "staleness": 0.084,
-      "envelope_breach": 0.0,
-      "trajectory": 0.0,
-      "confidence": 0.0,
-      "evidence_ids": [
-        "CB-EV4",
-        "CB-EV7"
-      ],
-      "why": [
-        "Event indicates 'litigation', contradicting the on-file belief (adverse_media_status = Material litigation exposure \u2014 SEC v. Coinbase (filed 2023)).",
-        "Event indicates 'litigation', contradicting the on-file belief (adverse_media_status = Material litigation exposure \u2014 SEC v. Coinbase (filed 2023))."
-      ]
-    },
     {
       "assertion_id": "CB4",
       "predicate": "operating_geographies",
       "dimension": "contextual_change",
       "value": "US-origin, expanding globally (EU, UK, APAC)",
-      "status": "contradicted",
-      "surprise": 1.0,
-      "risk_impact": 0.55,
-      "contradiction": 0.85,
+      "status": "valid",
+      "surprise": 0.54,
+      "risk_impact": 0.297,
+      "contradiction": 0.0,
       "staleness": 0.084,
       "envelope_breach": 0.6,
       "trajectory": 0.0,
-      "confidence": 0.044,
+      "confidence": 0.766,
       "evidence_ids": [
-        "CB-EV2",
-        "CB-EV6"
+        "CB-EV2"
       ],
       "why": [
-        "Coinbase obtains BaFin crypto-custody licence (Germany) \u2014 EU regulatory footprint expands \u2014 breaches expected envelope.",
-        "Event indicates 'crypto', contradicting the on-file belief (operating_geographies = US-origin, expanding globally (EU, UK, APAC))."
+        "Coinbase obtains BaFin crypto-custody licence (Germany) \u2014 EU regulatory footprint expands \u2014 breaches expected envelope."
       ]
     }
-  ]
+  ],
+  "timeline": [
+    {
+      "as_of": "2021-04-14",
+      "risk_score": 60,
+      "tier": "MEDIUM",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2023-06-06",
+      "risk_score": 79,
+      "tier": "HIGH",
+      "surprise": 0.72,
+      "situation": "b:flag",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2023-06-26",
+      "risk_score": 79,
+      "tier": "HIGH",
+      "surprise": 0.54,
+      "situation": "c:notable",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2023-08-09",
+      "risk_score": 81,
+      "tier": "HIGH",
+      "surprise": 0.72,
+      "situation": "b:flag",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-02-27",
+      "risk_score": 67,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-05-08",
+      "risk_score": 67,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-06-20",
+      "risk_score": 67,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    }
+  ],
+  "final_score": 67,
+  "final_tier": "HIGH"
 }

@@ -14,6 +14,14 @@
     "onboarding_band": "LOW"
   },
 
+  "kyc_review": {
+    "_note": "Risk-based periodic review. LOW band -> 36-month cadence.",
+    "cadence_months_by_band": { "LOW": 36, "MEDIUM": 24, "HIGH": 12 },
+    "last_review": "2022-01-01",
+    "next_periodic_review": "2025-01-01",
+    "_derivation": "LOW -> 36mo -> 2022-01 + 36mo = 2025-01. Benign profile, no off-cycle trigger."
+  },
+
   "entity_profile": {
     "legal_name": "Geberit AG",
     "principal_place_of_business": "Rapperswil-Jona, Switzerland",

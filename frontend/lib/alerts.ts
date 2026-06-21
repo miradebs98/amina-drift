@@ -92,9 +92,9 @@ function eventToAlert(e: EvidenceEvent, customerId: string, company: string): Al
 }
 
 export function buildAlertFeed(cases: CustomerCase[]): CompanyAlerts[] {
-  const groups = cases.map(({ customer, events, alert }) => {
+  const groups = cases.map(({ customer, events, alert, final_score }) => {
     const company = customer.legal_name;
-    const score = alert.new_risk_score ?? customer.risk_model.onboarding_score;
+    const score = final_score ?? alert.new_risk_score ?? customer.risk_model.onboarding_score;
     const items: AlertItem[] = [];
 
     // headline: the aggregated re-tiering / drift alert (only when there is real drift)

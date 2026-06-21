@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-// Demo opens on the Meridian Scheda Cliente (the 28→82 drift hero).
+// Demo opens on Coinbase (rises on the SEC suit → falls on the dismissal).
 export default function Home() {
-  redirect("/customers/meridian-sands");
+  redirect("/customers/coinbase-global");
 }

@@ -1,0 +1,136 @@
+{
+  "events": [
+    {
+      "id": "BN-EV1",
+      "entity_ref": "Binance",
+      "customer_id": "binance",
+      "resolution_confidence": null,
+      "type": "news",
+      "summary": "UK FCA bans Binance Markets Limited from carrying out regulated activity in the United Kingdom",
+      "payload": {
+        "regulator": "FCA",
+        "jurisdiction": "GB",
+        "action": "ban"
+      },
+      "source": "FCA",
+      "source_url": "https://www.fca.org.uk/news",
+      "published_at": "2021-06-26T00:00:00Z",
+      "confidence": 0.9,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "BN-EV2",
+      "entity_ref": "Binance",
+      "customer_id": "binance",
+      "resolution_confidence": null,
+      "type": "news",
+      "summary": "Regulators in Japan, Italy and Ontario issue public warnings that Binance is not authorised to operate locally",
+      "payload": {
+        "jurisdiction": "multi",
+        "action": "unlicensed-warning"
+      },
+      "source": "regulator notices",
+      "source_url": "https://www.fsa.go.jp/en/",
+      "published_at": "2021-07-02T00:00:00Z",
+      "confidence": 0.85,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "BN-EV3",
+      "entity_ref": "Binance",
+      "customer_id": "binance",
+      "resolution_confidence": null,
+      "type": "news",
+      "summary": "US CFTC sues Binance and founder Changpeng Zhao for operating an illegal, unregistered derivatives exchange",
+      "payload": {
+        "regulator": "CFTC",
+        "jurisdiction": "US",
+        "action": "lawsuit"
+      },
+      "source": "CFTC",
+      "source_url": "https://www.cftc.gov/PressRoom",
+      "published_at": "2023-03-27T00:00:00Z",
+      "confidence": 0.9,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "BN-EV4",
+      "entity_ref": "Binance",
+      "customer_id": "binance",
+      "resolution_confidence": null,
+      "type": "news",
+      "summary": "US SEC sues Binance and CZ alleging unregistered securities offerings and commingling of customer funds",
+      "payload": {
+        "regulator": "SEC",
+        "jurisdiction": "US",
+        "action": "lawsuit"
+      },
+      "source": "SEC",
+      "source_url": "https://www.sec.gov/news",
+      "published_at": "2023-06-05T00:00:00Z",
+      "confidence": 0.9,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "BN-EV5",
+      "entity_ref": "Binance",
+      "customer_id": "binance",
+      "resolution_confidence": null,
+      "type": "news",
+      "summary": "Binance pleads guilty and agrees a US$4.3B settlement with the US DOJ, FinCEN and OFAC over Bank Secrecy Act and sanctions-program compliance failures",
+      "payload": {
+        "regulator": "DOJ/FinCEN/OFAC",
+        "jurisdiction": "US",
+        "amount_usd": 4300000000,
+        "action": "settlement"
+      },
+      "source": "US DOJ",
+      "source_url": "https://www.justice.gov/opa/pr",
+      "published_at": "2023-11-21T00:00:00Z",
+      "confidence": 0.95,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    },
+    {
+      "id": "BN-EV6",
+      "entity_ref": "Binance",
+      "customer_id": "binance",
+      "resolution_confidence": null,
+      "type": "ownership_change",
+      "summary": "Changpeng Zhao (CZ) steps down as CEO of Binance; Richard Teng is appointed chief executive",
+      "payload": {
+        "departing_ceo": "Changpeng Zhao",
+        "new_ceo": "Richard Teng",
+        "control_change": true
+      },
+      "source": "company / press",
+      "source_url": "https://www.binance.com/en/blog",
+      "published_at": "2023-11-21T00:00:00Z",
+      "confidence": 0.9,
+      "raw_ref": null,
+      "dimension": "identity_ownership"
+    },
+    {
+      "id": "BN-EV7",
+      "entity_ref": "Binance",
+      "customer_id": "binance",
+      "resolution_confidence": null,
+      "type": "news",
+      "summary": "Changpeng Zhao is sentenced to four months in prison in the United States",
+      "payload": {
+        "jurisdiction": "US",
+        "action": "sentencing"
+      },
+      "source": "press",
+      "source_url": "https://www.reuters.com/legal",
+      "published_at": "2024-04-30T00:00:00Z",
+      "confidence": 0.9,
+      "raw_ref": null,
+      "dimension": "network_risk"
+    }
+  ]
+}

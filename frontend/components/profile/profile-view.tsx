@@ -41,7 +41,7 @@ function SectionTitle({ children, hint }: { children: React.ReactNode; hint?: st
 }
 
 export function ProfileView({ data }: { data: CustomerCase }) {
-  const { customer, events, alert } = data;
+  const { customer, events, alert, timeline } = data;
   const qc = useQueryClient();
   const [selected, setSelected] = useState<EvidenceEvent | null>(null);
   const [replayIdx, setReplayIdx] = useState<number | null>(null);
@@ -68,7 +68,7 @@ export function ProfileView({ data }: { data: CustomerCase }) {
   }
 
   const { frames, old, now, startT, endT } = useMemo(
-    () => buildTrajectory(customer, events, alert),
+    () => buildTrajectory(customer, events, alert, timeline),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer.customer_id],
   );
@@ -123,6 +123,7 @@ export function ProfileView({ data }: { data: CustomerCase }) {
         <ClientSection
           customer={customer}
           alert={alert}
+          currentScore={now}
           role={role}
           onRoleChange={setRole}
           dispo={dispo}
@@ -240,6 +241,7 @@ export function ProfileView({ data }: { data: CustomerCase }) {
                 customer={customer}
                 events={events}
                 alert={alert}
+                timeline={timeline}
                 onSelectEvent={setSelected}
                 replayT={replayT}
               />
@@ -343,6 +345,7 @@ export function ProfileView({ data }: { data: CustomerCase }) {
                         customer={customer}
                         events={events}
                         alert={alert}
+                        currentScore={now}
                         dispo={dispo}
                         selectedId={selected?.id}
                         onSelect={setSelected}

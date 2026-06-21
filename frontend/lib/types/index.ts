@@ -155,6 +155,14 @@ export interface DriftAlert {
   created_at: string;
 }
 
+// one tick of the engine's risk-score arc (backend replay timeline)
+export interface TimelinePoint {
+  as_of: string;       // date
+  risk_score: number;  // 0–100 at this tick
+  tier: string;        // LOW | MEDIUM | HIGH
+  situation?: string;  // a:gentle | b:flag | c:notable
+}
+
 // ── Composite view model the UI works with ─────────────────────────────────
 export interface CustomerCase {
   customer: Customer;
@@ -164,6 +172,10 @@ export interface CustomerCase {
   dimensions_drifted?: Dimension[];
   breadth?: number;
   assertion_drift?: AssertionDrift[];
+  // the REAL risk-score arc + final state (the engine's own output — use these, not the alert's old/new)
+  timeline?: TimelinePoint[];
+  final_score?: number;
+  final_tier?: string;
 }
 
 // ── Governance (backend/govern) ────────────────────────────────────────────

@@ -7,18 +7,6 @@ import type { CustomerCase } from "./types";
 type NowEntry = { now: string; evidenceIds: string[] };
 
 const NOW_MAP: Record<string, Record<string, NowEntry>> = {
-  "meridian-sands": {
-    MS1: { now: "Web3 / crypto trading infrastructure", evidenceIds: ["MS-EV1", "MS-EV5"] },
-    MS2: { now: "UAE + new offshore entity (BVI)", evidenceIds: ["MS-EV2"] },
-    MS3: { now: "+ Crescent Sovereign Partners 30% (PEP-adjacent)", evidenceIds: ["MS-EV3"] },
-    MS4: { now: "Retail crypto brokerage product launched", evidenceIds: ["MS-EV5"] },
-    MS5: { now: "Corporate crypto treasury adopted (BTC/ETH/USDC)", evidenceIds: ["MS-EV8"] },
-    MS7: { now: "Increasingly crypto trading proceeds", evidenceIds: ["MS-EV5", "MS-EV6"] },
-    MS8: { now: "~6M AED/mo — ~12× the onboarding envelope", evidenceIds: ["MS-EV6"] },
-    MS9: { now: "Regulated activity offered without FSRA authorisation", evidenceIds: ["MS-EV5"] },
-    MS10: { now: "PEP-adjacent UBO via the new investor", evidenceIds: ["MS-EV3"] },
-    MS12: { now: "Co-founder named in a fraud investigation", evidenceIds: ["MS-EV7"] },
-  },
   "coinbase-global": {
     CB1: { now: "+ derivatives (Deribit), L2 (Base), staking", evidenceIds: ["CB-EV3", "CB-EV6"] },
     CB4: { now: "Global, incl. EU (MiCA) & Germany", evidenceIds: ["CB-EV5"] },
@@ -39,18 +27,26 @@ export type DiffRow = {
 };
 
 export function getTwinDiff(c: CustomerCase): { rows: DiffRow[]; changed: number; total: number } {
+  // Authored "now" summaries (curated polish) take priority; otherwise fall back to the engine's
+  // own per-belief drift (assertion_drift) so EVERY customer's twin-diff is correct from real output.
   const map = NOW_MAP[c.customer.customer_id] ?? {};
+  const drift = new Map((c.assertion_drift ?? []).map((d) => [d.assertion_id, d]));
   const rows: DiffRow[] = c.customer.assertions
     .filter((a) => !EXCLUDE.has(a.predicate))
     .map((a) => {
       const hit = map[a.id];
+      const ad = drift.get(a.id);
+      const engineChanged = Boolean(ad && (ad.status === "contradicted" || ad.risk_impact > 0.05));
+      const now =
+        hit?.now ??
+        (engineChanged ? ad?.why?.join("; ") || "Contradicted by public evidence" : "No material change — re-verified");
       return {
         assertionId: a.id,
         predicate: a.predicate,
         then: a.value,
-        now: hit?.now ?? "No material change — re-verified",
-        evidenceIds: hit?.evidenceIds ?? [],
-        changed: Boolean(hit),
+        now,
+        evidenceIds: hit?.evidenceIds ?? ad?.evidence_ids ?? [],
+        changed: Boolean(hit) || engineChanged,
       };
     });
   // changed rows first

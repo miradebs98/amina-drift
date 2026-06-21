@@ -1,53 +1,352 @@
 {
   "dimensions_drifted": [
     "contextual_change",
-    "identity_ownership"
+    "identity_ownership",
+    "network_risk"
   ],
-  "breadth": 2,
+  "breadth": 3,
   "assertion_drift": [
+    {
+      "assertion_id": "HK10",
+      "predicate": "adverse_media_status",
+      "dimension": "network_risk",
+      "value": "No material adverse media",
+      "status": "contradicted",
+      "surprise": 0.953,
+      "risk_impact": 0.858,
+      "contradiction": 0.953,
+      "staleness": 0.101,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "wayback-55b27b1e51",
+        "news_rss-1113cceece",
+        "sanctions-407f4e7a50"
+      ],
+      "why": [
+        "The evidence indicates a change in the homepage content of HashKey Group, which could be interpreted as a material adverse media event. This contradicts the belief that there is no material adverse media status.",
+        "The evidence indicates that HashKey, a crypto exchange, has experienced a 2.5% decline in share value, which is a material adverse media event. This contradicts the belief that there is no material adverse media status for the entity."
+      ]
+    },
+    {
+      "assertion_id": "HK5",
+      "predicate": "regulatory_status",
+      "dimension": "contextual_change",
+      "value": "Hong Kong SFC-licensed (VATP via HashKey Exchange)",
+      "status": "contradicted",
+      "surprise": 0.989,
+      "risk_impact": 0.841,
+      "contradiction": 0.989,
+      "staleness": 0.101,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "wayback-3fe08dd6c4",
+        "wayback-05e9801af8",
+        "wayback-8e218cfd40",
+        "wayback-55b27b1e51",
+        "wayback-97e81fc9f1",
+        "wayback-f483d86f83",
+        "wayback-0e4ffe2e60",
+        "sanctions-407f4e7a50"
+      ],
+      "why": [
+        "The evidence indicates a change in the homepage content of HashKey Group, which could imply a change in their regulatory status or licensing information. The belief states that HashKey is Hong Kong SFC-licensed (VATP via HashKey Exchange), but the evidence suggests a change in their regulatory status or licensing information, which contradicts the belief.",
+        "The evidence indicates a change in HashKey Group's homepage content, which suggests a potential change in their regulatory status. The belief states that HashKey is Hong Kong SFC-licensed (VATP via HashKey Exchange), but the evidence of a homepage change could imply a change in their regulatory status or a new development that contradicts the belief. This is a material change as it affects the regulatory compliance of the entity."
+      ]
+    },
+    {
+      "assertion_id": "HK6",
+      "predicate": "ownership_structure",
+      "dimension": "identity_ownership",
+      "value": "Single Hong Kong group holding",
+      "status": "contradicted",
+      "surprise": 0.998,
+      "risk_impact": 0.599,
+      "contradiction": 0.998,
+      "staleness": 0.101,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "wayback-f73cfab8f7",
+        "wayback-3fe08dd6c4",
+        "wayback-05e9801af8",
+        "wayback-8e218cfd40",
+        "wayback-55b27b1e51",
+        "wayback-97e81fc9f1",
+        "wayback-f483d86f83",
+        "funding-ab30fd0a41",
+        "news_rss-ab30fd0a41",
+        "wayback-0e4ffe2e60",
+        "news_rss-9c77dc64a8"
+      ],
+      "why": [
+        "The evidence indicates a change in the ownership structure of HashKey Group, as the homepage content has been updated. This contradicts the BELIEF that the ownership structure is single and held by a Hong Kong group.",
+        "The evidence indicates a change in the homepage content of HashKey Group, which suggests a potential change in ownership structure or corporate governance. This contradicts the belief that the ownership structure is single and held by a Hong Kong group."
+      ]
+    },
+    {
+      "assertion_id": "HK9",
+      "predicate": "sanctions_status",
+      "dimension": "network_risk",
+      "value": "No sanctions exposure",
+      "status": "contradicted",
+      "surprise": 0.5,
+      "risk_impact": 0.5,
+      "contradiction": 0.5,
+      "staleness": 0.101,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.374,
+      "evidence_ids": [
+        "sanctions-407f4e7a50"
+      ],
+      "why": [
+        "Potential (name-only) screen match \u2014 UNVERIFIED, requires human verification before any risk decision."
+      ]
+    },
     {
       "assertion_id": "HK8",
       "predicate": "pep_status",
       "dimension": "identity_ownership",
       "value": "No PEP among directors / UBOs",
       "status": "contradicted",
-      "surprise": 1.0,
-      "risk_impact": 0.95,
-      "contradiction": 0.974,
+      "surprise": 0.5,
+      "risk_impact": 0.475,
+      "contradiction": 0.5,
       "staleness": 0.101,
       "envelope_breach": 0.0,
       "trajectory": 0.0,
-      "confidence": 0.0,
+      "confidence": 0.349,
       "evidence_ids": [
-        "sanctions-ac598ff8ba",
-        "sanctions-b7662fd3ba",
-        "sanctions-9295117bd4",
-        "sanctions-3d6f2c0854"
+        "sanctions-407f4e7a50",
+        "sanctions-ac598ff8ba"
       ],
       "why": [
-        "Event indicates 'pep', contradicting the on-file belief (pep_status = No PEP among directors / UBOs).",
-        "Event indicates 'pep', contradicting the on-file belief (pep_status = No PEP among directors / UBOs)."
+        "Potential (name-only) screen match \u2014 UNVERIFIED, requires human verification before any risk decision.",
+        "Potential (name-only) screen match \u2014 UNVERIFIED, requires human verification before any risk decision."
       ]
     },
     {
-      "assertion_id": "HK2",
-      "predicate": "operating_geographies",
+      "assertion_id": "HK1",
+      "predicate": "business_model",
       "dimension": "contextual_change",
-      "value": "Hong Kong (primary)",
+      "value": "Hong Kong-focused licensed digital-asset exchange & asset-management group",
       "status": "contradicted",
-      "surprise": 0.94,
-      "risk_impact": 0.517,
-      "contradiction": 0.9,
+      "surprise": 0.531,
+      "risk_impact": 0.372,
+      "contradiction": 0.531,
       "staleness": 0.101,
       "envelope_breach": 0.0,
       "trajectory": 0.0,
-      "confidence": 0.0,
+      "confidence": 0.321,
       "evidence_ids": [
-        "gleif-b9312e4810"
+        "wayback-55b27b1e51",
+        "wayback-0e4ffe2e60"
       ],
       "why": [
-        "Event indicates 'digital asset', contradicting the on-file belief (operating_geographies = Hong Kong (primary))."
+        "The evidence indicates a change in the homepage content of HashKey Group, which suggests a potential expansion or shift in their business model. This contradicts the belief that HashKey is a Hong Kong-focused licensed digital-asset exchange & asset-management group, as the evidence points to a broader or different focus.",
+        "The evidence indicates a change in the homepage content of HashKey Group, which suggests a potential expansion or change in their business model. The belief states that HashKey is a Hong Kong-focused licensed digital-asset exchange & asset-management group, but the evidence indicates a change in their homepage content, which could imply a broader scope or new focus. This change is material and not incremental, as it involves a change in their public presentation of their business model. Therefore, the evidence contradicts the belief."
       ]
     }
-  ]
+  ],
+  "timeline": [
+    {
+      "as_of": "2023-06-01",
+      "risk_score": 55,
+      "tier": "MEDIUM",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2024-01-16",
+      "risk_score": 55,
+      "tier": "MEDIUM",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2024-03-01",
+      "risk_score": 61,
+      "tier": "MEDIUM",
+      "surprise": 0.31,
+      "situation": "c:notable",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2024-05-30",
+      "risk_score": 68,
+      "tier": "HIGH",
+      "surprise": 0.31,
+      "situation": "b:flag",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2024-09-08",
+      "risk_score": 72,
+      "tier": "HIGH",
+      "surprise": 0.22,
+      "situation": "b:flag",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2024-12-12",
+      "risk_score": 74,
+      "tier": "HIGH",
+      "surprise": 0.15,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-02-14",
+      "risk_score": 74,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-02-15",
+      "risk_score": 74,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-03-18",
+      "risk_score": 77,
+      "tier": "HIGH",
+      "surprise": 0.31,
+      "situation": "b:flag",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-03-27",
+      "risk_score": 77,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-06-27",
+      "risk_score": 78,
+      "tier": "HIGH",
+      "surprise": 0.07,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-10-07",
+      "risk_score": 78,
+      "tier": "HIGH",
+      "surprise": 0.05,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-10-09",
+      "risk_score": 78,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-12-16",
+      "risk_score": 80,
+      "tier": "HIGH",
+      "surprise": 0.46,
+      "situation": "b:flag",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-12-22",
+      "risk_score": 80,
+      "tier": "HIGH",
+      "surprise": 0.22,
+      "situation": "b:flag",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2025-12-24",
+      "risk_score": 80,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2026-01-01",
+      "risk_score": 82,
+      "tier": "HIGH",
+      "surprise": 0.5,
+      "situation": "b:flag",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2026-03-13",
+      "risk_score": 82,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2026-04-22",
+      "risk_score": 82,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2026-05-14",
+      "risk_score": 82,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2026-05-21",
+      "risk_score": 82,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2026-06-05",
+      "risk_score": 82,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2026-06-12",
+      "risk_score": 82,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2026-06-16",
+      "risk_score": 82,
+      "tier": "HIGH",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    }
+  ],
+  "final_score": 82,
+  "final_tier": "HIGH"
 }

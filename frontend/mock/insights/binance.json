@@ -1,0 +1,266 @@
+{
+  "dimensions_drifted": [
+    "contextual_change",
+    "identity_ownership",
+    "network_risk"
+  ],
+  "breadth": 3,
+  "assertion_drift": [
+    {
+      "assertion_id": "BN11",
+      "predicate": "adverse_media_status",
+      "dimension": "network_risk",
+      "value": "No material adverse media at onboarding",
+      "status": "contradicted",
+      "surprise": 1.0,
+      "risk_impact": 0.9,
+      "contradiction": 1.0,
+      "staleness": 0.107,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "BN-EV1",
+        "BN-EV2",
+        "BN-EV3",
+        "BN-EV4",
+        "BN-EV5",
+        "BN-EV6",
+        "BN-EV7"
+      ],
+      "why": [
+        "The evidence indicates that Binance Markets Limited has been banned by the UK FCA, which contradicts the belief that there is no material adverse media at onboarding. This is a severe contradiction as it involves a regulatory ban, which is a significant adverse media event.",
+        "The evidence contradicts the belief as it indicates that Binance is not authorised to operate in multiple jurisdictions, which is a material adverse media status."
+      ]
+    },
+    {
+      "assertion_id": "BN5",
+      "predicate": "ubo",
+      "dimension": "identity_ownership",
+      "value": "Founder Changpeng Zhao (CZ) \u2014 majority owner and CEO",
+      "status": "contradicted",
+      "surprise": 0.996,
+      "risk_impact": 0.896,
+      "contradiction": 0.996,
+      "staleness": 0.107,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "BN-EV3",
+        "BN-EV4",
+        "BN-EV6",
+        "BN-EV7"
+      ],
+      "why": [
+        "The evidence contradicts the belief that the majority owner and CEO is the founder Changpeng Zhao (CZ). The evidence states that the US CFTC is suing Binance and its founder Changpeng Zhao for operating an illegal, unregistered derivatives exchange. This indicates that the founder is not the majority owner and CEO as stated in the belief.",
+        "The evidence contradicts the belief as it indicates that CZ is being sued by the SEC in the US, which suggests a loss of control or a significant regulatory issue, contrary to the belief that CZ is the majority owner and CEO."
+      ]
+    },
+    {
+      "assertion_id": "BN4",
+      "predicate": "regulatory_status",
+      "dimension": "contextual_change",
+      "value": "Pursuing licences across jurisdictions; not yet broadly authorised",
+      "status": "contradicted",
+      "surprise": 0.994,
+      "risk_impact": 0.845,
+      "contradiction": 0.994,
+      "staleness": 0.107,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "BN-EV1",
+        "BN-EV3",
+        "BN-EV4",
+        "BN-EV5"
+      ],
+      "why": [
+        "The evidence contradicts the belief as it indicates a specific regulatory action (ban) taken by the FCA in the UK, which is a jurisdiction mentioned in the belief. This action is a significant risk-relevant event that worsens the regulatory status of the entity, as it is not yet broadly authorised in the UK. The strength is 0.85 as this is a severe regulatory action that directly contradicts the belief.",
+        "The evidence contradicts the belief as it indicates that Binance and its founder are being sued by the US CFTC for operating an unregistered derivatives exchange, which is a significant regulatory action. The belief states that the entity is 'Pursuing licences across jurisdictions; not yet broadly authorised', but this evidence shows that the entity is already under regulatory scrutiny and action in the US, which is a specific jurisdiction. This is a severe contradiction as it indicates a significant regulatory risk and a material deviation from the belief."
+      ]
+    },
+    {
+      "assertion_id": "BN7",
+      "predicate": "digital_asset_policy",
+      "dimension": "contextual_change",
+      "value": "Crypto-native exchange; holds BNB and custodies customer assets",
+      "status": "contradicted",
+      "surprise": 1.0,
+      "risk_impact": 0.7,
+      "contradiction": 1.0,
+      "staleness": 0.107,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "BN-EV1",
+        "BN-EV2",
+        "BN-EV3",
+        "BN-EV4",
+        "BN-EV5",
+        "BN-EV6"
+      ],
+      "why": [
+        "The evidence contradicts the belief as it states that the FCA has banned Binance Markets Limited from carrying out regulated activity in the UK, which is a significant change from the belief that the entity holds a crypto-native exchange license and custodies customer assets. This is a severe contradiction as it indicates a loss of regulatory permission to operate in the UK, which is a material risk.",
+        "The evidence contradicts the belief that Binance is a crypto-native exchange that holds BNB and custodies customer assets. The regulators' warnings indicate that Binance is not authorised to operate in these jurisdictions, which contradicts the belief that it is authorised to operate in these places. This is a severe contradiction as it involves enforcement actions and a loss of licences, which is a 0.85 strength."
+      ]
+    },
+    {
+      "assertion_id": "BN1",
+      "predicate": "business_model",
+      "dimension": "contextual_change",
+      "value": "Global crypto-asset spot exchange and ecosystem (BNB chain, wallet)",
+      "status": "contradicted",
+      "surprise": 0.996,
+      "risk_impact": 0.697,
+      "contradiction": 0.996,
+      "staleness": 0.107,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "BN-EV3",
+        "BN-EV4",
+        "BN-EV5",
+        "BN-EV6"
+      ],
+      "why": [
+        "The evidence contradicts the belief as it indicates that Binance is being sued by the US CFTC for operating an illegal, unregistered derivatives exchange, which is outside the scope of the belief that Binance operates a global crypto-asset spot exchange and ecosystem (BNB chain, wallet). This is a severe contradiction as it involves a regulatory action against Binance for a specific activity that is not in line with the belief's stated business model.",
+        "The evidence contradicts the belief as it indicates a legal action by the US SEC against Binance and CZ, alleging unregistered securities offerings and commingling of customer funds. This directly challenges the belief that the business model is a Global crypto-asset spot exchange and ecosystem (BNB chain, wallet), as it suggests regulatory issues and potential violations of securities laws. The strength is 0.85 as this is a severe and definitive contradiction, involving a major regulatory action and potential legal consequences."
+      ]
+    },
+    {
+      "assertion_id": "BN2",
+      "predicate": "product_mix",
+      "dimension": "contextual_change",
+      "value": "Spot crypto trading, custody and staking; no broadly-licensed regulated derivatives at onboarding",
+      "status": "contradicted",
+      "surprise": 0.994,
+      "risk_impact": 0.696,
+      "contradiction": 0.994,
+      "staleness": 0.107,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "BN-EV1",
+        "BN-EV3",
+        "BN-EV4",
+        "BN-EV5"
+      ],
+      "why": [
+        "The evidence contradicts the belief as it indicates a ban on regulated activity in the UK, which is a regulated derivatives market. The belief states that the product mix does not include broadly-licensed regulated derivatives, but the evidence shows that Binance Markets Limited has been banned from carrying out such activity in the UK, indicating that such derivatives are indeed part of the regulated market.",
+        "The evidence contradicts the belief as it reveals that Binance and its founder are being sued by the US CFTC for operating an illegal, unregistered derivatives exchange. This action is a severe contradiction as it directly violates the belief's condition of not offering broadly-licensed regulated derivatives at onboarding. The strength of this contradiction is high (1.0) as it involves a regulatory action and a significant legal consequence."
+      ]
+    },
+    {
+      "assertion_id": "BN3",
+      "predicate": "operating_geographies",
+      "dimension": "contextual_change",
+      "value": "Global retail & institutional; no single declared headquarters",
+      "status": "contradicted",
+      "surprise": 1.0,
+      "risk_impact": 0.55,
+      "contradiction": 1.0,
+      "staleness": 0.107,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.0,
+      "evidence_ids": [
+        "BN-EV1",
+        "BN-EV2",
+        "BN-EV3",
+        "BN-EV4",
+        "BN-EV5",
+        "BN-EV6",
+        "BN-EV7"
+      ],
+      "why": [
+        "The evidence indicates that Binance Markets Limited has been banned from operating in the United Kingdom by the UK FCA, which contradicts the belief that the entity operates globally with no single declared headquarters. This is a severe contradiction as it involves a specific regulatory action in a specific jurisdiction, which is a material risk-relevant deviation from the belief.",
+        "The evidence contradicts the belief as it shows that Binance is not authorised to operate in multiple jurisdictions, including Japan, Italy, and Ontario, which is not consistent with the belief that Binance operates globally with no single declared headquarters."
+      ]
+    },
+    {
+      "assertion_id": "BN8",
+      "predicate": "listing_status",
+      "dimension": "identity_ownership",
+      "value": "Private company",
+      "status": "contradicted",
+      "surprise": 0.722,
+      "risk_impact": 0.289,
+      "contradiction": 0.722,
+      "staleness": 0.107,
+      "envelope_breach": 0.0,
+      "trajectory": 0.0,
+      "confidence": 0.143,
+      "evidence_ids": [
+        "BN-EV2"
+      ],
+      "why": [
+        "The evidence contradicts the belief that the entity is a private company because it indicates that Binance is not authorised to operate in multiple jurisdictions, which suggests a level of public scrutiny and regulatory oversight that is inconsistent with the private company status. This is a severe contradiction as it involves enforcement actions and public warnings from multiple regulatory bodies."
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "as_of": "2019-01-01",
+      "risk_score": 58,
+      "tier": "MEDIUM",
+      "surprise": 0.0,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2021-06-26",
+      "risk_score": 80,
+      "tier": "HIGH",
+      "surprise": 0.72,
+      "situation": "b:flag",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2021-07-02",
+      "risk_score": 82,
+      "tier": "HIGH",
+      "surprise": 0.72,
+      "situation": "b:flag",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2023-03-27",
+      "risk_score": 83,
+      "tier": "HIGH",
+      "surprise": 0.72,
+      "situation": "b:flag",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2023-06-05",
+      "risk_score": 84,
+      "tier": "HIGH",
+      "surprise": 0.2,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2023-11-21",
+      "risk_score": 84,
+      "tier": "HIGH",
+      "surprise": 0.07,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    },
+    {
+      "as_of": "2024-04-30",
+      "risk_score": 84,
+      "tier": "HIGH",
+      "surprise": 0.01,
+      "situation": "a:gentle",
+      "traj_distance": 0.0
+    }
+  ],
+  "final_score": 84,
+  "final_tier": "HIGH"
+}

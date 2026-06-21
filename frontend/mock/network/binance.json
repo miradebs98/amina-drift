@@ -1,0 +1,35 @@
+{
+  "customer_id": "binance",
+  "nodes": [
+    {
+      "id": "binance-holdings-ltd",
+      "label": "Binance Holdings Ltd.",
+      "type": "customer",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    },
+    {
+      "id": "founder-changpeng-zhao-cz-majority-owner-and-ceo",
+      "label": "Founder Changpeng Zhao (CZ) \u2014 majority owner and CEO",
+      "type": "person",
+      "flags": [],
+      "needs_verification": false,
+      "note": ""
+    }
+  ],
+  "edges": [
+    {
+      "source": "binance-holdings-ltd",
+      "target": "founder-changpeng-zhao-cz-majority-owner-and-ceo",
+      "relation": "founder",
+      "source_url": null
+    }
+  ],
+  "network_risk": {
+    "connected_entities": 1,
+    "flagged_nodes": [],
+    "elevated": false,
+    "summary": "1 connected entities; no screening hits."
+  }
+}

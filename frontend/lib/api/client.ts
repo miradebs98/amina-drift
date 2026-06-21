@@ -57,6 +57,10 @@ export async function getCase(customerId: string): Promise<CustomerCase | null> 
       dimensions_drifted: c.dimensions_drifted as CustomerCase["dimensions_drifted"],
       breadth: c.breadth as number | undefined,
       assertion_drift: c.assertion_drift as CustomerCase["assertion_drift"],
+      // the real risk-score arc + final state (so the gauge/replay show onboarding → final, not the alert delta)
+      timeline: c.timeline as CustomerCase["timeline"],
+      final_score: c.final_score as number | undefined,
+      final_tier: c.final_tier as string | undefined,
     };
   } catch (e) {
     if (e instanceof ApiError && e.status === 404) return null;

@@ -1,0 +1,28 @@
+{
+  "alert": {
+    "id": "alert-geberit-clean",
+    "customer_id": "geberit",
+    "drift_type": "event",
+    "flag": "No material drift",
+    "severity": "low",
+    "drift_score": 0.0,
+    "old_risk_score": 22,
+    "new_risk_score": 22,
+    "old_risk_tier": "LOW",
+    "new_risk_tier": "LOW",
+    "contradicted_assertion_id": null,
+    "also_contradicts": [],
+    "evidence_ids": [],
+    "rationale": "Monitored 6 public signals; no on-file KYC assertion was contradicted.",
+    "what_would_flip": null,
+    "recommended_action": "No action \u2014 continue monitoring.",
+    "confidence": 0.6,
+    "stage_reached": 1,
+    "model_used": "none",
+    "tokens_used": 0,
+    "governance_state": "pending",
+    "reviewer": null,
+    "decided_at": null,
+    "created_at": "2025-03-11T00:00:00Z"
+  }
+}

@@ -49,6 +49,7 @@ function Fact({ icon: Icon, label, value }: { icon: React.ElementType; label: st
 export function ClientSection({
   customer,
   alert,
+  currentScore,
   role,
   onRoleChange,
   dispo,
@@ -56,6 +57,7 @@ export function ClientSection({
 }: {
   customer: Customer;
   alert: DriftAlert;
+  currentScore?: number;
   role: Role;
   onRoleChange: (r: Role) => void;
   dispo: DecisionResult | null;
@@ -68,7 +70,7 @@ export function ClientSection({
   const [error, setError] = useState<string | null>(null);
 
   const ep = customer.entity_profile;
-  const score = alert.new_risk_score ?? customer.risk_model.onboarding_score;
+  const score = currentScore ?? alert.new_risk_score ?? customer.risk_model.onboarding_score;
   const band = bandForScore(score);
   const c = colorsForScore(score);
   const materialChanges = (alert.contradicted_assertion_id ? 1 : 0) + alert.also_contradicts.length;

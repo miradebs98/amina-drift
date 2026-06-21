@@ -13,7 +13,7 @@ import {
   ReferenceLine,
   ReferenceDot,
 } from "recharts";
-import type { DriftAlert, EvidenceEvent, Customer } from "@/lib/types";
+import type { DriftAlert, EvidenceEvent, Customer, TimelinePoint } from "@/lib/types";
 import { fmtDate, fmtMonthYear, toEpoch, bandForScore, colorsForScore, eventTypeLabel } from "@/lib/format";
 import { buildTrajectory, type TrajPoint } from "@/lib/trajectory";
 
@@ -29,19 +29,21 @@ export function DriftScoreOverTime({
   customer,
   events,
   alert,
+  timeline,
   onSelectEvent,
   replayT,
 }: {
   customer: Customer;
   events: EvidenceEvent[];
   alert: DriftAlert;
+  timeline?: TimelinePoint[];
   onSelectEvent?: (e: EvidenceEvent) => void;
   replayT?: number | null;
 }) {
   const [period, setPeriod] = useState<(typeof PERIODS)[number]["key"]>("all");
 
   const { points, old, now, startT, endT } = useMemo(
-    () => buildTrajectory(customer, events, alert),
+    () => buildTrajectory(customer, events, alert, timeline),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer.customer_id],
   );

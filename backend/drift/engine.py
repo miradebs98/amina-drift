@@ -104,8 +104,11 @@ def build_alert(state, a: Assessment, prev_score: int, prev_tier: str, llm: LLMC
     judgment = llm.interpret_risk(drifts, context)      # ApiLLM = real interpretation; MockLLM = static
     heavy_tokens = llm.meter.heavy_tokens - before
 
-    flag = judgment.flag or static_flag
-    action = judgment.recommended_action or static_action
+    # Flag + action come from the DETERMINISTIC predicate→flag map (grounded in the actual contradicted
+    # belief) — the LLM's free-text flag was unreliable (it mislabelled an SEC-suit episode as
+    # "Ownership Change"). The LLM's value is the contextual NARRATIVE, which we keep as the rationale.
+    flag = static_flag
+    action = static_action
     rationale = judgment.reasoning or static_rationale
 
     return DriftAlert(

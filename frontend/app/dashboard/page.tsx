@@ -7,12 +7,11 @@ import { CompanyLogo } from "@/components/shared/company-logo";
 
 export default async function DashboardPage() {
   const cases = await listCases();
-  // rank by drift magnitude (biggest mover first)
-  const ranked = [...cases].sort((a, b) => {
-    const da = (a.alert.new_risk_score ?? 0) - (a.alert.old_risk_score ?? 0);
-    const db = (b.alert.new_risk_score ?? 0) - (b.alert.old_risk_score ?? 0);
-    return db - da;
-  });
+  // rank by OVERALL drift since onboarding (baseline → current), biggest mover first
+  const driftOf = (c: (typeof cases)[number]) =>
+    (c.final_score ?? c.alert.new_risk_score ?? c.customer.risk_model.onboarding_score) -
+    c.customer.risk_model.onboarding_score;
+  const ranked = [...cases].sort((a, b) => driftOf(b) - driftOf(a));
 
   return (
     <AppShell title="Client Portfolio" subtitle="Clients ranked by KYC drift">
@@ -24,8 +23,8 @@ export default async function DashboardPage() {
 
         <div className="mt-6 overflow-hidden rounded-card border border-surface-line bg-white shadow-card">
           {ranked.map((c, i) => {
-            const old = c.alert.old_risk_score ?? c.customer.risk_model.onboarding_score;
-            const now = c.alert.new_risk_score ?? old;
+            const old = c.customer.risk_model.onboarding_score;          // onboarding baseline
+            const now = c.final_score ?? c.alert.new_risk_score ?? old;  // current (engine final)
             const band = bandForScore(now);
             const col = colorsForScore(now);
             const delta = Math.round(now - old);

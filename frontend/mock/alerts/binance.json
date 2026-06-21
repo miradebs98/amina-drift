@@ -1,0 +1,40 @@
+{
+  "alert": {
+    "id": "alert-binance-20230327",
+    "customer_id": "binance",
+    "drift_type": "event",
+    "flag": "Adverse Media \u2013 Investigation + Regulatory-Scope Risk",
+    "severity": "high",
+    "drift_score": 0.72,
+    "old_risk_score": 82,
+    "new_risk_score": 83,
+    "old_risk_tier": "HIGH",
+    "new_risk_tier": "HIGH",
+    "contradicted_assertion_id": "BN11",
+    "also_contradicts": [
+      "BN4",
+      "BN7",
+      "BN5",
+      "BN2",
+      "BN3",
+      "BN1",
+      "BN8"
+    ],
+    "evidence_ids": [
+      "BN-EV3",
+      "BN-EV1",
+      "BN-EV2"
+    ],
+    "rationale": "The evidence from the FCA ban in the UK and the US CFTC lawsuit against Binance and its founder for operating an unregistered derivatives exchange contradicts the on-file beliefs about regulatory status and product mix. These events indicate a significant regulatory risk and a material deviation from the original beliefs. The strength of these contradictions is high, as they involve severe regulatory actions and legal consequences. The client's now_score and tier (HIGH) may need to be reassessed given these new developments.",
+    "what_would_flip": "Confirmation that the new activity/geographies/ownership are within licensed scope and covered by the existing risk assessment.",
+    "recommended_action": "Trigger EDD; compliance review; consider SAR filing.",
+    "confidence": 0.9,
+    "stage_reached": 3,
+    "model_used": "swiss-ai/Apertus-70B-Instruct-2509",
+    "tokens_used": 1360,
+    "governance_state": "pending",
+    "reviewer": null,
+    "decided_at": null,
+    "created_at": "2023-03-27T00:00:00Z"
+  }
+}

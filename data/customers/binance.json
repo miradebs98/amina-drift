@@ -14,6 +14,14 @@
     "onboarding_band": "MEDIUM"
   },
 
+  "kyc_review": {
+    "_note": "Risk-based periodic review. MEDIUM band -> 24-month cadence.",
+    "cadence_months_by_band": { "LOW": 36, "MEDIUM": 24, "HIGH": 12 },
+    "last_review": "2019-01-01",
+    "next_periodic_review": "2021-01-01",
+    "_derivation": "MEDIUM -> 24mo -> 2019-01 + 24mo = 2021-01. The 2021 FCA ban / enforcement wave should pull this off-cycle."
+  },
+
   "entity_profile": {
     "legal_name": "Binance Holdings Ltd.",
     "founded": "2017",

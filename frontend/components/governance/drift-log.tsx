@@ -46,6 +46,7 @@ export function DriftLog({
   customer,
   events,
   alert,
+  currentScore,
   dispo,
   selectedId,
   onSelect,
@@ -53,12 +54,14 @@ export function DriftLog({
   customer: Customer;
   events: EvidenceEvent[];
   alert: DriftAlert;
+  currentScore?: number;
   dispo?: DecisionResult | null;
   selectedId?: string | null;
   onSelect?: (e: EvidenceEvent) => void;
 }) {
-  const old = alert.old_risk_score ?? customer.risk_model.onboarding_score;
-  const now = alert.new_risk_score ?? old;
+  // overall drift since onboarding: baseline → current (engine final), not the single-alert delta
+  const old = customer.risk_model.onboarding_score;
+  const now = currentScore ?? alert.new_risk_score ?? old;
   const cNow = colorsForScore(now);
 
   const drivers = alert.evidence_ids
