@@ -182,11 +182,26 @@ The scorer iterates predicates generically; no engine code changes.
 
 ### 4.3 Map a signal to a flag and action
 ```python
-# backend/drift/engine.py :: _FLAGS
-"litigation_status": ("Adverse Litigation — EDD", "Trigger enhanced due diligence; assess SAR need."),
+# backend/drift/engine.py :: _FLAGS   (predicate → (flag label, recommended action))
+"source_of_wealth": ("Scale Risk Change", "Reassess transaction-monitoring thresholds; update the activity profile."),
+"legal_name":       ("Entity Identity Change – Re-KYC Required", "Trigger KYC refresh; re-evaluate risk category."),
 ```
-The heavy-tier model writes a contextual narrative on the headline alert; this map is the deterministic
-fallback and the canonical flag label.
+Adding a row is a one-line change — the predicate already carries its dimension and weight (§4.2), so
+the new flag and action flow through the alert with no engine edits. `_FLAGS` currently maps 17
+predicates onto the brief's flag vocabulary; an unmapped predicate falls back to `_DEFAULT_ACTION`.
+
+**Why the flag and action are a static table, not an LLM call — by design.** The recommended action is
+compliance *policy* (e.g. "sanctions hit → escalate to MLRO + SAR"), so it must be deterministic,
+identical across runs, and auditable — never a per-alert generative guess that can drift. The division
+of labour is deliberate:
+- the **heavy-tier LLM** decides *which* on-file assertion a piece of evidence contradicts, and writes
+  the contextual narrative on the headline alert (the "why"); that reasoning is grounded and cited.
+- this **deterministic map** turns the contradicted predicate into the canonical flag label and the
+  recommended action (the "what to do") — the part a regulator must be able to reproduce and trace.
+
+The same predicate→action policy is mirrored on the UI's per-signal call-to-action
+(`frontend/lib/alerts.ts::TYPE_RESPONSE`, keyed by event type) so the headline flag and the per-event
+CTA cannot disagree.
 
 ### 4.4 Add a structured / authoritative belief (sanctions-like)
 For binary, list-driven beliefs that must not be inferred from news:
@@ -214,9 +229,10 @@ For binary, list-driven beliefs that must not be inferred from news:
 
 ## 5. Brief signals — current coverage
 
-Each signal decomposes into (source) + (belief) + (flag/action). The rows marked "needs source"
-require a transaction data source; the consuming mechanism (`expected_envelope` +
-`check_envelope_breach` + the `transaction` `EvidenceType`) already exists.
+Each signal decomposes into (source) + (belief) + (flag/action). Seven of the ten map to a
+deterministic flag and action today (§4.3); the three marked "needs source" require a transaction
+data source — the consuming mechanism (`expected_envelope` + `check_envelope_breach` + the
+`transaction` `EvidenceType`) already exists, only the feed is missing.
 
 | # | Signal | Status | Wired (source · belief · flag) | To complete |
 |---|---|---|---|---|
@@ -225,11 +241,11 @@ require a transaction data source; the consuming mechanism (`expected_envelope` 
 | 7 | Jurisdiction/legal-form move → Structural | implemented | registry/embedding · `operating_geographies` + envelope | — |
 | 8 | New UBO → Ownership Change | implemented | funding/GLEIF · `ubo` · *Ownership Change – KYC Drift* | — |
 | 5 | Domain/website change → Business Activity | implemented | Wayback/crt.sh · `business_model` (soft-weighted) | — |
-| 9 | Funding/expansion → Scale Risk | partial | funding connector → `source_of_wealth` | add a *Scale Risk Change* flag (§4.3) |
-| 4 | Legal-entity name change → Re-KYC | partial | GLEIF supplies the name | add a monitored `legal_name` predicate (§4.2) |
-| 2 | Cross-border transfers → Money Mule | needs source | envelope mechanism present | add a transaction connector (§4.1) + volume envelope (§4.5) |
+| 9 | Funding/expansion → Scale Risk | implemented | funding connector · `source_of_wealth` · *Scale Risk Change* (+ UI CTA) | — |
+| 4 | Legal-entity name change → Re-KYC | implemented | registry/GLEIF · `legal_name` · *Entity Identity Change – Re-KYC* | author a `legal_name` assertion to exercise it on a client |
+| 2 | Cross-border transfers → Money Mule | needs source | envelope + *Behavioural Anomaly – Money Mule* flag present | add a transaction connector (§4.1) + volume envelope (§4.5) |
 | 3 | Linked entities + flows → Structuring | needs source | network graph (linked entities) | add transactions + a layering rule over the graph |
-| 10 | Dormant → high volume → Dormancy Break | needs source | `activity_level` weight present | add transactions + a dormancy→spike rule (§4.5) |
+| 10 | Dormant → high volume → Dormancy Break | needs source | `activity_level` · *Dormancy Break* flag present | add transactions + a dormancy→spike rule (§4.5) |
 
 ---
 
