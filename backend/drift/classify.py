@@ -49,6 +49,9 @@ PREDICATE_SIGNALS = {
                               "types": ["registry_change", "ownership_change"]},
     "counterparty_geographies": {"kw": ["offshore", "expansion", "corridor", "international"],
                                  "types": ["registry_change", "ownership_change"]},
+    "legal_name": {"kw": ["renamed", "rebrand", "name change", "changed its name", "formerly known as",
+                          "now known as", "trading as", "doing business as", "new legal name"],
+                   "types": ["registry_change"]},
     # INBOUND ownership change: an ownership_change event, a stake-in-the-customer payload, OR a funding
     # round / IPO (a new lead investor can become a >25% UBO → re-screen). Deliberately NOT bare
     # "acquire/stake": those also match the customer acquiring OTHERS (Coinbase→Deribit), which doesn't
@@ -159,6 +162,7 @@ SEMANTIC_HINTS = {
     "product_mix": "new or changed products and services — trading, derivatives, futures, perpetuals, custody, lending, deposits, payments, stablecoins, prime brokerage, clearing",
     "operating_geographies": "expansion into or relocation to a new jurisdiction — offshore centres such as the Cayman Islands, BVI or Seychelles, new countries, foreign subsidiaries, re-domiciliation of the holding company",
     "counterparty_geographies": "dealing with counterparties in new or higher-risk jurisdictions, offshore corridors, or new cross-border flows",
+    "legal_name": "a change of registered legal name — a corporate rename or rebrand, 'formerly known as', 'now trading as', or a new legal entity name in the company register",
     "ubo": "a change of beneficial ownership or control — a new shareholder, controlling owner, family office or consortium acquiring a stake, or a newly disclosed ultimate beneficial owner, founders stepping back",
     "pep_status": "a politically exposed person — a government minister, cabinet member, politician, member of parliament, senior public official, head of state or ambassador, or a close family member or associate of one — appointed as a director, owner or board member",
     "digital_asset_policy": "adopting or expanding digital-asset activity — holding crypto, bitcoin or stablecoins, tokenised instruments, a corporate crypto treasury, or providing custody",

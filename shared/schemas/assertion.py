@@ -33,6 +33,7 @@ class Predicate(str, Enum):
     LISTING_STATUS = "listing_status"            # private vs listed on a stock exchange
 
     # --- Identity / legal (slow-moving, but material when they change) ---
+    LEGAL_NAME = "legal_name"                    # registered legal name — a change ⇒ Entity Identity Change / Re-KYC
     LEGAL_FORM = "legal_form"                    # e.g. "AG", "GmbH"
     DOMICILE = "domicile"                        # registered seat: country of incorporation + reg. address
     PRINCIPAL_PLACE_OF_BUSINESS = "principal_place_of_business"  # where actually managed/operated

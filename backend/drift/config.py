@@ -39,7 +39,9 @@ RISK_WEIGHT = {
     "ownership_structure": 0.6,
     "domicile": 0.4,
     "legal_form": 0.4,
+    "legal_name": 0.5,
     "activity_level": 0.45,
+    "listing_status": 0.45,
     "domain": 0.25,
 }
 DEFAULT_RISK_WEIGHT = 0.4

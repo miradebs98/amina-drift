@@ -58,16 +58,17 @@ const TYPE_DIMENSION: Record<string, string> = {
   funding: "contextual_change",
 };
 
-// event type → analyst response (severity + CTA). funding is info-only.
+// event type → analyst response (severity + CTA). Mirrors the brief's signal→action table.
 const TYPE_RESPONSE: Record<string, { severity: Severity; cta: AlertCTA | null }> = {
   sanctions_hit: { severity: "high", cta: { key: "sar", label: "Escalate to MLRO · file internal SAR", done: "Escalated to MLRO — SAR drafted" } },
   pep_hit: { severity: "high", cta: { key: "sow", label: "Refresh UBO & source-of-wealth", done: "Source-of-wealth refresh requested" } },
   ownership_change: { severity: "high", cta: { key: "ubo", label: "Re-verify UBO & screen new owner", done: "UBO re-verification opened" } },
-  registry_change: { severity: "medium", cta: { key: "entity", label: "Verify entity & jurisdiction", done: "Entity / jurisdiction check queued" } },
+  registry_change: { severity: "medium", cta: { key: "entity", label: "Entity Identity check · Re-KYC", done: "Entity / jurisdiction check queued" } },
   website_change: { severity: "medium", cta: { key: "edd", label: "Open EDD · business-model review", done: "EDD case opened" } },
   transaction: { severity: "medium", cta: { key: "tm", label: "Re-baseline TM thresholds", done: "TM thresholds re-baselined" } },
   news: { severity: "medium", cta: { key: "media", label: "Review adverse media", done: "Adverse-media review logged" } },
-  funding: { severity: "low", cta: null },
+  // funding = scale-risk signal (new wealth / rapid expansion), not pure info → reassess TM thresholds
+  funding: { severity: "low", cta: { key: "scale", label: "Scale-risk · reassess TM thresholds", done: "Activity profile & TM thresholds flagged for review" } },
 };
 
 const ADVERSE = /fraud|investigat|sanction|probe|lawsuit|adverse|breach|launder|terror|bribe/i;

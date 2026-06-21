@@ -27,13 +27,20 @@ _FLAGS = {
     "product_mix": ("Material Business Model Change", "Update risk classification; escalate for compliance review."),
     "operating_geographies": ("Structural Risk Change – Geographic Expansion",
                               "Trigger enhanced due diligence; re-check beneficial ownership & corridors."),
+    "legal_name": ("Entity Identity Change – Re-KYC Required", "Trigger KYC refresh; re-evaluate risk category."),
     "ubo": ("Ownership Change – KYC Drift", "Full ownership verification; re-screen against sanctions/PEP lists."),
+    "ownership_structure": ("Ownership Change – KYC Drift", "Full ownership verification; re-screen against sanctions/PEP lists."),
     "pep_status": ("PEP Exposure – Re-screen", "EDD; senior-management approval; ongoing PEP monitoring."),
+    "sanctions_status": ("Sanctions Exposure", "Screen against sanctions lists; escalate to MLRO; consider SAR filing."),
     "digital_asset_policy": ("Digital-Asset Policy Change", "Re-scope digital-asset risk; verify custody/treasury controls."),
     "source_of_funds": ("Source-of-Funds Change", "Re-verify source of funds; reassess transaction monitoring."),
+    "source_of_wealth": ("Scale Risk Change", "Reassess transaction-monitoring thresholds; update the activity profile."),
     "regulatory_status": ("Regulatory-Scope Risk", "Verify licensing (FSRA); escalate potential unlicensed activity."),
     "adverse_media_status": ("Adverse Media – Investigation", "Trigger EDD; compliance review; consider SAR filing."),
-    "expected_monthly_volume": ("Behavioural-Envelope Breach", "AML review; reassess transaction-monitoring thresholds."),
+    "listing_status": ("Listing-Status Change", "Re-verify public-company status; refresh KYC scope."),
+    "counterparty_geographies": ("Structural Risk Change – Corridors", "EDD; re-check counterparties & corridors."),
+    "expected_monthly_volume": ("Behavioural Anomaly – Potential Money Mule", "Monitor transactions; flag for AML analyst review."),
+    "activity_level": ("Dormancy Break – Suspicious Activation", "Trigger AML review; validate business legitimacy."),
 }
 _DEFAULT_ACTION = "Refresh KYC scope; reassess activity profile and transaction-monitoring thresholds."
 

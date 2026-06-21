@@ -22,7 +22,7 @@ PREDICATE_DIMENSION: dict[str, Dimension] = {
     # Identity & Ownership
     "ubo": Dimension.IDENTITY, "directors": Dimension.IDENTITY,
     "ownership_structure": Dimension.IDENTITY, "pep_status": Dimension.IDENTITY,
-    "domicile": Dimension.IDENTITY, "legal_form": Dimension.IDENTITY,
+    "domicile": Dimension.IDENTITY, "legal_form": Dimension.IDENTITY, "legal_name": Dimension.IDENTITY,
     "principal_place_of_business": Dimension.IDENTITY, "tax_residency": Dimension.IDENTITY,
     "tax_classification": Dimension.IDENTITY, "listing_status": Dimension.IDENTITY,
     # Network Risk
