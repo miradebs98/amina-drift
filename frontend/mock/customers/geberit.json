@@ -29,6 +29,8 @@
   },
   "entity_profile": {
     "legal_name": "Geberit AG",
+    "legal_form": "Public limited company (AG)",
+    "country_of_incorporation": "CH",
     "principal_place_of_business": "Rapperswil-Jona, Switzerland",
     "website": "https://www.geberit.com",
     "listed_on_exchange": true

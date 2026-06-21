@@ -24,6 +24,8 @@
 
   "entity_profile": {
     "legal_name": "Binance Holdings Ltd.",
+    "legal_form": "Private limited company",
+    "country_of_incorporation": "KY",
     "founded": "2017",
     "principal_place_of_business": "No single declared global headquarters (SIMULATED onboarding note)",
     "website": "https://www.binance.com",

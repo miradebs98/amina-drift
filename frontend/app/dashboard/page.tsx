@@ -28,6 +28,10 @@ export default async function DashboardPage() {
             const band = bandForScore(now);
             const col = colorsForScore(now);
             const delta = Math.round(now - old);
+            const ep = c.customer.entity_profile;
+            const subtitle = [ep.legal_form, ep.country_of_incorporation, `onboarded ${fmtDate(c.customer.onboarded_as_of)}`]
+              .filter(Boolean)
+              .join(" · ");
             return (
               <Link
                 key={c.customer.customer_id}
@@ -39,13 +43,15 @@ export default async function DashboardPage() {
                 <CompanyLogo customerId={c.customer.customer_id} name={c.customer.legal_name} size={44} />
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-sm font-semibold text-ink">{c.customer.legal_name}</div>
-                  <div className="truncate text-xs text-ink-muted">
-                    {c.customer.entity_profile.legal_form} · {c.customer.entity_profile.country_of_incorporation} ·
-                    onboarded {fmtDate(c.customer.onboarded_as_of)}
-                  </div>
+                  <div className="truncate text-xs text-ink-muted">{subtitle}</div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="tabular text-sm font-semibold text-risk-high">{fmtDelta(delta)}</span>
+                  <span
+                    className={`tabular text-sm font-semibold ${delta === 0 ? "text-ink-muted" : ""}`}
+                    style={delta === 0 ? undefined : { color: col.fg }}
+                  >
+                    {fmtDelta(delta)}
+                  </span>
                   <span
                     className="tabular rounded-pill px-2.5 py-1 text-xs font-semibold"
                     style={{ background: col.bg, color: col.fg }}

@@ -63,8 +63,8 @@ export function DriftScoreOverTime({
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-xs text-ink-muted">
-          <span className="inline-block h-0 w-5 border-t-2 border-dashed border-teal" />
-          modelled trajectory <span className="text-ink-muted/70">(engine estimate · endpoints measured)</span>
+          <span className="inline-block h-0 w-5 border-t-2 border-teal" />
+          risk score <span className="text-ink-muted/70">(holds flat between reviews — each step is a public signal)</span>
         </div>
         <div className="flex overflow-hidden rounded-md border border-surface-line">
           {PERIODS.map((p) => (
@@ -82,7 +82,26 @@ export function DriftScoreOverTime({
       </div>
 
       <ResponsiveContainer width="100%" height={300}>
-        <ComposedChart data={points} margin={{ top: 16, right: 16, bottom: 8, left: -8 }}>
+        <ComposedChart
+          data={points}
+          margin={{ top: 16, right: 16, bottom: 8, left: -8 }}
+          onClick={(state) => {
+            // chart-level select: clicking anywhere picks the nearest point and selects its event
+            // (reliable — the per-dot onClick is often swallowed by the Tooltip cursor layer).
+            // recharts' click param type omits activePayload, so cast + fall back to activeIndex.
+            const s = state as unknown as {
+              activePayload?: { payload?: TrajPoint }[];
+              activeIndex?: number | string;
+            };
+            const p =
+              s.activePayload?.[0]?.payload ??
+              (s.activeIndex != null ? points[Number(s.activeIndex)] : undefined);
+            if (p?.eventId) {
+              const e = eventById.get(p.eventId);
+              if (e) onSelectEvent?.(e);
+            }
+          }}
+        >
           <ReferenceArea y1={0} y2={33} fill="#15803d" fillOpacity={0.05} />
           <ReferenceArea y1={33} y2={66} fill="#b45309" fillOpacity={0.05} />
           <ReferenceArea y1={66} y2={100} fill="#b91c1c" fillOpacity={0.06} />
@@ -145,11 +164,10 @@ export function DriftScoreOverTime({
           />
 
           <Line
-            type="monotone"
+            type="stepAfter"
             dataKey="estimate"
             stroke="#14b8a6"
             strokeWidth={2.5}
-            strokeDasharray="6 5"
             isAnimationActive
             animationDuration={1200}
             dot={(props: { cx?: number; cy?: number; payload?: TrajPoint }) => {
