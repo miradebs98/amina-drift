@@ -292,6 +292,35 @@ For binary, list-driven beliefs that must not be inferred from news:
 | `DRIFT_SATURATION` | accumulated drift that maps ~63% toward the cap |
 | `VELOCITY_ALERT_POINTS`, `BREADTH_MIN_DIMS` | drift-alert triggers |
 
+### 4.7 Analyst chat — grounded retrieval today, grounded LLM next (`frontend/lib/ask.ts`)
+The "ask the data" chat is **deterministic by design**. `askData(question, case)` runs entirely in the
+browser — no network, no model at query time — routing the question through intent matchers that
+assemble every answer **only from the loaded case** (event summaries, the alert's Apertus-written
+rationale, assertion values, recommended action), attach **citations** (the real evidence events + their
+source URLs), and set a **coverage flag** (`grounded` / `partial` / `insufficient`). This was a
+deliberate compliance choice: a general-purpose generative model is disqualified as a *final* decider
+(hallucination risk), so the chat is built so it **physically cannot invent** — every reply is composed
+from cited evidence, offline and instant. (Note: the "why is it HIGH?" answer surfaces
+`alert.rationale`, which *is* genuine Apertus-70B narrative — written when the case was built; the chat
+simply doesn't call the model live.)
+
+The hard part — the **anti-hallucination scaffolding** (the grounding contract `Answer { text,
+citations, coverage }`, citation extraction, the coverage gate) — is **already built**. Adding a live
+LLM is then a contained, single-seam upgrade that *keeps every guarantee*:
+
+1. **Add the server seam the code already anticipates** — `POST /api/customers/{id}/ask` (the chat UI
+   is unchanged; `ask.ts` is written to swap to it).
+2. **Retrieve, then generate.** Pass the model ONLY the case's grounded context and force it to answer
+   *strictly from that context*, returning the same `{text, citations, coverage}` shape — citations stay
+   real evidence ids, not model output.
+3. **Reject ungrounded output.** Keep the coverage gate server-side: an answer that cites nothing returns
+   `insufficient`, never a free-form guess. The model fills the *prose*; the framework still owns the
+   *truth*.
+
+**Scaling:** route open-ended questions the intent matchers miss ("any litigation in Asia?") to the
+heavy tier (Apertus-70B), and keep the deterministic matchers as a **zero-token fast-path + offline
+fallback** — the same cascade discipline as the drift pipeline: rules first, model only on the residual.
+
 ---
 
 ## 5. Brief signals — how each maps to the engine
